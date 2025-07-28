@@ -1,0 +1,19 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+options:
+  numbered: True
+parts:
+- caption: Characteristic Functions Option Pricing
+  numbered: True
+  chapters:
+  - file: cpdf_recovery
+  - file: HestonModelExact6
+
+- caption: Pricing American Options - replicating Longstaff-Schwarz (2001)
+  numbered: True
+  chapters:
+  - file: LSMC
+  - file: FD
