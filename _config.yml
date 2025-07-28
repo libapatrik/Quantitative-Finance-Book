@@ -33,6 +33,9 @@ html:
   use_issues_button: true
   use_repository_button: true
 
+# bibtex_bibfiles:
+#   - references.bib
+
 # Sphinx extensions for advanced features
 sphinx:
   extra_extensions:

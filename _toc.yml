@@ -6,7 +6,7 @@ root: intro
 options:
   numbered: True
 parts:
-- caption: Characteristic Functions Option Pricing
+- caption: Project - Characteristic Functions Option Pricing
   numbered: True
   chapters:
   - file: cpdf_recovery
