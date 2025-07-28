@@ -36,19 +36,6 @@ html:
 # bibtex_bibfiles:
 #   - references.bib
 
-# Sphinx extensions for advanced features
-sphinx:
-  extra_extensions:
-    - sphinx_copybutton
-    - sphinx_togglebutton
-    - sphinx.ext.intersphinx
-  config:
-    html_theme_options:
-      repository_url: https://github.com/libapatrik/Quantitative-Finance-Book
-      use_repository_button: true
-      use_issues_button: true
-      use_download_button: true
-      use_fullscreen_button: true
 parse:
   myst_enable_extensions:
     - dollarmath
