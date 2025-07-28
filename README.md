@@ -3,8 +3,9 @@
  🌐 **Read Online:** [https://libapatrik.github.io/Quantitative-Finance-Book/](https://libapatrik.github.io/Quantitative-Finance-Book/)
 
 ## 📚 Contents
-**Part 1**
 - [Introduction](https://libapatrik.github.io/Quantitative-Finance-Book/intro.html)
+  
+**Part 1**
 - [CDF-PDF Recovery by COS, Carr-Madan, CONV Methods](https://libapatrik.github.io/Quantitative-Finance-Book/cpdf_recovery.html)
 - [Exact Simulation of Heston Model with Characteristic Function Methods](https://libapatrik.github.io/Quantitative-Finance-Book/HestonModelExact6.html)
 
