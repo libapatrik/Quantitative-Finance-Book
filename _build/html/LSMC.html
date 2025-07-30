@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>3. Pricing American Options by LSMC Method &#8212; Quantitative Finance Book</title>
+    <title>4. Pricing American Options by LSMC Method &#8212; Quantitative Finance Book</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'LSMC';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="4. Finite Difference for Pricing American Options" href="FD.html" />
-    <link rel="prev" title="2. Stage 2 - Exact Heston Model Simuations" href="HestonModelExact6.html" />
+    <link rel="next" title="5. Pricing American Options by Finite Difference" href="FD.html" />
+    <link rel="prev" title="3. Intuition behind the Longstaff-Schwartz implementation" href="LongSchAlgo.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -188,8 +188,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Pricing American Options by LSMC Method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FD.html">4. Finite Difference for Pricing American Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FD.html">5. Pricing American Options by Finite Difference</a></li>
 </ul>
 
     </div>
@@ -385,8 +386,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-initial-example">3.1. Simple initial example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-monte-carlo">3.2. Least-Squares Monte Carlo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-initial-example">4.1. Simple initial example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-monte-carlo">4.2. Least-Squares Monte Carlo</a></li>
 </ul>
             </nav>
         </div>
@@ -399,16 +400,21 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="pricing-american-options-by-lsmc-method">
-<h1><span class="section-number">3. </span>Pricing American Options by LSMC Method<a class="headerlink" href="#pricing-american-options-by-lsmc-method" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">4. </span>Pricing American Options by LSMC Method<a class="headerlink" href="#pricing-american-options-by-lsmc-method" title="Link to this heading">#</a></h1>
 <section id="simple-initial-example">
-<h2><span class="section-number">3.1. </span>Simple initial example<a class="headerlink" href="#simple-initial-example" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.1. </span>Simple initial example<a class="headerlink" href="#simple-initial-example" title="Link to this heading">#</a></h2>
 <p>The goal is to replicate the LSMC method implemented <a class="reference external" href="https://people.math.ethz.ch/~hjfurrer/teaching/LongstaffSchwartzAmericanOptionsLeastSquareMonteCarlo.pdf">here</a> which is considered to be an industry standard for pricing American (put) options.</p>
 <p>Other useful sources:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.youtube.com/watch?v=4KAqgK_85UI&amp;amp;list=PLJ9XZsVSloaQ3bkTpJvWHEEjWiW27F8Zx&amp;amp;index=29">Youtube lecture series</a> (1-3)</p></li>
 <li><p>Tools for Computational Finance by R. U. Seydel</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Libraries</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -417,6 +423,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -965,7 +972,7 @@ Early exercise premium = 0.05805
 </div>
 </section>
 <section id="least-squares-monte-carlo">
-<h2><span class="section-number">3.2. </span>Least-Squares Monte Carlo<a class="headerlink" href="#least-squares-monte-carlo" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.2. </span>Least-Squares Monte Carlo<a class="headerlink" href="#least-squares-monte-carlo" title="Link to this heading">#</a></h2>
 <p>Now, instead of considering the fixed paths, we will generate the paths by Monte Carlo under the standard Geometric Brownian motion, $<span class="math notranslate nohighlight">\(\mathrm{d}S_t = \mu S_t \mathrm{d}t + \sigma S_t \mathrm{d}W_t,\)</span><span class="math notranslate nohighlight">\( where \)</span>S_t<span class="math notranslate nohighlight">\( - stock price, \)</span>W_t$ - standard Brownian motion.</p>
 <p>First, we will consider the exact price given by Black-Scholes model and simulate the paths under GBM.</p>
 <p>Second, we will develop LSMC-pricer function using the Laguerre polynomials as implemented in the paper.</p>
@@ -1297,12 +1304,12 @@ Early exercise premium = 0.05805
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="HestonModelExact6.html"
+       href="LongSchAlgo.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">2. </span>Stage 2 - Exact Heston Model Simuations</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Intuition behind the Longstaff-Schwartz implementation</p>
       </div>
     </a>
     <a class="right-next"
@@ -1310,7 +1317,7 @@ Early exercise premium = 0.05805
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">4. </span>Finite Difference for Pricing American Options</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Pricing American Options by Finite Difference</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1330,8 +1337,8 @@ Early exercise premium = 0.05805
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-initial-example">3.1. Simple initial example</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-monte-carlo">3.2. Least-Squares Monte Carlo</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-initial-example">4.1. Simple initial example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-monte-carlo">4.2. Least-Squares Monte Carlo</a></li>
 </ul>
   </nav></div>
 

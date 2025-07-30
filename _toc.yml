@@ -15,5 +15,6 @@ parts:
 - caption: Pricing American Options - replicating Longstaff-Schwarz (2001)
   numbered: True
   chapters:
+  - file: LongSchAlgo
   - file: LSMC
   - file: FD
