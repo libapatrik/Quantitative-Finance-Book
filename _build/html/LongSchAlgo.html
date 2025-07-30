@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'LongSchAlgo';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -361,7 +363,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -377,6 +381,17 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-brownian-motion">3.1. Geometric Brownian Motion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -390,6 +405,11 @@ document.write(`
 <h1><span class="section-number">3. </span>Intuition behind the Longstaff-Schwartz implementation<a class="headerlink" href="#intuition-behind-the-longstaff-schwartz-implementation" title="Link to this heading">#</a></h1>
 <p>This notebook is heavily influenced by the <a class="reference external" href="https://quantgirluk.github.io/Understanding-Quantitative-Finance/AOS.html">Dr D. Santiago’s book</a> where she discusses the Longstaff-Schwartz Algorithm to price American options.</p>
 <p>I find this presentation provides a great intuition to the problem at hand.</p>
+<section id="geometric-brownian-motion">
+<h2><span class="section-number">3.1. </span>Geometric Brownian Motion<a class="headerlink" href="#geometric-brownian-motion" title="Link to this heading">#</a></h2>
+<p>We will assume that the dynamics of the prices of the underlying asset follows GBM. That is to say, that the Itô process <span class="math notranslate nohighlight">\(\{X_t\}_{t\in\mathbb{N}}\)</span> satisfies the following stochastic differential equation (SDE)
+$<span class="math notranslate nohighlight">\( \mathrm{d}X_t = rX_t \, \mathrm{d}t + \sigma X_t \mathrm{d}W_t   \)</span><span class="math notranslate nohighlight">\(
+with \)</span>X_0 = x_0 &gt; 0<span class="math notranslate nohighlight">\(, where \)</span>W_t<span class="math notranslate nohighlight">\( denotes a standard Brownian motion, and \)</span>r, \sigma$ are known parameters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
@@ -402,6 +422,17 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="parameters">
+<h2><span class="section-number">3.2. </span>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(r = 2\%\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma = 15\%\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_0 = 1.0\)</span>,</p></li>
+<li><p>Maturity <span class="math notranslate nohighlight">\(T=6\)</span> (6 months),</p></li>
+<li><p><span class="math notranslate nohighlight">\(N=50\)</span> - simulating <span class="math notranslate nohighlight">\(50\)</span> paths on the grid,</p></li>
+<li><p><span class="math notranslate nohighlight">\(n=120\)</span> - simulating <span class="math notranslate nohighlight">\(120\)</span> time-steps (points) [20 days per month].</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="mf">0.2</span>
@@ -428,9 +459,73 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/aac316788862060628d9992f23236253aaab3b78e05b3e854e21bc2f816fcbdc.png" src="_images/aac316788862060628d9992f23236253aaab3b78e05b3e854e21bc2f816fcbdc.png" />
+<img alt="_images/71c2a9a644d87860512b12e4041e2d439cba3817901cc17770f9937087250834.png" src="_images/71c2a9a644d87860512b12e4041e2d439cba3817901cc17770f9937087250834.png" />
 </div>
 </div>
+</section>
+<section id="american-option-contracts">
+<h2><span class="section-number">3.3. </span>American Option Contracts<a class="headerlink" href="#american-option-contracts" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(S_0 = 1.0\)</span> Initial stock price</p></li>
+<li><p>We consider American <span class="math notranslate nohighlight">\(\textcolor{red}{Put}\)</span> contract as a <strong>writter/seller</strong>.</p></li>
+<li><p>The <strong>holder/buyer</strong> has the right to exercise the option at any time between today (time <span class="math notranslate nohighlight">\(t_0 = 0\)</span>) and maturity <span class="math notranslate nohighlight">\(t_n = T = 6\)</span>.</p></li>
+<li><p>If the <em>holder</em> decides to exercise at time <span class="math notranslate nohighlight">\(t_i\)</span>, this means that he will <strong>sell</strong> the asset (whose market price os <span class="math notranslate nohighlight">\(S_{t_i}\)</span> at time <span class="math notranslate nohighlight">\(t = t_i\)</span>) at price $K = 1.1 to us (<em>writer</em>).</p></li>
+<li><p>Why put? Assuming no dividends are being paid, <strong>only</strong> for the put option it is sometimes optimal to exercise earlier.</p>
+<ul>
+<li><p>Why? Suppose we have a American call at time <span class="math notranslate nohighlight">\(t &lt; T\)</span> with the payoff <span class="math notranslate nohighlight">\([S_t - K]^+\)</span>.</p>
+<ul>
+<li><p>Alternative strategy: the option holder may short the underlying asset (which gives the payoff <span class="math notranslate nohighlight">\(S_t\)</span>), and purchsae the asset by the most favourable of</p>
+<ul>
+<li><p>exercise the American call at maturity, and</p></li>
+<li><p>buying at the market price at time <span class="math notranslate nohighlight">\(T\)</span>.</p></li>
+</ul>
+</li>
+<li><p>With the alternative strategy the holder has gained amount <span class="math notranslate nohighlight">\(S_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> and paid out an amount <span class="math notranslate nohighlight">\(\leq K\)</span> at time <span class="math notranslate nohighlight">\(T. This is clearly, better than gaining the different \)</span>S_t - K<span class="math notranslate nohighlight">\( at time \)</span>t$.</p></li>
+<li><p>Hence <em>it is never optimal to exercise an American call option before the expiry date</em>.</p></li>
+<li><p>American call option must have the same value as a European call option, i.e. <span class="math notranslate nohighlight">\(C^{AM} = C^{EU}\)</span>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>For a <strong>put option</strong>, early exercise <strong>can be optimal</strong>, because:</p>
+<ul>
+<li><p>You can receive  <span class="math notranslate nohighlight">\([K - S_t]\)</span> earlier and invest it,</p></li>
+<li><p>If the option is deep in the money (i.e., <span class="math notranslate nohighlight">\(S_t \ll K\)</span>) and interest rates are positive, early exercise may dominate holding,</p></li>
+<li><p>Hence: <span class="math notranslate nohighlight">\(P^{AM} \geq P^{EU}\)</span>, and strict inequality is possible</p></li>
+</ul>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">=</span> <span class="mf">1.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="discretisation-of-the-domain">
+<h2><span class="section-number">3.4. </span>Discretisation of the domain<a class="headerlink" href="#discretisation-of-the-domain" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>If <span class="math notranslate nohighlight">\(S_{t_i} \geq K\)</span>, then the holder has <strong>no</strong> incentive to exercise the option (i.e. selling the asset at price <span class="math notranslate nohighlight">\(K\)</span> makes no sense!)</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(S_{t_i} &lt; K\)</span>, then the option is In-The-Money (ITM) and rhe holder <strong>may want to exercise</strong> it. The payoff in case of exercise at time <span class="math notranslate nohighlight">\(t_i\)</span> would be <span class="math notranslate nohighlight">\(Y(t_i) = [K- S_{t_i}]^+\)</span></p></li>
+</ul>
+<p>Let us visualise the times when the simulated paths have a positive payoff.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gold&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">K</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;blue&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated paths $S_t$</span><span class="se">\n</span><span class="s2"> Gold if ITM, Blue otherwise&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/916b0ffa39a75115c12209ebb421a628edead8f485606611db30b885c4e639e0.png" src="_images/916b0ffa39a75115c12209ebb421a628edead8f485606611db30b885c4e639e0.png" />
+</div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -487,6 +582,24 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-brownian-motion">3.1. Geometric Brownian Motion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
