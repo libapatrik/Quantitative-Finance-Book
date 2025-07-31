@@ -390,6 +390,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#longstaff-schwartz-algorithm">3.5. Longstaff-Schwartz Algorithm</a></li>
 </ul>
             </nav>
         </div>
@@ -419,6 +420,18 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">aleatory.utils.plotters</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_paths</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">aleatory.styles</span><span class="w"> </span><span class="kn">import</span> <span class="n">qp_style</span>
+
+<span class="n">qp_style</span><span class="p">()</span>  <span class="c1"># Use quant-pastel-style</span>
+
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format =&#39;retina&#39;
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">my_style</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/quantgirluk/matplotlib-stylesheets/main/quant-pastel-light.mplstyle&quot;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">my_style</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.dpi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
 </pre></div>
 </div>
 </div>
@@ -436,7 +449,7 @@ document.write(`
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="mf">0.2</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="mf">0.02</span>
 <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.15</span>
 <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">T</span> <span class="o">=</span> <span class="mi">6</span>
@@ -460,7 +473,8 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5f2307f75e5708b21338f9d28af65289c35bf3b1a401cabfe89445076f42cd78.png" src="_images/5f2307f75e5708b21338f9d28af65289c35bf3b1a401cabfe89445076f42cd78.png" />
+<a class="reference internal image-reference" href="_images/07b642893bc69e19113bc02c27d835babd22698c9e28eacea22b6afa508e5731.png"><img alt="_images/07b642893bc69e19113bc02c27d835babd22698c9e28eacea22b6afa508e5731.png" src="_images/07b642893bc69e19113bc02c27d835babd22698c9e28eacea22b6afa508e5731.png" style="width: 991px; height: 614px;" />
+</a>
 </div>
 </div>
 </section>
@@ -468,7 +482,7 @@ document.write(`
 <h2><span class="section-number">3.3. </span>American Option Contracts<a class="headerlink" href="#american-option-contracts" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(S_0 = 1.0\)</span> Initial stock price</p></li>
-<li><p>We consider American <span class="math notranslate nohighlight">\(\textcolor{red}{Put}\)</span> contract as a <strong>writter/seller</strong>.</p></li>
+<li><p>We consider American put contract as a <strong>writter/seller</strong>.</p></li>
 <li><p>The <strong>holder/buyer</strong> has the right to exercise the option at any time between today (time <span class="math notranslate nohighlight">\(t_0 = 0\)</span>) and maturity <span class="math notranslate nohighlight">\(t_n = T = 6\)</span>.</p></li>
 <li><p>If the <em>holder</em> decides to exercise at time <span class="math notranslate nohighlight">\(t_i\)</span>, this means that he will <strong>sell</strong> the asset (whose market price os <span class="math notranslate nohighlight">\(S_{t_i}\)</span> at time <span class="math notranslate nohighlight">\(t = t_i\)</span>) at price $K = 1.1 to us (<em>writer</em>).</p></li>
 <li><p>Why put? Assuming no dividends are being paid, <strong>only</strong> for the put option it is sometimes optimal to exercise earlier.</p>
@@ -481,7 +495,8 @@ document.write(`
 <li><p>buying at the market price at time <span class="math notranslate nohighlight">\(T\)</span>.</p></li>
 </ul>
 </li>
-<li><p>With the alternative strategy the holder has gained amount <span class="math notranslate nohighlight">\(S_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> and paid out an amount <span class="math notranslate nohighlight">\(\leq K\)</span> at time <span class="math notranslate nohighlight">\(T. This is clearly, better than gaining the different \)</span>S_t - K<span class="math notranslate nohighlight">\( at time \)</span>t$.</p></li>
+<li><p>With the alternative strategy the holder has gained amount <span class="math notranslate nohighlight">\(S_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> and paid out an amount <span class="math notranslate nohighlight">\(\leq K\)</span> at time <span class="math notranslate nohighlight">\(T\)</span>.
+This is clearly, better than gaining the different <span class="math notranslate nohighlight">\(S_t - K\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
 <li><p>Hence <em>it is never optimal to exercise an American call option before the expiry date</em>.</p></li>
 <li><p>American call option must have the same value as a European call option, i.e. <span class="math notranslate nohighlight">\(C^{AM} = C^{EU}\)</span>.</p></li>
 </ul>
@@ -517,15 +532,54 @@ document.write(`
     <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gold&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">K</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;blue&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated paths $S_t$</span><span class="se">\n</span><span class="s2"> Gold if ITM, Blue otherwise&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated paths of $S_t$</span><span class="se">\n</span><span class="s2"> Gold if ITM, Blue otherwise&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/5fcf68c92e4d6bc1346f75e55fab8f504de3acbfd007aeda45c1a720012ea817.png" src="_images/5fcf68c92e4d6bc1346f75e55fab8f504de3acbfd007aeda45c1a720012ea817.png" />
+<a class="reference internal image-reference" href="_images/f5ddc8935ddd79c5f2b7a26b9582f15745bd29780217c7333baf7ec9c70190fa.png"><img alt="_images/f5ddc8935ddd79c5f2b7a26b9582f15745bd29780217c7333baf7ec9c70190fa.png" src="_images/f5ddc8935ddd79c5f2b7a26b9582f15745bd29780217c7333baf7ec9c70190fa.png" style="width: 984px; height: 620px;" />
+</a>
 </div>
 </div>
+<p>Next, we define the payoff function, recall <span class="math notranslate nohighlight">\([K- S_t]^+ = \max\{(K-S_t, 0)\}\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">exercise_value</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgrey&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated Payoffs\, $Y_t = [K- S_t]^+$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$Y_t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time $t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="_images/12a9f21fe6a1da9f6871cec5e69a74b0652206d9e4dafb91309da92308283824.png"><img alt="_images/12a9f21fe6a1da9f6871cec5e69a74b0652206d9e4dafb91309da92308283824.png" src="_images/12a9f21fe6a1da9f6871cec5e69a74b0652206d9e4dafb91309da92308283824.png" style="width: 995px; height: 621px;" />
+</a>
+</div>
+</div>
+<p>So, at every time <span class="math notranslate nohighlight">\(t_i\)</span>, the holder has the right to exercise the option to obtain the payoff,
+$<span class="math notranslate nohighlight">\( \textrm{Exercise Value} = Y_{t_i} = [K - S_{t_i}]^+. \)</span>$</p>
+<p>Now, the problem is that we do not know if its better to exercise or hold (continue to $t_{i+1}). For this we need to <em><strong>estimate continuation value</strong></em>, that is we need to look one step into the and compare (immediate) exercise value vs. continuation value.</p>
+<p>So, how do we estimate continuation value?
+$<span class="math notranslate nohighlight">\( \textrm{Continuation Value} = C_{t_i} = \, \textrm{?}\)</span>$</p>
+</section>
+<section id="longstaff-schwartz-algorithm">
+<h2><span class="section-number">3.5. </span>Longstaff-Schwartz Algorithm<a class="headerlink" href="#longstaff-schwartz-algorithm" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>In order to estimate continuation value, we follow the approach by Longstaff-Schwartz.</p></li>
+<li><p>The deomnstration by <a class="reference external" href="https://quantgirluk.github.io/Understanding-Quantitative-Finance/AOS.html">Dr D. Santiago’s book</a> provide great intuition.</p></li>
+</ul>
 </section>
 </section>
 
@@ -597,6 +651,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#longstaff-schwartz-algorithm">3.5. Longstaff-Schwartz Algorithm</a></li>
 </ul>
   </nav></div>
 

@@ -188,8 +188,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="LSMC.html">3. Pricing American Options by LSMC Method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FD.html">4. Finite Difference for Pricing American Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LSMC.html">4. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FD.html">5. Pricing American Options by Finite Difference</a></li>
 </ul>
 
     </div>
@@ -422,7 +423,7 @@ document.write(`
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ss</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ss</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">trapezoid</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -594,11 +595,11 @@ document.write(`
 </div>
 <img alt="_images/173da71079e15dc20bcff4486d3ea98fb02b4dd2be1363be679b165068a24064.png" src="_images/173da71079e15dc20bcff4486d3ea98fb02b4dd2be1363be679b165068a24064.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    N         Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   4  2.536344e-01          0.025034                   NaN
-1   8  1.074376e-01          0.015688             -0.009346
-2  16  7.158203e-03          0.020242              0.004554
-3  32  4.008963e-07          0.034189              0.013947
-4  64  3.330669e-16          0.061893              0.027704
+0   4  2.536344e-01          0.018144                   NaN
+1   8  1.074376e-01          0.015783             -0.002360
+2  16  7.158203e-03          0.020504              0.004721
+3  32  4.008963e-07          0.034833              0.014329
+4  64  3.330669e-16          0.063491              0.028658
 
 Testing CDF recovery:
 </pre></div>
@@ -777,12 +778,12 @@ Testing CDF recovery:
 </div>
 <img alt="_images/e8dd9a5e163eca969acc137d3bd98dcdf3ef9f30cd16b06d6ed0e95f86d2d863.png" src="_images/e8dd9a5e163eca969acc137d3bd98dcdf3ef9f30cd16b06d6ed0e95f86d2d863.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     N         Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   16  1.989435e+00          0.153542                   NaN
-1   32  9.947169e-01          0.177765              0.024223
-2   64  5.047621e-01          0.282812              0.105047
-3  128  3.989628e-01          0.579023              0.296211
-4  256  3.898076e-03          1.009655              0.430632
-5  512  1.110223e-16          2.281618              1.271963
+0   16  1.989435e+00          0.154638                   NaN
+1   32  9.947169e-01          0.202417              0.047779
+2   64  5.047621e-01          0.305414              0.102997
+3  128  3.989628e-01          1.047993              0.742579
+4  256  3.898076e-03          1.028442             -0.019550
+5  512  1.110223e-16          2.213287              1.184845
 
 Testing CDF recovery:
 </pre></div>
@@ -1092,12 +1093,12 @@ Testing CDF recovery:
 <img alt="_images/5faf09d2b0e03ff044945f0c20715e95af5f6045229699870eefddc79de4724b.png" src="_images/5faf09d2b0e03ff044945f0c20715e95af5f6045229699870eefddc79de4724b.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Convergence table:
      N     Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   16  0.016440          0.041914                   NaN
-1   32  0.004682          0.034499             -0.007415
-2   64  0.001210          0.035620              0.001121
-3  128  0.000306          0.038624              0.003004
-4  256  0.000221          0.043678              0.005054
-5  512  0.000221          0.099897              0.056219
+0   16  0.016440          0.040531                   NaN
+1   32  0.004682          0.045323              0.004792
+2   64  0.001210          0.036097             -0.009227
+3  128  0.000306          0.039363              0.003266
+4  256  0.000221          0.044084              0.004721
+5  512  0.000221          0.086665              0.042582
 
 Testing CDF recovery:
 </pre></div>
