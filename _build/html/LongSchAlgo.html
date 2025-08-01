@@ -191,6 +191,7 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="LSMC.html">4. Pricing American Options by LSMC Method</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FD.html">5. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">6. Pricing American Options by COS method</a></li>
 </ul>
 
     </div>
@@ -390,7 +391,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#longstaff-schwartz-algorithm">3.5. Longstaff-Schwartz Algorithm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">3.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">3.5.1. Laguerre Polynomials (paper)</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -412,7 +416,7 @@ document.write(`
 <div class="math notranslate nohighlight">
 \[ \mathrm{d}X_t = rX_t \, \mathrm{d}t + \sigma X_t \, \mathrm{d}W_t   \]</div>
 <p>with <span class="math notranslate nohighlight">\(X_0 = x_0 &gt; 0\)</span>, where <span class="math notranslate nohighlight">\(W_t\)</span> denotes a standard Brownian motion, and <span class="math notranslate nohighlight">\(r, \sigma\)</span> are known parameters.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -473,7 +477,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/07b642893bc69e19113bc02c27d835babd22698c9e28eacea22b6afa508e5731.png"><img alt="_images/07b642893bc69e19113bc02c27d835babd22698c9e28eacea22b6afa508e5731.png" src="_images/07b642893bc69e19113bc02c27d835babd22698c9e28eacea22b6afa508e5731.png" style="width: 991px; height: 614px;" />
+<a class="reference internal image-reference" href="_images/54f73f4dc0867f613ba88d325c3ed8a798e14927c9820fe8d80cf19327e0ea36.png"><img alt="_images/54f73f4dc0867f613ba88d325c3ed8a798e14927c9820fe8d80cf19327e0ea36.png" src="_images/54f73f4dc0867f613ba88d325c3ed8a798e14927c9820fe8d80cf19327e0ea36.png" style="width: 991px; height: 614px;" />
 </a>
 </div>
 </div>
@@ -539,7 +543,7 @@ This is clearly, better than gaining the different <span class="math notranslate
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/f5ddc8935ddd79c5f2b7a26b9582f15745bd29780217c7333baf7ec9c70190fa.png"><img alt="_images/f5ddc8935ddd79c5f2b7a26b9582f15745bd29780217c7333baf7ec9c70190fa.png" src="_images/f5ddc8935ddd79c5f2b7a26b9582f15745bd29780217c7333baf7ec9c70190fa.png" style="width: 984px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/adb84699f468784f74fad80b9d316ae48de0d8edafbeb6551a298ac56e02da75.png"><img alt="_images/adb84699f468784f74fad80b9d316ae48de0d8edafbeb6551a298ac56e02da75.png" src="_images/adb84699f468784f74fad80b9d316ae48de0d8edafbeb6551a298ac56e02da75.png" style="width: 984px; height: 620px;" />
 </a>
 </div>
 </div>
@@ -564,22 +568,129 @@ This is clearly, better than gaining the different <span class="math notranslate
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/12a9f21fe6a1da9f6871cec5e69a74b0652206d9e4dafb91309da92308283824.png"><img alt="_images/12a9f21fe6a1da9f6871cec5e69a74b0652206d9e4dafb91309da92308283824.png" src="_images/12a9f21fe6a1da9f6871cec5e69a74b0652206d9e4dafb91309da92308283824.png" style="width: 995px; height: 621px;" />
+<a class="reference internal image-reference" href="_images/9f2f4cb5310726860a3ff49696b2574fec88b9a4fe03aa325c1c6e978ef8c43e.png"><img alt="_images/9f2f4cb5310726860a3ff49696b2574fec88b9a4fe03aa325c1c6e978ef8c43e.png" src="_images/9f2f4cb5310726860a3ff49696b2574fec88b9a4fe03aa325c1c6e978ef8c43e.png" style="width: 995px; height: 621px;" />
 </a>
 </div>
 </div>
 <p>So, at every time <span class="math notranslate nohighlight">\(t_i\)</span>, the holder has the right to exercise the option to obtain the payoff,
-$<span class="math notranslate nohighlight">\( \textrm{Exercise Value} = Y_{t_i} = [K - S_{t_i}]^+. \)</span>$</p>
+$<span class="math notranslate nohighlight">\( \textrm{Exercise Value} = Y(t_i) = [K - S_{t_i}]^+. \)</span>$</p>
 <p>Now, the problem is that we do not know if its better to exercise or hold (continue to $t_{i+1}). For this we need to <em><strong>estimate continuation value</strong></em>, that is we need to look one step into the and compare (immediate) exercise value vs. continuation value.</p>
 <p>So, how do we estimate continuation value?
-$<span class="math notranslate nohighlight">\( \textrm{Continuation Value} = C_{t_i} = \, \textrm{?}\)</span>$</p>
+$<span class="math notranslate nohighlight">\( \textrm{Continuation Value} = C(t_i) = \, \textrm{?} \)</span>$</p>
 </section>
-<section id="longstaff-schwartz-algorithm">
-<h2><span class="section-number">3.5. </span>Longstaff-Schwartz Algorithm<a class="headerlink" href="#longstaff-schwartz-algorithm" title="Link to this heading">#</a></h2>
+<section id="to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">
+<h2><span class="section-number">3.5. </span>To exercise or not to exercise - Longstaff-Schwartz Algorithm<a class="headerlink" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Why is the Monte Carlo computationally infeasible?</p>
+<ul>
+<li><p>For a fixed <span class="math notranslate nohighlight">\(\omega\)</span>-path, at each node, we need to decide whether to exercise the option or not, whereas the continuation value is not known without either embedding another MC simulation at each node of each time lattice or a prior exercise strategy, since
+$<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\mathbb{E}[V(X_{t_n}, t_n) \mid X_{t_{n-1}} = x] \)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\( V(x, t_{n-1}) = \max\{ \Lambda(x, t_{n-1}, \, C(x, t_{n-1})  \} \)</span>$</p></li>
+</ul>
+</li>
+</ul>
+<p>NOTE: Add the content from Germany!</p>
 <ul class="simple">
 <li><p>In order to estimate continuation value, we follow the approach by Longstaff-Schwartz.</p></li>
 <li><p>The deomnstration by <a class="reference external" href="https://quantgirluk.github.io/Understanding-Quantitative-Finance/AOS.html">Dr D. Santiago’s book</a> provide great intuition.</p></li>
 </ul>
+<p>First, lets plot the discounted cashflows.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cashflow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> 
+<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$V(t_{n-1}, t_n)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Underlying Asset Price $X(t_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;At time $t_{n-1}$ we want to approximate the </span><span class="se">\n</span><span class="s2">Continuation values $C(t_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="_images/589eb3c600b85f4d91a45c24e993a2192a1db45212a89f77db9b25e02dd7df11.png"><img alt="_images/589eb3c600b85f4d91a45c24e993a2192a1db45212a89f77db9b25e02dd7df11.png" src="_images/589eb3c600b85f4d91a45c24e993a2192a1db45212a89f77db9b25e02dd7df11.png" style="width: 996px; height: 639px;" />
+</a>
+</div>
+</div>
+<p>Second, in order to estimate the continuation value (or, the conditional expectation), the Longstaff-Schwartz implementation makes use of least-squares method to fit a polynomial function to the pairs</p>
+<div class="math notranslate nohighlight">
+\[ (X(t_{n-1}, \omega), \, V(t_{n-1}, \omega))\]</div>
+<p>and then using such polynomials to approximate the continuation value as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split} C(t_{n-1}) \approx \sum_{j=0}^{\\infty} \hat{\alpha}_{ij}L_j(X(t_{i})) \end{split}\]</div>
+<ul class="simple">
+<li><p>So the question is, what if we could do approximation with simple functions (basis functions) multiplied with some weights?</p></li>
+</ul>
+<p>So, we need to make two choices:
+1 Polynomial functions e.g. Laguerre (used in paper), Hermite, Chebyshev, Jacobiused as basis functions.
+2 Degree of the Polynomial.</p>
+<section id="laguerre-polynomials-paper">
+<h3><span class="section-number">3.5.1. </span>Laguerre Polynomials (paper)<a class="headerlink" href="#laguerre-polynomials-paper" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Laguerre polynomial</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Fit the Laguerre polynomials</span>
+<span class="n">fitted_laguerre</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Laguerre</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_laguerre</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Laguerre Polynomial&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Laguerre polynomial fitted to pairs $(X(t_{n-1}, \omega), \, V(t_{n-1}, \omega))$</span><span class="se">\n</span><span class="s2"> to approximate the $C(t_{n-1})$-continuation value&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$X(t_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$V(t_{n-1}, t_n)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="_images/ed1bc764b65cd58b3d6f422f0b1334ae55a46f560fcccf871e9a21b6d47fef67.png"><img alt="_images/ed1bc764b65cd58b3d6f422f0b1334ae55a46f560fcccf871e9a21b6d47fef67.png" src="_images/ed1bc764b65cd58b3d6f422f0b1334ae55a46f560fcccf871e9a21b6d47fef67.png" style="width: 996px; height: 640px;" />
+</a>
+</div>
+</div>
+<p>Where the associated least-sqaures equation takes the following form:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fitted_laguerre</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_latex math notranslate nohighlight">
+\[x \mapsto \text{-41.30301849}\,{L}_{0}(\text{-0.32486337} + \text{0.62612158}x) + \text{184.33597061}\,{L}_{1}(\text{-0.32486337} + \text{0.62612158}x) - \text{306.57026976}\,{L}_{2}(\text{-0.32486337} + \text{0.62612158}x) + \text{225.70243256}\,{L}_{3}(\text{-0.32486337} + \text{0.62612158}x) - \text{61.55735272}\,{L}_{4}(\text{-0.32486337} + \text{0.62612158}x)\]</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Combined polynomial</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Fit the Laguerre polynomials</span>
+<span class="n">fitted_laguerre</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Laguerre</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">fitted_hermite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Hermite</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">fitted_chebyshev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Chebyshev</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_laguerre</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Laguerre Polynomial (deg=6)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_hermite</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Hermite Polynomial  (deg=3)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_chebyshev</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Chebyshev Polynomial  (deg=8)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Combined polynomials fitted to pairs $(X(t_{n-1}, \omega), \, V(t_{n-1}, \omega))$</span><span class="se">\n</span><span class="s2"> to approximate the $C(t_{n-1})$-continuation value&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$X(t_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$V(t_{n-1}, t_n)$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="_images/9a419402181fa38a2a1de2165acbd40ebdd35a0ae4642b49048bf2eda3b0cd3a.png"><img alt="_images/9a419402181fa38a2a1de2165acbd40ebdd35a0ae4642b49048bf2eda3b0cd3a.png" src="_images/9a419402181fa38a2a1de2165acbd40ebdd35a0ae4642b49048bf2eda3b0cd3a.png" style="width: 996px; height: 640px;" />
+</a>
+</div>
+</div>
+</section>
 </section>
 </section>
 
@@ -651,7 +762,10 @@ $<span class="math notranslate nohighlight">\( \textrm{Continuation Value} = C_{
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#longstaff-schwartz-algorithm">3.5. Longstaff-Schwartz Algorithm</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">3.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">3.5.1. Laguerre Polynomials (paper)</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

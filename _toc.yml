@@ -18,3 +18,4 @@ parts:
   - file: LongSchAlgo
   - file: LSMC
   - file: FD
+  - file: COS_AMpricer
