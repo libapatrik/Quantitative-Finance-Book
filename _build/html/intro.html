@@ -365,7 +365,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -381,6 +383,16 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#welcome-to-my-problem-book">Welcome to my problem book</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -392,11 +404,12 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="quantitative-finance-book">
 <h1>Quantitative Finance Book<a class="headerlink" href="#quantitative-finance-book" title="Link to this heading">#</a></h1>
-<p>This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out <a class="reference external" href="https://jupyterbook.org">the Jupyter Book documentation</a> for more information.</p>
-<p>Check out the content pages bundled with this sample book to see more.</p>
+<section id="welcome-to-my-problem-book">
+<h2>Welcome to my problem book<a class="headerlink" href="#welcome-to-my-problem-book" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Goal of this book is to summarise key topics encountered, analyse them deeper and extend them further.</p></li>
+<li><p>Emphasis will be put on developing intuition and decomposing these often tricky topics in simple words.</p></li>
+</ul>
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
 <ul>
@@ -413,6 +426,7 @@ It does not go in-depth into any particular topic - check out <a class="referenc
 <li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">6. Pricing American Options by COS method</a></li>
 </ul>
 </div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -460,6 +474,23 @@ It does not go in-depth into any particular topic - check out <a class="referenc
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#welcome-to-my-problem-book">Welcome to my problem book</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

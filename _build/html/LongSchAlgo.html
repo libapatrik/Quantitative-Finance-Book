@@ -393,6 +393,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">3.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">3.5.1. Laguerre Polynomials (paper)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-backwards-in-time">3.5.2. Iterating Backwards in Time</a></li>
 </ul>
 </li>
 </ul>
@@ -477,7 +478,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/54f73f4dc0867f613ba88d325c3ed8a798e14927c9820fe8d80cf19327e0ea36.png"><img alt="_images/54f73f4dc0867f613ba88d325c3ed8a798e14927c9820fe8d80cf19327e0ea36.png" src="_images/54f73f4dc0867f613ba88d325c3ed8a798e14927c9820fe8d80cf19327e0ea36.png" style="width: 991px; height: 614px;" />
+<a class="reference internal image-reference" href="_images/c97774f89c1486234f86195611a37730cc6f4943c0a6b697cb3c480f3a2d585b.png"><img alt="_images/c97774f89c1486234f86195611a37730cc6f4943c0a6b697cb3c480f3a2d585b.png" src="_images/c97774f89c1486234f86195611a37730cc6f4943c0a6b697cb3c480f3a2d585b.png" style="width: 991px; height: 614px;" />
 </a>
 </div>
 </div>
@@ -543,7 +544,7 @@ This is clearly, better than gaining the different <span class="math notranslate
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/adb84699f468784f74fad80b9d316ae48de0d8edafbeb6551a298ac56e02da75.png"><img alt="_images/adb84699f468784f74fad80b9d316ae48de0d8edafbeb6551a298ac56e02da75.png" src="_images/adb84699f468784f74fad80b9d316ae48de0d8edafbeb6551a298ac56e02da75.png" style="width: 984px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/9f449e2a84239415198e7be91a3e5b14c78461cd31103d533968886e9e6d1f05.png"><img alt="_images/9f449e2a84239415198e7be91a3e5b14c78461cd31103d533968886e9e6d1f05.png" src="_images/9f449e2a84239415198e7be91a3e5b14c78461cd31103d533968886e9e6d1f05.png" style="width: 977px; height: 620px;" />
 </a>
 </div>
 </div>
@@ -568,7 +569,7 @@ This is clearly, better than gaining the different <span class="math notranslate
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/9f2f4cb5310726860a3ff49696b2574fec88b9a4fe03aa325c1c6e978ef8c43e.png"><img alt="_images/9f2f4cb5310726860a3ff49696b2574fec88b9a4fe03aa325c1c6e978ef8c43e.png" src="_images/9f2f4cb5310726860a3ff49696b2574fec88b9a4fe03aa325c1c6e978ef8c43e.png" style="width: 995px; height: 621px;" />
+<a class="reference internal image-reference" href="_images/07a36e421a31f8b196783901bbda4ea7ede2d838a12c3ca3eb09146a51f85821.png"><img alt="_images/07a36e421a31f8b196783901bbda4ea7ede2d838a12c3ca3eb09146a51f85821.png" src="_images/07a36e421a31f8b196783901bbda4ea7ede2d838a12c3ca3eb09146a51f85821.png" style="width: 995px; height: 621px;" />
 </a>
 </div>
 </div>
@@ -610,7 +611,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/589eb3c600b85f4d91a45c24e993a2192a1db45212a89f77db9b25e02dd7df11.png"><img alt="_images/589eb3c600b85f4d91a45c24e993a2192a1db45212a89f77db9b25e02dd7df11.png" src="_images/589eb3c600b85f4d91a45c24e993a2192a1db45212a89f77db9b25e02dd7df11.png" style="width: 996px; height: 639px;" />
+<a class="reference internal image-reference" href="_images/4e8bb354c81ac68cd6d93ec67c9f4fb97444ff0c90733c8a0fbc9ad3cd9d0a6b.png"><img alt="_images/4e8bb354c81ac68cd6d93ec67c9f4fb97444ff0c90733c8a0fbc9ad3cd9d0a6b.png" src="_images/4e8bb354c81ac68cd6d93ec67c9f4fb97444ff0c90733c8a0fbc9ad3cd9d0a6b.png" style="width: 996px; height: 639px;" />
 </a>
 </div>
 </div>
@@ -630,7 +631,9 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 <h3><span class="section-number">3.5.1. </span>Laguerre Polynomials (paper)<a class="headerlink" href="#laguerre-polynomials-paper" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Laguerre polynomial</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cashflow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> 
+<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+<span class="c1"># Laguerre polynomial</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -648,7 +651,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/ed1bc764b65cd58b3d6f422f0b1334ae55a46f560fcccf871e9a21b6d47fef67.png"><img alt="_images/ed1bc764b65cd58b3d6f422f0b1334ae55a46f560fcccf871e9a21b6d47fef67.png" src="_images/ed1bc764b65cd58b3d6f422f0b1334ae55a46f560fcccf871e9a21b6d47fef67.png" style="width: 996px; height: 640px;" />
+<a class="reference internal image-reference" href="_images/0ada5790ffecc4617aae6ab2249893e51d06ced879c856c44aa44db4f7dcb396.png"><img alt="_images/0ada5790ffecc4617aae6ab2249893e51d06ced879c856c44aa44db4f7dcb396.png" src="_images/0ada5790ffecc4617aae6ab2249893e51d06ced879c856c44aa44db4f7dcb396.png" style="width: 996px; height: 640px;" />
 </a>
 </div>
 </div>
@@ -661,12 +664,14 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 <div class="cell_output docutils container">
 <div class="output text_latex math notranslate nohighlight">
-\[x \mapsto \text{-41.30301849}\,{L}_{0}(\text{-0.32486337} + \text{0.62612158}x) + \text{184.33597061}\,{L}_{1}(\text{-0.32486337} + \text{0.62612158}x) - \text{306.57026976}\,{L}_{2}(\text{-0.32486337} + \text{0.62612158}x) + \text{225.70243256}\,{L}_{3}(\text{-0.32486337} + \text{0.62612158}x) - \text{61.55735272}\,{L}_{4}(\text{-0.32486337} + \text{0.62612158}x)\]</div>
+\[x \mapsto \text{-41.88866619}\,{L}_{0}(\text{-0.18830334} + \text{0.44472962}x) + \text{182.84843219}\,{L}_{1}(\text{-0.18830334} + \text{0.44472962}x) - \text{296.06470699}\,{L}_{2}(\text{-0.18830334} + \text{0.44472962}x) + \text{210.77650695}\,{L}_{3}(\text{-0.18830334} + \text{0.44472962}x) - \text{54.93984558}\,{L}_{4}(\text{-0.18830334} + \text{0.44472962}x)\]</div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Combined polynomial</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cashflow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> 
+<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+<span class="c1"># Combined polynomial</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -674,9 +679,9 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 <span class="n">fitted_laguerre</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Laguerre</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 <span class="n">fitted_hermite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Hermite</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">fitted_chebyshev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Chebyshev</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_laguerre</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Laguerre Polynomial (deg=6)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_hermite</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Hermite Polynomial  (deg=3)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_chebyshev</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Chebyshev Polynomial  (deg=8)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_laguerre</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Laguerre Polynomial (deg=6)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_hermite</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Hermite Polynomial  (deg=3)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted_chebyshev</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Chebyshev Polynomial  (deg=8)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Combined polynomials fitted to pairs $(X(t_{n-1}, \omega), \, V(t_{n-1}, \omega))$</span><span class="se">\n</span><span class="s2"> to approximate the $C(t_{n-1})$-continuation value&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$X(t_{n-1})$&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$V(t_{n-1}, t_n)$&quot;</span><span class="p">)</span>
@@ -686,7 +691,185 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/9a419402181fa38a2a1de2165acbd40ebdd35a0ae4642b49048bf2eda3b0cd3a.png"><img alt="_images/9a419402181fa38a2a1de2165acbd40ebdd35a0ae4642b49048bf2eda3b0cd3a.png" src="_images/9a419402181fa38a2a1de2165acbd40ebdd35a0ae4642b49048bf2eda3b0cd3a.png" style="width: 996px; height: 640px;" />
+<a class="reference internal image-reference" href="_images/600f782a1f944bd0ef26dcd7363ff2abd1adcc3abd6264f0758cbeabdce514c2.png"><img alt="_images/600f782a1f944bd0ef26dcd7363ff2abd1adcc3abd6264f0758cbeabdce514c2.png" src="_images/600f782a1f944bd0ef26dcd7363ff2abd1adcc3abd6264f0758cbeabdce514c2.png" style="width: 996px; height: 640px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cashflow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> 
+<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">exercise</span> <span class="o">=</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">fitted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Polynomial</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># 3 degree as in paper</span>
+
+<span class="n">continuation</span> <span class="o">=</span> <span class="n">fitted</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Polynomial&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cashflow</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Strike K&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X(T_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fitted</span><span class="o">.</span><span class="n">linspace</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted Polynomial&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">exercise</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exercise&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">continuation</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Approximated Continuation Value&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Strike K&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X(T_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Approximation of Continuation Value (Using all points)&quot;</span><span class="p">)</span>
+<span class="c1"># fig.supxlabel(&quot;$X(T_{n-1})$&quot;)</span>
+<span class="c1"># fig.supylabel(&quot;Discounted Cashflow&quot;)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">fitted</span> <span class="c1"># return the equation</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="_images/bcaed2686db94c38622536a31fdc8ddfb2d8cc5076308adcf8f93dd122e8ec69.png"><img alt="_images/bcaed2686db94c38622536a31fdc8ddfb2d8cc5076308adcf8f93dd122e8ec69.png" src="_images/bcaed2686db94c38622536a31fdc8ddfb2d8cc5076308adcf8f93dd122e8ec69.png" style="width: 1150px; height: 584px;" />
+</a>
+<div class="output text_latex math notranslate nohighlight">
+\[x \mapsto \text{-0.03317051} - \text{0.03133425}\,\left(\text{-1.37660668} + \text{0.88945924}x\right) + \text{0.40850554}\,\left(\text{-1.37660668} + \text{0.88945924}x\right)^{2} - \text{0.35455093}\,\left(\text{-1.37660668} + \text{0.88945924}x\right)^{3}\]</div>
+</div>
+</div>
+<p>Now, we focus on only ITM points, i.e. the paths which ended up with non-zero payoff.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cashflow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> 
+<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">exercise</span> <span class="o">=</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># recall payoff function</span>
+<span class="n">itm</span> <span class="o">=</span> <span class="n">exercise</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="c1"># use as index</span>
+
+<span class="n">fitted_itm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Polynomial</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="n">cashflow</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">continuation</span> <span class="o">=</span> <span class="n">fitted_itm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="n">cashflow</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">itm</span><span class="p">],</span> <span class="n">cashflow</span><span class="p">[</span><span class="o">~</span><span class="n">itm</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Strike K&quot;</span><span class="p">)</span>
+
+<span class="n">aux</span> <span class="o">=</span> <span class="n">fitted</span><span class="o">.</span><span class="n">linspace</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> 
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span> <span class="n">fitted_itm</span><span class="p">(</span><span class="n">aux</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted ITM Polynomial&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span> <span class="n">fitted_itm</span><span class="p">(</span><span class="n">aux</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Fitted ITM Polynomial&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="n">exercise</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exercise&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="n">continuation</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Approximated Continuation Value&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">itm</span><span class="p">],</span> <span class="n">exercise</span><span class="p">[</span><span class="o">~</span><span class="n">itm</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">itm</span><span class="p">],</span> <span class="n">fitted_itm</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">itm</span><span class="p">]),</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X(T_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Discounted Cashflow&quot;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$X(T_{n-1})$&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Exercise vs Continuation&quot;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Approximation of Continuation Value (Using ITM points)&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">fitted_itm</span> <span class="c1"># return equation</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="_images/aaf13866b9e1a8d7efd501073c7c954f5eef01a4bd192c86541da9e8b0e6e335.png"><img alt="_images/aaf13866b9e1a8d7efd501073c7c954f5eef01a4bd192c86541da9e8b0e6e335.png" src="_images/aaf13866b9e1a8d7efd501073c7c954f5eef01a4bd192c86541da9e8b0e6e335.png" style="width: 1150px; height: 584px;" />
+</a>
+<div class="output text_latex math notranslate nohighlight">
+\[x \mapsto \text{0.34761852} - \text{0.30894465}\,\left(\text{-2.29789957} + \text{3.06534331}x\right) + \text{0.00174779}\,\left(\text{-2.29789957} + \text{3.06534331}x\right)^{2} - \text{0.02408072}\,\left(\text{-2.29789957} + \text{3.06534331}x\right)^{3}\]</div>
+</div>
+</div>
+</section>
+<section id="iterating-backwards-in-time">
+<h3><span class="section-number">3.5.2. </span>Iterating Backwards in Time<a class="headerlink" href="#iterating-backwards-in-time" title="Link to this heading">#</a></h3>
+<ul>
+<li><p>Starting at expiry (terminal node) <span class="math notranslate nohighlight">\(T = t_n\)</span></p></li>
+<li><p>At expiry <span class="math notranslate nohighlight">\(T\)</span>, the payoff is known: <span class="math notranslate nohighlight">\(U(t_n) = Y(t_n) = [K- S_{t_n}]^+\)</span>.</p></li>
+<li><p>At time <span class="math notranslate nohighlight">\(t_{n-1}\)</span>, we need to decide if to exercise or not to exercise, based on:
+$<span class="math notranslate nohighlight">\( U(t_{n-1}) = \max\{ Y(t_{n-1}, \, C(t_{n-1}) \} \)</span>$</p>
+<p>where <span class="math notranslate nohighlight">\(C(t_{n-1}) \} = e^{-r (t_n - t_{n-1})}\mathbb{E}[U(t_n) \mid \mathcal{F}_{n-1}] \)</span> and
+<span class="math notranslate nohighlight">\( Y(t_{n-1}) = [K- S_{t_{n-1}}]^+ \)</span>.</p>
+</li>
+<li><p>Notice that <strong>if</strong> the holder does not exercise, then the option behaves likes an European (the exercise decision has to be made in the next step and there is no early exit choice, so exercise at expiry) over the period <span class="math notranslate nohighlight">\( [t_n, t_{n-1}]\)</span>. Thus, we can discount the value <span class="math notranslate nohighlight">\(U(t_n)\)</span> and hence obtaining
+$<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(t_{n-1}, t_n) = e^{-r((t_n - t_{n-1}))} [K-S_{t_n}]^+.\)</span>$</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Moving step-by-step on each path  backwards</span>
+<span class="n">intermediate_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cashflow</span> <span class="o">=</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+
+<span class="c1"># Loop backwards in time</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+    <span class="c1"># One step discount factor, equidistant grid spacing</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="c1"># Discounted cashflows</span>
+    <span class="n">cashflow</span> <span class="o">=</span> <span class="n">cashflow</span> <span class="o">*</span> <span class="n">df</span> 
+    <span class="c1"># Stock price</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="c1"># Exercise value, at time t=i</span>
+    <span class="n">exercise</span> <span class="o">=</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># Index ITM paths</span>
+    <span class="n">itm</span> <span class="o">=</span> <span class="n">exercise</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="c1"># Fit polynomial to estimate continuation value</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Polynomial</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="n">cashflow</span><span class="p">[</span><span class="n">itm</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># degree 3</span>
+    <span class="c1"># Estimate continuation value, at time t=i</span>
+    <span class="n">continuation</span> <span class="o">=</span> <span class="n">fitted</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> 
+    <span class="c1"># Index where Exercise is optimal</span>
+    <span class="n">ex_idx</span> <span class="o">=</span> <span class="n">itm</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">exercise</span> <span class="o">&gt;</span> <span class="n">continuation</span><span class="p">)</span>
+    <span class="c1"># Update cashflow with early exercises</span>
+    <span class="n">cashflow</span><span class="p">[</span><span class="n">ex_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">exercise</span><span class="p">[</span><span class="n">ex_idx</span><span class="p">]</span>
+
+    <span class="n">intermediate_results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cashflow</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">continuation</span><span class="p">,</span> <span class="n">exercise</span><span class="p">,</span> <span class="n">ex_idx</span><span class="p">))</span>
+
+<span class="c1"># Define plotting approximation</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_approx_n</span><span class="p">(</span><span class="n">n_steps</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
+    <span class="n">cashflow</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">continuation</span><span class="p">,</span> <span class="n">exercise</span><span class="p">,</span> <span class="n">ex_idx</span> <span class="o">=</span> <span class="n">intermediate_results</span><span class="p">[</span><span class="n">n_steps</span><span class="p">]</span>
+    <span class="n">fitted_x</span><span class="p">,</span> <span class="n">fitted_y</span> <span class="o">=</span> <span class="n">fitted</span><span class="o">.</span><span class="n">linspace</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">ex_idx</span><span class="p">],</span> <span class="n">exercise</span><span class="p">[</span><span class="n">ex_idx</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Optimal to Exercise&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">ex_idx</span><span class="p">],</span> <span class="n">exercise</span><span class="p">[</span><span class="o">~</span><span class="n">ex_idx</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Optimal to Continue&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fitted_x</span><span class="p">,</span> <span class="n">fitted_y</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Approximated Continuation Value&quot;</span><span class="p">)</span>
+    <span class="n">_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">_x</span><span class="p">,</span> <span class="n">fitted</span><span class="p">(</span><span class="n">_x</span><span class="p">),</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgray&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">times</span> 
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">plot_approx_n</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Approximation of Continuation Value at t=</span><span class="si">{t[-i - 1]:0.2f}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X_t&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Exercise or Continue&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="_images/5805ac631576ace89c319586b6b2a141d039e2787e91edada3a8e3a46d56e5ac.png"><img alt="_images/5805ac631576ace89c319586b6b2a141d039e2787e91edada3a8e3a46d56e5ac.png" src="_images/5805ac631576ace89c319586b6b2a141d039e2787e91edada3a8e3a46d56e5ac.png" style="width: 1006px; height: 620px;" />
+</a>
+<a class="reference internal image-reference" href="_images/efe58b6ec06da83fb3916d01fbf016298a9f50746e4228f2fce4961c1e22de2b.png"><img alt="_images/efe58b6ec06da83fb3916d01fbf016298a9f50746e4228f2fce4961c1e22de2b.png" src="_images/efe58b6ec06da83fb3916d01fbf016298a9f50746e4228f2fce4961c1e22de2b.png" style="width: 992px; height: 620px;" />
+</a>
+<a class="reference internal image-reference" href="_images/4eba42cb5b186dc1a10ca35891c2dd1685ca543aaf6fb5bf7151d6f2417d7ed7.png"><img alt="_images/4eba42cb5b186dc1a10ca35891c2dd1685ca543aaf6fb5bf7151d6f2417d7ed7.png" src="_images/4eba42cb5b186dc1a10ca35891c2dd1685ca543aaf6fb5bf7151d6f2417d7ed7.png" style="width: 995px; height: 620px;" />
+</a>
+<a class="reference internal image-reference" href="_images/3a7feb8d231737368b65ca3121b2643f1da5d167f48938e0a2cebb37e5f0bc5b.png"><img alt="_images/3a7feb8d231737368b65ca3121b2643f1da5d167f48938e0a2cebb37e5f0bc5b.png" src="_images/3a7feb8d231737368b65ca3121b2643f1da5d167f48938e0a2cebb37e5f0bc5b.png" style="width: 1006px; height: 620px;" />
+</a>
+<a class="reference internal image-reference" href="_images/78abedff92fb220318237d48221ac860f62a835c279562b4b523702d8f992f98.png"><img alt="_images/78abedff92fb220318237d48221ac860f62a835c279562b4b523702d8f992f98.png" src="_images/78abedff92fb220318237d48221ac860f62a835c279562b4b523702d8f992f98.png" style="width: 1002px; height: 620px;" />
 </a>
 </div>
 </div>
@@ -764,6 +947,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">3.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">3.5.1. Laguerre Polynomials (paper)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-backwards-in-time">3.5.2. Iterating Backwards in Time</a></li>
 </ul>
 </li>
 </ul>
