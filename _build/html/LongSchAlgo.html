@@ -478,7 +478,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/ca41cc19ffe2a37c722ae5d21f906c4afb44350789a5d7fd0e0de47ed5db2d6b.png"><img alt="_images/ca41cc19ffe2a37c722ae5d21f906c4afb44350789a5d7fd0e0de47ed5db2d6b.png" src="_images/ca41cc19ffe2a37c722ae5d21f906c4afb44350789a5d7fd0e0de47ed5db2d6b.png" style="width: 991px; height: 614px;" />
+<a class="reference internal image-reference" href="_images/c80c183bc8ac2bd450a9d57c0563de79b7c847197520b4bef1d028aef60b0795.png"><img alt="_images/c80c183bc8ac2bd450a9d57c0563de79b7c847197520b4bef1d028aef60b0795.png" src="_images/c80c183bc8ac2bd450a9d57c0563de79b7c847197520b4bef1d028aef60b0795.png" style="width: 991px; height: 614px;" />
 </a>
 </div>
 </div>
@@ -489,10 +489,10 @@ document.write(`
 <li><p><span class="math notranslate nohighlight">\(S_0 = 1.0\)</span> Initial stock price</p></li>
 <li><p>We consider American put contract as a <strong>writter/seller</strong>.</p></li>
 <li><p>The <strong>holder/buyer</strong> has the right to exercise the option at any time between today (time <span class="math notranslate nohighlight">\(t_0 = 0\)</span>) and maturity <span class="math notranslate nohighlight">\(t_n = T = 6\)</span>.</p></li>
-<li><p>If the <em>holder</em> decides to exercise at time <span class="math notranslate nohighlight">\(t_i\)</span>, this means that he will <strong>sell</strong> the asset (whose market price os <span class="math notranslate nohighlight">\(S_{t_i}\)</span> at time <span class="math notranslate nohighlight">\(t = t_i\)</span>) at price $K = 1.1 to us (<em>writer</em>).</p></li>
+<li><p>If the <em>holder</em> decides to exercise at time <span class="math notranslate nohighlight">\(t_i\)</span>, this means that he will <strong>sell</strong> the asset (whose market price os <span class="math notranslate nohighlight">\(X_{t_i}\)</span> at time <span class="math notranslate nohighlight">\(t = t_i\)</span>) at price $K = 1.1 to us (<em>writer</em>).</p></li>
 <li><p>Why put? Assuming no dividends are being paid, <strong>only</strong> for the put option it is sometimes optimal to exercise earlier.</p>
 <ul>
-<li><p>Why? Suppose we have a American call at time <span class="math notranslate nohighlight">\(t &lt; T\)</span> with the payoff <span class="math notranslate nohighlight">\([S_t - K]^+\)</span>.</p>
+<li><p>Why? Suppose we have a American call at time <span class="math notranslate nohighlight">\(t &lt; T\)</span> with the payoff <span class="math notranslate nohighlight">\([X_t - K]^+\)</span>.</p>
 <ul>
 <li><p>Alternative strategy: the option holder may short the underlying asset (which gives the payoff <span class="math notranslate nohighlight">\(S_t\)</span>), and purchsae the asset by the most favourable of</p>
 <ul>
@@ -501,7 +501,7 @@ document.write(`
 </ul>
 </li>
 <li><p>With the alternative strategy the holder has gained amount <span class="math notranslate nohighlight">\(S_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span> and paid out an amount <span class="math notranslate nohighlight">\(\leq K\)</span> at time <span class="math notranslate nohighlight">\(T\)</span>.
-This is clearly, better than gaining the different <span class="math notranslate nohighlight">\(S_t - K\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+This is clearly, better than gaining the different <span class="math notranslate nohighlight">\(X_t - K\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
 <li><p>Hence <em>it is never optimal to exercise an American call option before the expiry date</em>.</p></li>
 <li><p>American call option must have the same value as a European call option, i.e. <span class="math notranslate nohighlight">\(C^{AM} = C^{EU}\)</span>.</p></li>
 </ul>
@@ -510,7 +510,7 @@ This is clearly, better than gaining the different <span class="math notranslate
 </li>
 <li><p>For a <strong>put option</strong>, early exercise <strong>can be optimal</strong>, because:</p>
 <ul>
-<li><p>You can receive  <span class="math notranslate nohighlight">\([K - S_t]\)</span> earlier and invest it,</p></li>
+<li><p>You can receive  <span class="math notranslate nohighlight">\([K - X_t]\)</span> earlier and invest it,</p></li>
 <li><p>If the option is deep in the money (i.e., <span class="math notranslate nohighlight">\(S_t \ll K\)</span>) and interest rates are positive, early exercise may dominate holding,</p></li>
 <li><p>Hence: <span class="math notranslate nohighlight">\(P^{AM} \geq P^{EU}\)</span>, and strict inequality is possible</p></li>
 </ul>
@@ -537,14 +537,21 @@ This is clearly, better than gaining the different <span class="math notranslate
     <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gold&#39;</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="o">&lt;</span><span class="n">K</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;blue&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated paths of $S_t$</span><span class="se">\n</span><span class="s2"> Gold if ITM, Blue otherwise&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated paths of $X_t$</span><span class="se">\n</span><span class="s2"> Gold if ITM, Blue otherwise&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time $t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$X_t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/3a14d6ef720c77fe886c659e6345f63652778f3bc2f9da9697c4ed08f03e6056.png"><img alt="_images/3a14d6ef720c77fe886c659e6345f63652778f3bc2f9da9697c4ed08f03e6056.png" src="_images/3a14d6ef720c77fe886c659e6345f63652778f3bc2f9da9697c4ed08f03e6056.png" style="width: 977px; height: 620px;" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_97360/4100275644.py:9: UserWarning: No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+  plt.legend()
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/2933fe0ccf42e496b36625c896e796fc7d0ddd5ded5f6b5c6e8711ab0f4a80f5.png"><img alt="_images/2933fe0ccf42e496b36625c896e796fc7d0ddd5ded5f6b5c6e8711ab0f4a80f5.png" src="_images/2933fe0ccf42e496b36625c896e796fc7d0ddd5ded5f6b5c6e8711ab0f4a80f5.png" style="width: 1002px; height: 638px;" />
 </a>
 </div>
 </div>
@@ -561,7 +568,7 @@ This is clearly, better than gaining the different <span class="math notranslate
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgrey&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated Payoffs\, $Y_t = [K- S_t]^+$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Simulated Payoffs\, $Y_t = [K- X_t]^+$&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$Y_t$&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time $t$&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -569,7 +576,7 @@ This is clearly, better than gaining the different <span class="math notranslate
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/d111b26cf0f21d584e8d60ed1f1682993cbad161cb99e97c65191ad6336e008f.png"><img alt="_images/d111b26cf0f21d584e8d60ed1f1682993cbad161cb99e97c65191ad6336e008f.png" src="_images/d111b26cf0f21d584e8d60ed1f1682993cbad161cb99e97c65191ad6336e008f.png" style="width: 995px; height: 621px;" />
+<a class="reference internal image-reference" href="_images/cb9213b8bd504968bf1ccf6b80ee1de9e2d7abfbe6fdaa94df92ecba14358a8b.png"><img alt="_images/cb9213b8bd504968bf1ccf6b80ee1de9e2d7abfbe6fdaa94df92ecba14358a8b.png" src="_images/cb9213b8bd504968bf1ccf6b80ee1de9e2d7abfbe6fdaa94df92ecba14358a8b.png" style="width: 995px; height: 621px;" />
 </a>
 </div>
 </div>
@@ -593,7 +600,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 <p>NOTE: Add the content from Germany!</p>
 <ul class="simple">
 <li><p>In order to estimate continuation value, we follow the approach by Longstaff-Schwartz.</p></li>
-<li><p>The deomnstration by <a class="reference external" href="https://quantgirluk.github.io/Understanding-Quantitative-Finance/AOS.html">Dr D. Santiago’s book</a> provide great intuition.</p></li>
+<li><p>The demonstration by <a class="reference external" href="https://quantgirluk.github.io/Understanding-Quantitative-Finance/AOS.html">Dr D. Santiago’s book</a> provides great intuition.</p></li>
 </ul>
 <p>First, lets plot the discounted cashflows.</p>
 <div class="cell docutils container">
@@ -611,7 +618,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/da2ac613dba9c28f0ca0cb74f194ed5054315027424b9421c1f894ca9ddf9c23.png"><img alt="_images/da2ac613dba9c28f0ca0cb74f194ed5054315027424b9421c1f894ca9ddf9c23.png" src="_images/da2ac613dba9c28f0ca0cb74f194ed5054315027424b9421c1f894ca9ddf9c23.png" style="width: 996px; height: 639px;" />
+<a class="reference internal image-reference" href="_images/e2ccb12655aa6eee322a13d4159b2c7700d4c70f320357ed04849af661f16b17.png"><img alt="_images/e2ccb12655aa6eee322a13d4159b2c7700d4c70f320357ed04849af661f16b17.png" src="_images/e2ccb12655aa6eee322a13d4159b2c7700d4c70f320357ed04849af661f16b17.png" style="width: 996px; height: 639px;" />
 </a>
 </div>
 </div>
@@ -620,7 +627,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 \[ (X(t_{n-1}, \omega), \, V(t_{n-1}, \omega))\]</div>
 <p>and then using such polynomials to approximate the continuation value as</p>
 <div class="math notranslate nohighlight">
-\[\begin{split} C(t_{n-1}) \approx \sum_{j=0}^{\\infty} \hat{\alpha}_{ij}L_j(X(t_{i})) \end{split}\]</div>
+\[ C(t_{n-1}) \approx \sum_{j=0}^{\infty} \hat{\alpha}_{ij}L_j(X(t_{i})) \]</div>
 <ul class="simple">
 <li><p>So the question is, what if we could do approximation with simple functions (basis functions) multiplied with some weights?</p></li>
 </ul>
@@ -651,7 +658,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/0b08ecc1a6d573e76363a31192095f53c4b622824802c9faea80ed494fc14e97.png"><img alt="_images/0b08ecc1a6d573e76363a31192095f53c4b622824802c9faea80ed494fc14e97.png" src="_images/0b08ecc1a6d573e76363a31192095f53c4b622824802c9faea80ed494fc14e97.png" style="width: 996px; height: 640px;" />
+<a class="reference internal image-reference" href="_images/ce774581a8098fff3017f22bc98df5d559d03b7fc62c170327451536b0f37f8e.png"><img alt="_images/ce774581a8098fff3017f22bc98df5d559d03b7fc62c170327451536b0f37f8e.png" src="_images/ce774581a8098fff3017f22bc98df5d559d03b7fc62c170327451536b0f37f8e.png" style="width: 996px; height: 640px;" />
 </a>
 </div>
 </div>
@@ -664,7 +671,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 <div class="cell_output docutils container">
 <div class="output text_latex math notranslate nohighlight">
-\[x \mapsto \text{-104.44146762}\,{L}_{0}(\text{-0.20932337} + \text{0.51100025}x) + \text{468.69428048}\,{L}_{1}(\text{-0.20932337} + \text{0.51100025}x) - \text{786.83123644}\,{L}_{2}(\text{-0.20932337} + \text{0.51100025}x) + \text{586.33767523}\,{L}_{3}(\text{-0.20932337} + \text{0.51100025}x) - \text{163.05864606}\,{L}_{4}(\text{-0.20932337} + \text{0.51100025}x)\]</div>
+\[x \mapsto \text{-7.109304}\,{L}_{0}(\text{-0.31588946} + \text{0.55388985}x) + \text{25.60543706}\,{L}_{1}(\text{-0.31588946} + \text{0.55388985}x) - \text{29.5168389}\,{L}_{2}(\text{-0.31588946} + \text{0.55388985}x) + \text{9.83322959}\,{L}_{3}(\text{-0.31588946} + \text{0.55388985}x) + \text{1.7836768}\,{L}_{4}(\text{-0.31588946} + \text{0.55388985}x)\]</div>
 </div>
 </div>
 <div class="cell docutils container">
@@ -691,7 +698,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/24c5dd7946e3abc3e057c4af161dc08ac9f8240fafa596925e3c7dea7429a9bb.png"><img alt="_images/24c5dd7946e3abc3e057c4af161dc08ac9f8240fafa596925e3c7dea7429a9bb.png" src="_images/24c5dd7946e3abc3e057c4af161dc08ac9f8240fafa596925e3c7dea7429a9bb.png" style="width: 1007px; height: 640px;" />
+<a class="reference internal image-reference" href="_images/ad9c31e8f496725e94eceaee7d6f77e919fdf4e0b1d5d94970e2ed4b1444f23d.png"><img alt="_images/ad9c31e8f496725e94eceaee7d6f77e919fdf4e0b1d5d94970e2ed4b1444f23d.png" src="_images/ad9c31e8f496725e94eceaee7d6f77e919fdf4e0b1d5d94970e2ed4b1444f23d.png" style="width: 996px; height: 640px;" />
 </a>
 </div>
 </div>
@@ -731,10 +738,10 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/87704cbc63ef7650bbc12b4b4eac70806bd5bbfd0a1d9d40beccb44e2721ef40.png"><img alt="_images/87704cbc63ef7650bbc12b4b4eac70806bd5bbfd0a1d9d40beccb44e2721ef40.png" src="_images/87704cbc63ef7650bbc12b4b4eac70806bd5bbfd0a1d9d40beccb44e2721ef40.png" style="width: 1150px; height: 584px;" />
+<a class="reference internal image-reference" href="_images/b8ea8ef2855d1cc187e274e03076265f5cf3150e685edec3479c2a9379020921.png"><img alt="_images/b8ea8ef2855d1cc187e274e03076265f5cf3150e685edec3479c2a9379020921.png" src="_images/b8ea8ef2855d1cc187e274e03076265f5cf3150e685edec3479c2a9379020921.png" style="width: 1150px; height: 584px;" />
 </a>
 <div class="output text_latex math notranslate nohighlight">
-\[x \mapsto \text{-0.00664189} - \text{0.12786817}\,\left(\text{-1.41864675} + \text{1.0220005}x\right) + \text{0.39933443}\,\left(\text{-1.41864675} + \text{1.0220005}x\right)^{2} - \text{0.24417571}\,\left(\text{-1.41864675} + \text{1.0220005}x\right)^{3}\]</div>
+\[x \mapsto \text{-0.02034404} + \text{0.02699938}\,\left(\text{-1.63177893} + \text{1.10777969}x\right) + \text{0.30684348}\,\left(\text{-1.63177893} + \text{1.10777969}x\right)^{2} - \text{0.33548957}\,\left(\text{-1.63177893} + \text{1.10777969}x\right)^{3}\]</div>
 </div>
 </div>
 <p>Now, we focus on only ITM points, i.e. the paths which ended up with non-zero payoff.</p>
@@ -782,10 +789,10 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/5ee1a3a613d26742b06f4962ea5b2f794a7c297d8ce770e320742e821ce00c44.png"><img alt="_images/5ee1a3a613d26742b06f4962ea5b2f794a7c297d8ce770e320742e821ce00c44.png" src="_images/5ee1a3a613d26742b06f4962ea5b2f794a7c297d8ce770e320742e821ce00c44.png" style="width: 1161px; height: 584px;" />
+<a class="reference internal image-reference" href="_images/7375f74b89b04134a1a34f71a6223866acee1365420ac32e1369c73faeef7751.png"><img alt="_images/7375f74b89b04134a1a34f71a6223866acee1365420ac32e1369c73faeef7751.png" src="_images/7375f74b89b04134a1a34f71a6223866acee1365420ac32e1369c73faeef7751.png" style="width: 1140px; height: 584px;" />
 </a>
 <div class="output text_latex math notranslate nohighlight">
-\[x \mapsto \text{0.38853417} - \text{0.31807499}\,\left(\text{-2.30596966} + \text{3.18813331}x\right) - \text{0.01444517}\,\left(\text{-2.30596966} + \text{3.18813331}x\right)^{2} + \text{0.00615237}\,\left(\text{-2.30596966} + \text{3.18813331}x\right)^{3}\]</div>
+\[x \mapsto \text{0.28000651} - \text{0.27524591}\,\left(\text{-3.35041496} + \text{4.12128648}x\right) - \text{0.0139566}\,\left(\text{-3.35041496} + \text{4.12128648}x\right)^{2} + \text{0.02636697}\,\left(\text{-3.35041496} + \text{4.12128648}x\right)^{3}\]</div>
 </div>
 </div>
 </section>
@@ -861,15 +868,15 @@ $<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/d210fe65d301ca5b68323a68ec6064967af6d4b1ef26d2a105dfd5c6f69ef8e7.png"><img alt="_images/d210fe65d301ca5b68323a68ec6064967af6d4b1ef26d2a105dfd5c6f69ef8e7.png" src="_images/d210fe65d301ca5b68323a68ec6064967af6d4b1ef26d2a105dfd5c6f69ef8e7.png" style="width: 1002px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/c87eb13d71b1c831433aaa0654a0be2a3b610cee442f6584db65d985a89694d3.png"><img alt="_images/c87eb13d71b1c831433aaa0654a0be2a3b610cee442f6584db65d985a89694d3.png" src="_images/c87eb13d71b1c831433aaa0654a0be2a3b610cee442f6584db65d985a89694d3.png" style="width: 995px; height: 620px;" />
 </a>
-<a class="reference internal image-reference" href="_images/8b6258346732058716826e1ad2f30ad9c6807dcda0117bc3da7822cf3ea84b26.png"><img alt="_images/8b6258346732058716826e1ad2f30ad9c6807dcda0117bc3da7822cf3ea84b26.png" src="_images/8b6258346732058716826e1ad2f30ad9c6807dcda0117bc3da7822cf3ea84b26.png" style="width: 1006px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/ebb2ac09c7944e11e96e31c27961d305590bfb10f09bb8e6d4aeaa3069ebff25.png"><img alt="_images/ebb2ac09c7944e11e96e31c27961d305590bfb10f09bb8e6d4aeaa3069ebff25.png" src="_images/ebb2ac09c7944e11e96e31c27961d305590bfb10f09bb8e6d4aeaa3069ebff25.png" style="width: 1006px; height: 620px;" />
 </a>
-<a class="reference internal image-reference" href="_images/dcb56a4168c6af2490156d2bad78a3464aab5dd751c63d6d2711924c7b3a0ca6.png"><img alt="_images/dcb56a4168c6af2490156d2bad78a3464aab5dd751c63d6d2711924c7b3a0ca6.png" src="_images/dcb56a4168c6af2490156d2bad78a3464aab5dd751c63d6d2711924c7b3a0ca6.png" style="width: 995px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/a62c40d723aa153ad79529581354f175187e390a7b605efd0421fd530c661373.png"><img alt="_images/a62c40d723aa153ad79529581354f175187e390a7b605efd0421fd530c661373.png" src="_images/a62c40d723aa153ad79529581354f175187e390a7b605efd0421fd530c661373.png" style="width: 1002px; height: 620px;" />
 </a>
-<a class="reference internal image-reference" href="_images/4b78e737cbaf3caa30cb306c27f791eb6552fc564df4ee1ace118f0aa62bd340.png"><img alt="_images/4b78e737cbaf3caa30cb306c27f791eb6552fc564df4ee1ace118f0aa62bd340.png" src="_images/4b78e737cbaf3caa30cb306c27f791eb6552fc564df4ee1ace118f0aa62bd340.png" style="width: 1006px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/137005bfb52cf0a96109f44fe27a11bab02e03e2ec6d26aeeaa8dc99037aeae6.png"><img alt="_images/137005bfb52cf0a96109f44fe27a11bab02e03e2ec6d26aeeaa8dc99037aeae6.png" src="_images/137005bfb52cf0a96109f44fe27a11bab02e03e2ec6d26aeeaa8dc99037aeae6.png" style="width: 995px; height: 620px;" />
 </a>
-<a class="reference internal image-reference" href="_images/9cc73682771facd008fb29205828b4153156d29616fccc570ec445944fdd5e3c.png"><img alt="_images/9cc73682771facd008fb29205828b4153156d29616fccc570ec445944fdd5e3c.png" src="_images/9cc73682771facd008fb29205828b4153156d29616fccc570ec445944fdd5e3c.png" style="width: 1013px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/b46918aa9f1a7b382e63cdffcdb367053dfc00479515cd355623917ffad4ec44.png"><img alt="_images/b46918aa9f1a7b382e63cdffcdb367053dfc00479515cd355623917ffad4ec44.png" src="_images/b46918aa9f1a7b382e63cdffcdb367053dfc00479515cd355623917ffad4ec44.png" style="width: 995px; height: 620px;" />
 </a>
 </div>
 </div>
@@ -910,7 +917,7 @@ $<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/5c0e4226780198e68ce8cac7ef391fc54c21dcabaacbb493e050028d64902fbd.png"><img alt="_images/5c0e4226780198e68ce8cac7ef391fc54c21dcabaacbb493e050028d64902fbd.png" src="_images/5c0e4226780198e68ce8cac7ef391fc54c21dcabaacbb493e050028d64902fbd.png" style="width: 995px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/40b970672b9ae123aaeb15b8f5a8b2a7e7b69479b8b749fcbd658f32dbe17354.png"><img alt="_images/40b970672b9ae123aaeb15b8f5a8b2a7e7b69479b8b749fcbd658f32dbe17354.png" src="_images/40b970672b9ae123aaeb15b8f5a8b2a7e7b69479b8b749fcbd658f32dbe17354.png" style="width: 1002px; height: 620px;" />
 </a>
 </div>
 </div>
@@ -948,7 +955,7 @@ $<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/03e44cff2ed6fd6f7d57bc28eb201329e85397bf46d14d84c38b8cba9c067157.png"><img alt="_images/03e44cff2ed6fd6f7d57bc28eb201329e85397bf46d14d84c38b8cba9c067157.png" src="_images/03e44cff2ed6fd6f7d57bc28eb201329e85397bf46d14d84c38b8cba9c067157.png" style="width: 995px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/ee33406308234254f73487f8cf04517a4d96887aa893141eae3ef2d3a5cb6fa6.png"><img alt="_images/ee33406308234254f73487f8cf04517a4d96887aa893141eae3ef2d3a5cb6fa6.png" src="_images/ee33406308234254f73487f8cf04517a4d96887aa893141eae3ef2d3a5cb6fa6.png" style="width: 1002px; height: 620px;" />
 </a>
 </div>
 </div>
@@ -972,7 +979,7 @@ $<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="_images/e2364f70ec26b8f24d99ee3e4ac21a363e102fb8fcf8753cb2ea8aa6ae15b97c.png"><img alt="_images/e2364f70ec26b8f24d99ee3e4ac21a363e102fb8fcf8753cb2ea8aa6ae15b97c.png" src="_images/e2364f70ec26b8f24d99ee3e4ac21a363e102fb8fcf8753cb2ea8aa6ae15b97c.png" style="width: 995px; height: 620px;" />
+<a class="reference internal image-reference" href="_images/44bbfb1f90c4407af41ca817a347bf2a73eb2d842f732620ff6d9d6d00413800.png"><img alt="_images/44bbfb1f90c4407af41ca817a347bf2a73eb2d842f732620ff6d9d6d00413800.png" src="_images/44bbfb1f90c4407af41ca817a347bf2a73eb2d842f732620ff6d9d6d00413800.png" style="width: 1002px; height: 620px;" />
 </a>
 </div>
 </div>
