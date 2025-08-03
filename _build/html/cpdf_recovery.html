@@ -405,27 +405,21 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="stage-1-characteristic-functions-methods">
 <h1><span class="section-number">1. </span>Stage 1 - Characteristic Functions Methods<a class="headerlink" href="#stage-1-characteristic-functions-methods" title="Link to this heading">#</a></h1>
 <ul>
-<li><p>The COS method (see <a class="reference external" href="http://ta.twi.tudelft.nl/mf/users/oosterle/oosterlee/COS.pdf">Fang-Osterlee 2009</a>) is highly efficient semi-analyitcal algorithm to solve the expectation of a function of a random variable.</p></li>
-<li><p>Unlike FFT, COS does not require any numerical integration, thus is much faster.</p></li>
-<li><p>For a smooth function supported on a finite interval <span class="math notranslate nohighlight">\([a,b]\)</span>, the Fourier cosine expansion is</p>
+<li><p>If characteristic function is known then we can use characteristic functions (ch.f.) methods to approximate CDF and PDF. We define characteristic function of a random variable <span class="math notranslate nohighlight">\(X\)</span> as</p>
 <div class="math notranslate nohighlight">
-\[ f(x) = \frac{1}{2}A_0 + \sum^{+\infty}_{k=1} A_k \cdot \cos\left(k \pi \frac{x-a}{b-a}\right)\]</div>
+\[ \varphi_X(t) = \mathbb{E}[e^{itx}] = \int_{-\infty}^{+\infty} e^{itx}f_X(x) \, \mathrm{d}x. \]</div>
+<p>where <span class="math notranslate nohighlight">\(i\)</span> represents the imaginary unit.</p>
+</li>
+<li><p><span class="math notranslate nohighlight">\(F_X(x)\)</span>, the cumualative distribution function (CDF) of <span class="math notranslate nohighlight">\(X\)</span> completely determines the characteristic function <span class="math notranslate nohighlight">\(\varphi_X(x)\)</span>; and vice versa.</p>
 <ul class="simple">
-<li><p>So we will assume that we can make a periodic extension of the target function <span class="math notranslate nohighlight">\(f\)</span>, by choosing an interval <span class="math notranslate nohighlight">\([a,b]\)</span> such that we capture the the function “well enough”.</p></li>
+<li><p>i.e. if <span class="math notranslate nohighlight">\(X\)</span> admist a probability density function (PDF) <span class="math notranslate nohighlight">\(f_X(x)\)</span>, then <span class="math notranslate nohighlight">\(\varphi_X(x)\)</span> is its <strong>Fourier dual</strong>, in the sense that <span class="math notranslate nohighlight">\(f_X(x)\)</span> and <span class="math notranslate nohighlight">\(\varphi_X(x)\)</span> are the <strong>continuous Fourier transforms</strong> of each other.</p></li>
 </ul>
 </li>
-<li><p>Coefficients <span class="math notranslate nohighlight">\(A_k\)</span>’s can be directly sampled from the Fourier transform of <span class="math notranslate nohighlight">\(f(x)\)</span>.</p>
-<div class="math notranslate nohighlight">
-\[A_k = \frac{2}{b-a}\mathfrak{Re}\left\{ \varphi\left( \frac{k\pi}{b-a} \right)\cdot \exp\left(-i\frac{k\pi a}{b-a}\right)  \right\} \]</div>
-</li>
+<li><p>The inversion formula; going from characteristic function to pdf
+$<span class="math notranslate nohighlight">\( f_X(x) = \frac{1}{2\pi}\int_{-\infty}^{+\infty} e^{-itx}\varphi_X(t) \, \mathrm{d}t. \)</span>$</p></li>
+<li><p>If ch.f. of an option pricing model is known analytically or semi-analytically - for example Black-Scholes, Heston, Variance-Gamme process, Affine jump diffusion processes in general. Then, these ch.f. based methods can offer an efficient way of computing PDF by inverting the ch.f., and thus option price.</p></li>
+<li><p>Having the corresponding PDF it allows us to price the options, i.e. computing the following integral under risk-neutral probability measure <span class="math notranslate nohighlight">\(\mathbb{Q}\)</span>:</p></li>
 </ul>
-<p>where <span class="math notranslate nohighlight">\(\varphi(x) = \int^a_b e^{itx}f(x) \, \mathrm{d}x\)</span></p>
-<ul class="simple">
-<li><p>For a smooth probability densities <span class="math notranslate nohighlight">\(f(x)\)</span> supported on <span class="math notranslate nohighlight">\((-\infty, +\infty)\)</span> we can truncate the distribution on a large enough interval <span class="math notranslate nohighlight">\([a, b]\)</span> and replace <span class="math notranslate nohighlight">\(\varphi\)</span> in the definition of <span class="math notranslate nohighlight">\(A_k\)</span>’s by the characteristic function of <span class="math notranslate nohighlight">\(f(x)\)</span> as an accurate approximation.</p></li>
-<li><p>COS method is proved to converge exponentially for regular densities.</p></li>
-</ul>
-<p>If characteristic function is known then we can use effiecient methods to approximate CDF and PDF.</p>
-<p>Having the corresponding PDF it allows us to price the options, i.e. computing the following integral under risk-neutral probability measure <span class="math notranslate nohighlight">\(\mathbb{Q}\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[ v(x, t_0) = e^{-r\Delta t} \mathbb{E}^{\mathbb{Q}}[v(y, T) \, | \, x ] = e^{-r\Delta t} \int_\mathbb{R} v(y, T) f(y \mid x) \, \mathrm{d}y  \]</div>
 <section id="to-do">
@@ -453,6 +447,29 @@ document.write(`
 </div>
 </details>
 </div>
+</section>
+<section id="cos-method">
+<h2><span class="section-number">1.2. </span>COS method<a class="headerlink" href="#cos-method" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>The COS method (see <a class="reference external" href="http://ta.twi.tudelft.nl/mf/users/oosterle/oosterlee/COS.pdf">Fang-Osterlee 2009</a>) is highly efficient semi-analyitcal algorithm to solve the expectation of a function of a random variable.</p></li>
+<li><p>Unlike FFT, COS does not require any numerical integration, thus is much faster.</p></li>
+<li><p>For a smooth function supported on a finite interval <span class="math notranslate nohighlight">\([a,b]\)</span>, the Fourier cosine expansion is</p>
+<div class="math notranslate nohighlight">
+\[ f(x) = \frac{1}{2}A_0 + \sum^{+\infty}_{k=1} A_k \cdot \cos\left(k \pi \frac{x-a}{b-a}\right)\]</div>
+<ul class="simple">
+<li><p>So we will assume that we can make a periodic extension of the target function <span class="math notranslate nohighlight">\(f\)</span>, by choosing an interval <span class="math notranslate nohighlight">\([a,b]\)</span> such that we capture the the function “well enough”.</p></li>
+</ul>
+</li>
+<li><p>Coefficients <span class="math notranslate nohighlight">\(A_k\)</span>’s can be directly sampled from the Fourier transform of <span class="math notranslate nohighlight">\(f(x)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[A_k = \frac{2}{b-a}\mathfrak{Re}\left\{ \varphi\left( \frac{k\pi}{b-a} \right)\cdot \exp\left(-i\frac{k\pi a}{b-a}\right)  \right\} \]</div>
+</li>
+</ul>
+<p>where <span class="math notranslate nohighlight">\(\varphi(x) = \int^a_b e^{itx}f(x) \, \mathrm{d}x\)</span></p>
+<ul class="simple">
+<li><p>For a smooth probability densities <span class="math notranslate nohighlight">\(f(x)\)</span> supported on <span class="math notranslate nohighlight">\((-\infty, +\infty)\)</span> we can truncate the distribution on a large enough interval <span class="math notranslate nohighlight">\([a, b]\)</span> and replace <span class="math notranslate nohighlight">\(\varphi\)</span> in the definition of <span class="math notranslate nohighlight">\(A_k\)</span>’s by the characteristic function of <span class="math notranslate nohighlight">\(f(x)\)</span> as an accurate approximation.</p></li>
+<li><p>COS method is proved to converge exponentially for regular densities.</p></li>
+</ul>
 <p>To demonstrate each this,</p>
 <ul class="simple">
 <li><p>we evaluate the equation <span class="math notranslate nohighlight">\(f(x) = \frac{1}{\sqrt{2\pi}}e^{-1/2x^2}\)</span>,</p></li>
@@ -460,9 +477,6 @@ document.write(`
 <li><p>we choose interval <span class="math notranslate nohighlight">\([-10, 10]\)</span>,</p></li>
 <li><p>measure the error  at <span class="math notranslate nohighlight">\(x = \{-5, -4, \ldots, 4, 5 \}\)</span>.</p></li>
 </ul>
-</section>
-<section id="cos-method">
-<h2><span class="section-number">1.2. </span>COS method<a class="headerlink" href="#cos-method" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Recovery CDF</span>
@@ -623,11 +637,11 @@ document.write(`
 </div>
 <img alt="_images/173da71079e15dc20bcff4486d3ea98fb02b4dd2be1363be679b165068a24064.png" src="_images/173da71079e15dc20bcff4486d3ea98fb02b4dd2be1363be679b165068a24064.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    N         Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   4  2.536344e-01          0.039315                   NaN
-1   8  1.074376e-01          0.015187             -0.024128
-2  16  7.158203e-03          0.020409              0.005221
-3  32  4.008963e-07          0.034046              0.013638
-4  64  3.330669e-16          0.061798              0.027752
+0   4  2.536344e-01          0.013447                   NaN
+1   8  1.074376e-01          0.014877              0.001431
+2  16  7.158203e-03          0.020695              0.005817
+3  32  4.008963e-07          0.034094              0.013399
+4  64  3.330669e-16          0.061917              0.027823
 
 Testing CDF recovery:
 </pre></div>
@@ -641,6 +655,13 @@ Testing CDF recovery:
 </section>
 <section id="carr-madan-method">
 <h2><span class="section-number">1.3. </span>Carr-Madan method<a class="headerlink" href="#carr-madan-method" title="Link to this heading">#</a></h2>
+<p>To demonstrate each this,</p>
+<ul class="simple">
+<li><p>we evaluate the equation <span class="math notranslate nohighlight">\(f(x) = \frac{1}{\sqrt{2\pi}}e^{-1/2x^2}\)</span>,</p></li>
+<li><p>we determine the accuracy for different values of <span class="math notranslate nohighlight">\(N\)</span> - number of integration points,</p></li>
+<li><p>we choose interval <span class="math notranslate nohighlight">\([-10, 10]\)</span>,</p></li>
+<li><p>measure the error  at <span class="math notranslate nohighlight">\(x = \{-5, -4, \ldots, 4, 5 \}\)</span>.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">]</span>
@@ -806,12 +827,12 @@ Testing CDF recovery:
 </div>
 <img alt="_images/e8dd9a5e163eca969acc137d3bd98dcdf3ef9f30cd16b06d6ed0e95f86d2d863.png" src="_images/e8dd9a5e163eca969acc137d3bd98dcdf3ef9f30cd16b06d6ed0e95f86d2d863.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     N         Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   16  1.989435e+00          0.137377                   NaN
-1   32  9.947169e-01          0.167608              0.030231
-2   64  5.047621e-01          0.257158              0.089550
-3  128  3.989628e-01          0.534153              0.276995
-4  256  3.898076e-03          0.955009              0.420856
-5  512  1.110223e-16          2.199650              1.244640
+0   16  1.989435e+00          0.126648                   NaN
+1   32  9.947169e-01          0.153542              0.026894
+2   64  5.047621e-01          0.265884              0.112343
+3  128  3.989628e-01          0.576019              0.310135
+4  256  3.898076e-03          1.012802              0.436783
+5  512  1.110223e-16          2.223301              1.210499
 
 Testing CDF recovery:
 </pre></div>
@@ -825,6 +846,13 @@ Testing CDF recovery:
 </section>
 <section id="conv-method">
 <h2><span class="section-number">1.4. </span>CONV method<a class="headerlink" href="#conv-method" title="Link to this heading">#</a></h2>
+<p>To demonstrate each this,</p>
+<ul class="simple">
+<li><p>we evaluate the equation <span class="math notranslate nohighlight">\(f(x) = \frac{1}{\sqrt{2\pi}}e^{-1/2x^2}\)</span>,</p></li>
+<li><p>we determine the accuracy for different values of <span class="math notranslate nohighlight">\(N\)</span> - number of integration points,</p></li>
+<li><p>we choose interval <span class="math notranslate nohighlight">\([-10, 10]\)</span>,</p></li>
+<li><p>measure the error  at <span class="math notranslate nohighlight">\(x = \{-5, -4, \ldots, 4, 5 \}\)</span>.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">conv_pdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">):</span>
@@ -1072,8 +1100,7 @@ Testing CDF recovery:
 
 <span class="c1"># Test CDF recovery</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_conv_cdf</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Test CDF recovery for standard normal </span>
-<span class="sd">    TO DO: Add different Ns &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Test CDF recovery for standard normal &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">chf_normal</span><span class="p">(</span><span class="n">u</span><span class="p">):</span> 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     
@@ -1121,12 +1148,12 @@ Testing CDF recovery:
 <img alt="_images/5faf09d2b0e03ff044945f0c20715e95af5f6045229699870eefddc79de4724b.png" src="_images/5faf09d2b0e03ff044945f0c20715e95af5f6045229699870eefddc79de4724b.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Convergence table:
      N     Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   16  0.016440          0.041723                   NaN
-1   32  0.004682          0.034237             -0.007486
-2   64  0.001210          0.035596              0.001359
-3  128  0.000306          0.040221              0.004625
-4  256  0.000221          0.044322              0.004101
-5  512  0.000221          0.096798              0.052476
+0   16  0.016440          0.044537                   NaN
+1   32  0.004682          0.035024             -0.009513
+2   64  0.001210          0.035787              0.000763
+3  128  0.000306          0.039911              0.004125
+4  256  0.000221          0.044918              0.005007
+5  512  0.000221          0.114679              0.069761
 
 Testing CDF recovery:
 </pre></div>
@@ -1187,6 +1214,13 @@ Testing CDF recovery:
     <span class="p">})</span>
     
     <span class="k">return</span> <span class="n">table</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">summary_convergence_table</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;function summary_convergence_table at 0x12583d990&gt;
 </pre></div>
 </div>
 </div>
