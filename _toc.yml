@@ -11,6 +11,8 @@ parts:
   chapters:
   - file: cpdf_recovery
   - file: HestonModelExact6
+  - file: rHeston
+  
 
 - caption: Pricing American Options - replicating Longstaff-Schwarz (2001)
   numbered: True

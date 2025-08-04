@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2. Stage 2 - Exact Heston Model Simuations &#8212; Quantitative Finance Book</title>
+    <title>2. Exact Heston Model Simuations for Characteristic Function Methods &#8212; Quantitative Finance Book</title>
   
   
   
@@ -60,8 +60,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'HestonModelExact6';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="3. Intuition behind the Longstaff-Schwartz implementation" href="LongSchAlgo.html" />
-    <link rel="prev" title="1. Stage 1 - Characteristic Functions Methods" href="cpdf_recovery.html" />
+    <link rel="next" title="3. Rough Volatility Models" href="rHeston.html" />
+    <link rel="prev" title="1. Characteristic Functions Methods Approximating CDF/PDF" href="cpdf_recovery.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -181,15 +181,16 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Stage 1 - Characteristic Functions Methods</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Stage 2 - Exact Heston Model Simuations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rHeston.html">3. Rough Volatility Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LSMC.html">4. Pricing American Options by LSMC Method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FD.html">5. Pricing American Options by Finite Difference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">6. Pricing American Options by COS method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">4. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LSMC.html">5. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FD.html">6. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">7. Pricing American Options by COS method</a></li>
 </ul>
 
     </div>
@@ -375,7 +376,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Stage 2 - Exact Heston Model Simuations</h1>
+    <h1>Exact Heston Model Simuations for Characteristic Function Methods</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -398,8 +399,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="stage-2-exact-heston-model-simuations">
-<h1><span class="section-number">2. </span>Stage 2 - Exact Heston Model Simuations<a class="headerlink" href="#stage-2-exact-heston-model-simuations" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="exact-heston-model-simuations-for-characteristic-function-methods">
+<h1><span class="section-number">2. </span>Exact Heston Model Simuations for Characteristic Function Methods<a class="headerlink" href="#exact-heston-model-simuations-for-characteristic-function-methods" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><p>Here we do …</p></li>
 </ul>
@@ -866,26 +867,26 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Testing COS Method ===
 Using cos method for CDF recovery and inversion
-Computation time: 0.134 seconds
+Computation time: 0.135 seconds
 
 === Testing CARR_MADAN Method ===
 Using carr_madan method for CDF recovery and inversion
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computation time: 1.595 seconds
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computation time: 1.669 seconds
 
 === Testing CONV Method ===
 Using conv method for CDF recovery and inversion
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computation time: 10.036 seconds
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computation time: 10.465 seconds
 </pre></div>
 </div>
-<img alt="_images/eb2d8fd68d892ed1badc7835e76c5d06f69e920627dc2420dcaf8c0eca791b50.png" src="_images/eb2d8fd68d892ed1badc7835e76c5d06f69e920627dc2420dcaf8c0eca791b50.png" />
+<img alt="_images/5772aecfe7320a113ef99c642b3cbcba574877cd06f628d8983037837d3c5982.png" src="_images/5772aecfe7320a113ef99c642b3cbcba574877cd06f628d8983037837d3c5982.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Performance Comparison ===
-COS: 0.134 seconds
-CARR_MADAN: 1.595 seconds
-CONV: 10.036 seconds
+COS: 0.135 seconds
+CARR_MADAN: 1.669 seconds
+CONV: 10.465 seconds
 </pre></div>
 </div>
 </div>
@@ -1183,19 +1184,19 @@ CONV: 10.036 seconds
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_98177/2954915863.py:28: RuntimeWarning: invalid value encountered in scalar multiply
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_20733/2954915863.py:28: RuntimeWarning: invalid value encountered in scalar multiply
   chf = temp1 * temp2 * temp3 / temp4
-/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_98177/2954915863.py:28: RuntimeWarning: invalid value encountered in scalar divide
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_20733/2954915863.py:28: RuntimeWarning: invalid value encountered in scalar divide
   chf = temp1 * temp2 * temp3 / temp4
-/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_98177/2954915863.py:19: RuntimeWarning: invalid value encountered in divide
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_20733/2954915863.py:19: RuntimeWarning: invalid value encountered in divide
   temp1 = R * np.exp(-tau / 2.0 * (R - kappa)) * (1 - np.exp(-kappa * tau)) / (kappa * (1 - np.exp(-R * tau)))
-/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_98177/2954915863.py:21: RuntimeWarning: invalid value encountered in divide
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_20733/2954915863.py:21: RuntimeWarning: invalid value encountered in divide
   temp2 = np.exp((vu + vt) / gamma ** 2 * (kappa * (1 + np.exp(-kappa * tau)) / (1 - np.exp(-kappa * tau)) - R * (1 + np.exp(-R * tau)) / (1 - np.exp(-R * tau))))
-/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_98177/2954915863.py:24: RuntimeWarning: invalid value encountered in divide
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_20733/2954915863.py:24: RuntimeWarning: invalid value encountered in divide
   temp3 = ss.iv(0.5 * d - 1.0, np.sqrt(vt * vu) * 4.0 * R * np.exp(-R * tau / 2.0) / (gamma ** 2 * (1 - np.exp(-R * tau))))
 </pre></div>
 </div>
-<img alt="_images/d5321e31bfb9c4a17b7a19109b75fbea58959e1fd8afdb98f5b83c374c29fbb3.png" src="_images/d5321e31bfb9c4a17b7a19109b75fbea58959e1fd8afdb98f5b83c374c29fbb3.png" />
+<img alt="_images/118de32ba562217eedf40ccb5d5702788040ee49e5eb7bc12a083f52f7d7206e.png" src="_images/118de32ba562217eedf40ccb5d5702788040ee49e5eb7bc12a083f52f7d7206e.png" />
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1225,40 +1226,40 @@ CONV: 10.036 seconds
     <tr>
       <th>0</th>
       <td>4</td>
-      <td>1.027115</td>
-      <td>0.040698</td>
+      <td>1.046319</td>
+      <td>0.043338</td>
       <td>0.003782</td>
       <td>0.003759</td>
     </tr>
     <tr>
       <th>1</th>
       <td>8</td>
-      <td>2.021256</td>
-      <td>0.081620</td>
+      <td>2.076231</td>
+      <td>0.084755</td>
       <td>0.002805</td>
       <td>0.002788</td>
     </tr>
     <tr>
       <th>2</th>
       <td>16</td>
-      <td>4.035291</td>
-      <td>0.163361</td>
+      <td>4.165968</td>
+      <td>0.173807</td>
       <td>0.003679</td>
       <td>0.003659</td>
     </tr>
     <tr>
       <th>3</th>
       <td>32</td>
-      <td>8.062351</td>
-      <td>0.323202</td>
+      <td>8.432366</td>
+      <td>0.334635</td>
       <td>0.003089</td>
       <td>0.003083</td>
     </tr>
     <tr>
       <th>4</th>
       <td>64</td>
-      <td>16.287854</td>
-      <td>0.661313</td>
+      <td>16.574050</td>
+      <td>0.661785</td>
       <td>NaN</td>
       <td>0.003533</td>
     </tr>
@@ -1305,15 +1306,15 @@ CONV: 10.036 seconds
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">1. </span>Stage 1 - Characteristic Functions Methods</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Characteristic Functions Methods Approximating CDF/PDF</p>
       </div>
     </a>
     <a class="right-next"
-       href="LongSchAlgo.html"
+       href="rHeston.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">3. </span>Intuition behind the Longstaff-Schwartz implementation</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Rough Volatility Models</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

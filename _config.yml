@@ -40,3 +40,6 @@ parse:
   myst_enable_extensions:
     - dollarmath
     - amsmath
+
+bibtex_bibfiles:
+  - references.bib  

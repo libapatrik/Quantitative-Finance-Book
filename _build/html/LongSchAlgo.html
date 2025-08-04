@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>3. Intuition behind the Longstaff-Schwartz implementation &#8212; Quantitative Finance Book</title>
+    <title>4. Intuition behind the Longstaff-Schwartz implementation &#8212; Quantitative Finance Book</title>
   
   
   
@@ -62,8 +62,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'LongSchAlgo';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="4. Pricing American Options by LSMC Method" href="LSMC.html" />
-    <link rel="prev" title="2. Stage 2 - Exact Heston Model Simuations" href="HestonModelExact6.html" />
+    <link rel="next" title="5. Pricing American Options by LSMC Method" href="LSMC.html" />
+    <link rel="prev" title="3. Rough Volatility Models" href="rHeston.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -183,15 +183,16 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Stage 1 - Characteristic Functions Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Stage 2 - Exact Heston Model Simuations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rHeston.html">3. Rough Volatility Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LSMC.html">4. Pricing American Options by LSMC Method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FD.html">5. Pricing American Options by Finite Difference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">6. Pricing American Options by COS method</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LSMC.html">5. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FD.html">6. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">7. Pricing American Options by COS method</a></li>
 </ul>
 
     </div>
@@ -387,13 +388,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-brownian-motion">3.1. Geometric Brownian Motion</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">3.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">3.5.1. Laguerre Polynomials (paper)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-backwards-in-time">3.5.2. Iterating Backwards in Time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-brownian-motion">4.1. Geometric Brownian Motion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">4.2. Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">4.3. American Option Contracts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">4.4. Discretisation of the domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">4.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">4.5.1. Laguerre Polynomials (paper)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-backwards-in-time">4.5.2. Iterating Backwards in Time</a></li>
 </ul>
 </li>
 </ul>
@@ -408,11 +409,11 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="intuition-behind-the-longstaff-schwartz-implementation">
-<h1><span class="section-number">3. </span>Intuition behind the Longstaff-Schwartz implementation<a class="headerlink" href="#intuition-behind-the-longstaff-schwartz-implementation" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">4. </span>Intuition behind the Longstaff-Schwartz implementation<a class="headerlink" href="#intuition-behind-the-longstaff-schwartz-implementation" title="Link to this heading">#</a></h1>
 <p>This notebook is heavily influenced by the <a class="reference external" href="https://quantgirluk.github.io/Understanding-Quantitative-Finance/AOS.html">Dr D. Santiago’s book</a> where she discusses the Longstaff-Schwartz Algorithm to price American options.</p>
 <p>I find this presentation provides a great intuition to the problem at hand.</p>
 <section id="geometric-brownian-motion">
-<h2><span class="section-number">3.1. </span>Geometric Brownian Motion<a class="headerlink" href="#geometric-brownian-motion" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.1. </span>Geometric Brownian Motion<a class="headerlink" href="#geometric-brownian-motion" title="Link to this heading">#</a></h2>
 <p>We will assume that the dynamics of the prices of the underlying asset follows GBM. That is to say, that the Itô process <span class="math notranslate nohighlight">\(\{X_t\}_{t\in\mathbb{N}}\)</span> satisfies the following stochastic differential equation (SDE)</p>
 <div class="math notranslate nohighlight">
 \[ \mathrm{d}X_t = rX_t \, \mathrm{d}t + \sigma X_t \, \mathrm{d}W_t   \]</div>
@@ -443,7 +444,7 @@ document.write(`
 </div>
 </section>
 <section id="parameters">
-<h2><span class="section-number">3.2. </span>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.2. </span>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(r = 2\%\)</span>,</p></li>
 <li><p><span class="math notranslate nohighlight">\(\sigma = 15\%\)</span>,</p></li>
@@ -484,7 +485,7 @@ document.write(`
 </div>
 </section>
 <section id="american-option-contracts">
-<h2><span class="section-number">3.3. </span>American Option Contracts<a class="headerlink" href="#american-option-contracts" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.3. </span>American Option Contracts<a class="headerlink" href="#american-option-contracts" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(S_0 = 1.0\)</span> Initial stock price</p></li>
 <li><p>We consider American put contract as a <strong>writter/seller</strong>.</p></li>
@@ -525,7 +526,7 @@ This is clearly, better than gaining the different <span class="math notranslate
 </div>
 </section>
 <section id="discretisation-of-the-domain">
-<h2><span class="section-number">3.4. </span>Discretisation of the domain<a class="headerlink" href="#discretisation-of-the-domain" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.4. </span>Discretisation of the domain<a class="headerlink" href="#discretisation-of-the-domain" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>If <span class="math notranslate nohighlight">\(S_{t_i} \geq K\)</span>, then the holder has <strong>no</strong> incentive to exercise the option (i.e. selling the asset at price <span class="math notranslate nohighlight">\(K\)</span> makes no sense!)</p></li>
 <li><p>If <span class="math notranslate nohighlight">\(S_{t_i} &lt; K\)</span>, then the option is In-The-Money (ITM) and rhe holder <strong>may want to exercise</strong> it. The payoff in case of exercise at time <span class="math notranslate nohighlight">\(t_i\)</span> would be <span class="math notranslate nohighlight">\(Y(t_i) = [K- S_{t_i}]^+\)</span></p></li>
@@ -587,7 +588,7 @@ $<span class="math notranslate nohighlight">\( \textrm{Exercise Value} = Y(t_i) 
 $<span class="math notranslate nohighlight">\( \textrm{Continuation Value} = C(t_i) = \, \textrm{?} \)</span>$</p>
 </section>
 <section id="to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">
-<h2><span class="section-number">3.5. </span>To exercise or not to exercise - Longstaff-Schwartz Algorithm<a class="headerlink" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">4.5. </span>To exercise or not to exercise - Longstaff-Schwartz Algorithm<a class="headerlink" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Why is the Monte Carlo computationally infeasible?</p>
 <ul>
@@ -635,7 +636,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 1 Polynomial functions e.g. Laguerre (used in paper), Hermite, Chebyshev, Jacobiused as basis functions.
 2 Degree of the Polynomial.</p>
 <section id="laguerre-polynomials-paper">
-<h3><span class="section-number">3.5.1. </span>Laguerre Polynomials (paper)<a class="headerlink" href="#laguerre-polynomials-paper" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">4.5.1. </span>Laguerre Polynomials (paper)<a class="headerlink" href="#laguerre-polynomials-paper" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cashflow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="o">*</span> <span class="n">exercise_value</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span> 
@@ -797,7 +798,7 @@ $<span class="math notranslate nohighlight">\( C(x, t_{n-1}) = e^{-r\Delta t}\ma
 </div>
 </section>
 <section id="iterating-backwards-in-time">
-<h3><span class="section-number">3.5.2. </span>Iterating Backwards in Time<a class="headerlink" href="#iterating-backwards-in-time" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">4.5.2. </span>Iterating Backwards in Time<a class="headerlink" href="#iterating-backwards-in-time" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Starting at expiry (terminal node) <span class="math notranslate nohighlight">\(T = t_n\)</span></p></li>
 <li><p>At expiry <span class="math notranslate nohighlight">\(T\)</span>, the payoff is known: <span class="math notranslate nohighlight">\(U(t_n) = Y(t_n) = [K- S_{t_n}]^+\)</span>.</p></li>
@@ -1018,12 +1019,12 @@ $<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="HestonModelExact6.html"
+       href="rHeston.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">2. </span>Stage 2 - Exact Heston Model Simuations</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Rough Volatility Models</p>
       </div>
     </a>
     <a class="right-next"
@@ -1031,7 +1032,7 @@ $<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">4. </span>Pricing American Options by LSMC Method</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Pricing American Options by LSMC Method</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1051,13 +1052,13 @@ $<span class="math notranslate nohighlight">\( \textrm{Discounted Cashflow} = V(
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-brownian-motion">3.1. Geometric Brownian Motion</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">3.2. Parameters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">3.3. American Option Contracts</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">3.4. Discretisation of the domain</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">3.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">3.5.1. Laguerre Polynomials (paper)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-backwards-in-time">3.5.2. Iterating Backwards in Time</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geometric-brownian-motion">4.1. Geometric Brownian Motion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters">4.2. Parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#american-option-contracts">4.3. American Option Contracts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discretisation-of-the-domain">4.4. Discretisation of the domain</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-exercise-or-not-to-exercise-longstaff-schwartz-algorithm">4.5. To exercise or not to exercise - Longstaff-Schwartz Algorithm</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#laguerre-polynomials-paper">4.5.1. Laguerre Polynomials (paper)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#iterating-backwards-in-time">4.5.2. Iterating Backwards in Time</a></li>
 </ul>
 </li>
 </ul>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>5. Pricing American Options by Finite Difference &#8212; Quantitative Finance Book</title>
+    <title>6. Pricing American Options by Finite Difference &#8212; Quantitative Finance Book</title>
   
   
   
@@ -60,7 +60,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'FD';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="4. Pricing American Options by LSMC Method" href="LSMC.html" />
+    <link rel="next" title="7. Pricing American Options by COS method" href="COS_AMpricer.html" />
+    <link rel="prev" title="5. Pricing American Options by LSMC Method" href="LSMC.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -180,14 +181,16 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Stage 1 - Characteristic Functions Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Stage 2 - Exact Heston Model Simuations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rHeston.html">3. Rough Volatility Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LSMC.html">4. Pricing American Options by LSMC Method</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">4. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LSMC.html">5. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">7. Pricing American Options by COS method</a></li>
 </ul>
 
     </div>
@@ -386,7 +389,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="pricing-american-options-by-finite-difference">
-<h1><span class="section-number">5. </span>Pricing American Options by Finite Difference<a class="headerlink" href="#pricing-american-options-by-finite-difference" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">6. </span>Pricing American Options by Finite Difference<a class="headerlink" href="#pricing-american-options-by-finite-difference" title="Link to this heading">#</a></h1>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Replicating the implementation in Longstaff and Schwarz.
 - Replicating the values in Table 1.
 - Completel replicating the Table 1, as in the paper.
@@ -444,8 +447,17 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">4. </span>Pricing American Options by LSMC Method</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>Pricing American Options by LSMC Method</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="COS_AMpricer.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Pricing American Options by COS method</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

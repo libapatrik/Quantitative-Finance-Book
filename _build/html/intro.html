@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="1. Stage 1 - Characteristic Functions Methods" href="cpdf_recovery.html" />
+    <link rel="next" title="1. Characteristic Functions Methods Approximating CDF/PDF" href="cpdf_recovery.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -184,15 +184,16 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Stage 1 - Characteristic Functions Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Stage 2 - Exact Heston Model Simuations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rHeston.html">3. Rough Volatility Models</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LSMC.html">4. Pricing American Options by LSMC Method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FD.html">5. Pricing American Options by Finite Difference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">6. Pricing American Options by COS method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">4. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LSMC.html">5. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FD.html">6. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">7. Pricing American Options by COS method</a></li>
 </ul>
 
     </div>
@@ -391,6 +392,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#welcome-to-my-problem-book">Welcome to my problem book</a><ul class="nav section-nav flex-column">
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
             </nav>
         </div>
@@ -413,18 +415,32 @@ document.write(`
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Stage 1 - Characteristic Functions Methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Stage 2 - Exact Heston Model Simuations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rHeston.html">3. Rough Volatility Models</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">3. Intuition behind the Longstaff-Schwartz implementation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="LSMC.html">4. Pricing American Options by LSMC Method</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FD.html">5. Pricing American Options by Finite Difference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">6. Pricing American Options by COS method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LongSchAlgo.html">4. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LSMC.html">5. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FD.html">6. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="COS_AMpricer.html">7. Pricing American Options by COS method</a></li>
 </ul>
+</div>
+<p>As shown in Longstaff and Schwartz’s method [&#64;longstaff2001valuing], we simulate early exercise.</p>
+<p>For more fundamentals, see Hull’s book [&#64;hull2018options]. <span id="id1">[<a class="reference internal" href="#id8" title="Francis A Longstaff and Eduardo S Schwartz. Valuing american options by simulation: a simple least-squares approach. The review of financial studies, 14(1):113–147, 2001.">LS01</a>]</span></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<div class="docutils container" id="id2">
+<div role="list" class="citation-list">
+<div class="citation" id="id8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">LS01</a><span class="fn-bracket">]</span></span>
+<p>Francis A Longstaff and Eduardo S Schwartz. Valuing american options by simulation: a simple least-squares approach. <em>The review of financial studies</em>, 14(1):113–147, 2001.</p>
+</div>
+</div>
 </div>
 </section>
 </section>
@@ -464,7 +480,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">1. </span>Stage 1 - Characteristic Functions Methods</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Characteristic Functions Methods Approximating CDF/PDF</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -487,6 +503,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#welcome-to-my-problem-book">Welcome to my problem book</a><ul class="nav section-nav flex-column">
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
   </nav></div>
 
