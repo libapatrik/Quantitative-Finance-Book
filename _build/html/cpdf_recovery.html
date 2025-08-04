@@ -181,7 +181,7 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Methods for Option Pricing</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
@@ -405,6 +405,10 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="characteristic-functions-methods-approximating-cdf-pdf">
 <h1><span class="section-number">1. </span>Characteristic Functions Methods Approximating CDF/PDF<a class="headerlink" href="#characteristic-functions-methods-approximating-cdf-pdf" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>Methods implemented are based on foundational research from <span id="id1">[]</span>.</p></li>
+</ul>
+<p>This work builds upon advanced coursework in computational finance under Dr. Fang Fang from TU Delft.</p>
 <ul>
 <li><p>If characteristic function is known then we can use characteristic functions (ch.f.) methods to approximate CDF and PDF. We define characteristic function of a random variable <span class="math notranslate nohighlight">\(X\)</span> as</p>
 <div class="math notranslate nohighlight">
@@ -638,11 +642,11 @@ $<span class="math notranslate nohighlight">\( f_X(x) = \frac{1}{2\pi}\int_{-\in
 </div>
 <img alt="_images/173da71079e15dc20bcff4486d3ea98fb02b4dd2be1363be679b165068a24064.png" src="_images/173da71079e15dc20bcff4486d3ea98fb02b4dd2be1363be679b165068a24064.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    N         Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   4  2.536344e-01          0.031924                   NaN
-1   8  1.074376e-01          0.015497             -0.016427
-2  16  7.158203e-03          0.020695              0.005198
-3  32  4.008963e-07          0.037169              0.016475
-4  64  3.330669e-16          0.064111              0.026941
+0   4  2.536344e-01          0.039077                   NaN
+1   8  1.074376e-01          0.015020             -0.024056
+2  16  7.158203e-03          0.020599              0.005579
+3  32  4.008963e-07          0.034642              0.014043
+4  64  3.330669e-16          0.063109              0.028467
 
 Testing CDF recovery:
 </pre></div>
@@ -828,12 +832,12 @@ Testing CDF recovery:
 </div>
 <img alt="_images/e8dd9a5e163eca969acc137d3bd98dcdf3ef9f30cd16b06d6ed0e95f86d2d863.png" src="_images/e8dd9a5e163eca969acc137d3bd98dcdf3ef9f30cd16b06d6ed0e95f86d2d863.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     N         Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   16  1.989435e+00          0.168991                   NaN
-1   32  9.947169e-01          0.170040              0.001049
-2   64  5.047621e-01          0.293255              0.123215
-3  128  3.989628e-01          0.585318              0.292063
-4  256  3.898076e-03          1.092386              0.507069
-5  512  1.110223e-16          2.426243              1.333857
+0   16  1.989435e+00          0.190258                   NaN
+1   32  9.947169e-01          0.184965             -0.005293
+2   64  5.047621e-01          0.287580              0.102615
+3  128  3.989628e-01          0.702143              0.414562
+4  256  3.898076e-03          1.143169              0.441027
+5  512  1.110223e-16          2.444553              1.301384
 
 Testing CDF recovery:
 </pre></div>
@@ -1149,12 +1153,12 @@ Testing CDF recovery:
 <img alt="_images/5faf09d2b0e03ff044945f0c20715e95af5f6045229699870eefddc79de4724b.png" src="_images/5faf09d2b0e03ff044945f0c20715e95af5f6045229699870eefddc79de4724b.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Convergence table:
      N     Error  CPU time (msec.)  Diff. in CPU (msec.)
-0   16  0.016440          0.045586                   NaN
-1   32  0.004682          0.036430             -0.009155
-2   64  0.001210          0.037003              0.000572
-3  128  0.000306          0.049114              0.012112
-4  256  0.000221          0.047708             -0.001407
-5  512  0.000221          0.094032              0.046325
+0   16  0.016440          0.040936                   NaN
+1   32  0.004682          0.034022             -0.006914
+2   64  0.001210          0.035453              0.001431
+3  128  0.000306          0.039101              0.003648
+4  256  0.000221          0.043726              0.004625
+5  512  0.000221          0.106192              0.062466
 
 Testing CDF recovery:
 </pre></div>
@@ -1221,7 +1225,7 @@ Testing CDF recovery:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;function summary_convergence_table at 0x10c541990&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;function summary_convergence_table at 0x119839a20&gt;
 </pre></div>
 </div>
 </div>
