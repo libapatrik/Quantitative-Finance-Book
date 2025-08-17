@@ -3,7 +3,9 @@
 
 ### Acknowledgement
 
-- Special credit goes to Dr. Fang Fang (TU Delft) for her foundational contributions to computational finance and the COS method in particular. The implementation and analysis of Fourier-based pricing methods in this work builds upon the research of Fang & Oosterlee (2009, 2010) and coursework under Dr. Fang's guidance. 
+- Special credit goes to Dr. Fang Fang (TU Delft) for teaching a great course on Computational Finance, her foundational contributions to computational finance and the COS method in particular. The implementation and analysis of Fourier-based pricing methods in this work builds upon the research of 
+{cite:p}`FangOst2008`, {cite:p}`FangOst2010`
+Fang & Oosterlee (2008, 2010) and coursework under Dr. Fang's guidance. 
 
 
 

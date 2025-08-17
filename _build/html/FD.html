@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'FD';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -179,7 +181,7 @@
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Option Pricing</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Methods for Option Pricing</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cpdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="HestonModelExact6.html">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
@@ -363,7 +365,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -379,6 +383,23 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-do">6.1. TO DO:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2. TO DO:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-eu-put-option">6.2.1. Finite difference for EU put option</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-american-put-option">6.2.2. Finite difference for American put option</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-table-replicating-functions">6.2.3. Define table replicating functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence-analysis">6.2.3.1. Convergence analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -390,11 +411,18 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="pricing-american-options-by-finite-difference">
 <h1><span class="section-number">6. </span>Pricing American Options by Finite Difference<a class="headerlink" href="#pricing-american-options-by-finite-difference" title="Link to this heading">#</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Replicating the implementation in Longstaff and Schwarz.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Replicating the Finite Difference implementation in {cite:p`longstaff2001valuing`
+
 - Replicating the values in Table 1.
-- Completel replicating the Table 1, as in the paper.
+
+- Completely replicating the Table 1, as in the paper.
 </pre></div>
 </div>
+<section id="to-do">
+<h2><span class="section-number">6.1. </span>TO DO:<a class="headerlink" href="#to-do" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Add the theory/papers</p></li>
+</ul>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -404,11 +432,887 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">lu_factor</span><span class="p">,</span> <span class="n">lu_solve</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1">#from LSMC import lsmc_american_put, simulate_gbm_paths, laguerre_polynomials</span>
+<span class="c1">#from Gaussian import gaussian_cf, sin_coeff</span>
 </pre></div>
 </div>
 </div>
 </details>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exact price - Black-Scholes formula</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="o">/</span><span class="n">K</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">T</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">T</span><span class="p">))</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">bs_put</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span><span class="o">*</span><span class="n">S0</span> <span class="o">+</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d2</span><span class="p">)</span><span class="o">*</span><span class="n">K</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="o">*</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bs_put</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Simulate stock prices under Geometric Brownian Motion</p></li>
+<li><p>Define Laugerre polynomials</p></li>
+<li><p>Define LSMC-pricer (as in <span id="id1">[<a class="reference internal" href="intro.html#id9" title="Francis A Longstaff and Eduardo S Schwartz. Valuing american options by simulation: a simple least-squares approach. The review of financial studies, 14(1):113–147, 2001.">LS01</a>]</span>)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MC paths generator with antithetic sampling</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">n_paths</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Antithetic: We input 50,000 paths and we get 100,000 paths &quot;&quot;&quot;</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="n">n_steps</span>
+
+    <span class="c1"># Generate randoms for half of n_paths</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_paths</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+    
+    <span class="c1"># Create vector of paths and antithetic paths</span>
+    <span class="n">Z_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">Z</span><span class="p">,</span> <span class="o">-</span><span class="n">Z</span><span class="p">])</span>  
+    
+    <span class="c1"># Initialize paths</span>
+    <span class="n">n_total</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_paths</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_total</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">S</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">S0</span>
+    
+    <span class="c1"># Simulate paths</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+        <span class="n">S</span><span class="p">[:,</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">S</span><span class="p">[:,</span> <span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">r</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dt</span> <span class="o">+</span> <span class="n">sigma</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span><span class="o">*</span><span class="n">Z_all</span><span class="p">[:,</span> <span class="n">t</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">S</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">laguerre_polynomials</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculate first three Laguerre polynomials</span>
+<span class="sd">    x_scaled as x / K - to account for moneyness &quot;&quot;&quot;</span>
+    <span class="c1"># Scale x </span>
+    <span class="n">x_scaled</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">K</span>  <span class="c1"># Normalize by strike price </span>
+    
+    <span class="c1"># Calculate e^(-x/2) </span>
+    <span class="n">exp_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x_scaled</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Laguerre polynomials</span>
+    <span class="n">L0</span> <span class="o">=</span> <span class="n">exp_term</span>
+    <span class="n">L1</span> <span class="o">=</span> <span class="n">exp_term</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x_scaled</span><span class="p">)</span>
+    <span class="n">L2</span> <span class="o">=</span> <span class="n">exp_term</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x_scaled</span> <span class="o">+</span> <span class="n">x_scaled</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">lsmc_american_put</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Least Squares Monte Carlo for American Put Option</span>
+<span class="sd">    Similar approach as in Q1, but now we don&#39;t view it as tree/lattice </span>
+<span class="sd">    but a whole random path at different times t; ie more cts</span>
+<span class="sd">    - going backwards in time, ie from terminal time (known payoff) to t=0.</span>
+<span class="sd">    - we use regression to estimate the continuation value </span>
+<span class="sd">    - early exercise decision</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_paths</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="n">n_steps</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    
+    <span class="c1"># Initialize cash flow matrix</span>
+    <span class="n">cash_flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_paths</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    
+    <span class="c1"># Terminal payoff</span>
+    <span class="n">cash_flows</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">S</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Backward induction</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Current payoff if exercised</span>
+        <span class="n">payoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">S</span><span class="p">[:,</span> <span class="n">t</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Find in-the-money paths</span>
+        <span class="n">itm</span> <span class="o">=</span> <span class="n">payoff</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="c1"># will use as index for tracking</span>
+        
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">itm</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Get stock prices for ITM paths</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">itm</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span>
+            
+            <span class="c1"># Calculate basis functions according to paper</span>
+            <span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span> <span class="o">=</span> <span class="n">laguerre_polynomials</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+            
+            <span class="c1"># Data matrix: constant (intercept) + 3 Laguerre polynomials</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">])</span>
+            
+            <span class="c1"># Calculate discounted future cash flows Y - response variable</span>
+                <span class="c1"># Continuation value we are want to estimate</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span> <span class="c1">#</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">Y</span> <span class="o">+=</span> <span class="n">cash_flows</span><span class="p">[:,</span> <span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="o">**</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> 
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">itm</span><span class="p">]</span>
+            
+            <span class="c1"># Regression to estimate continuation value</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># prediction</span>
+            <span class="c1">#print(beta)</span>
+            <span class="n">cont_value</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">beta</span>
+            <span class="c1">#print(cont_value)</span>
+            
+            <span class="c1"># Exercise decision: exercise if immediate payoff &gt;= continuation value</span>
+            <span class="n">exercise</span> <span class="o">=</span> <span class="n">payoff</span><span class="p">[</span><span class="n">itm</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont_value</span>
+            
+            <span class="c1"># Update cash flows</span>
+            <span class="n">itm_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">itm</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">should_exercise</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">exercise</span><span class="p">):</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">itm_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">should_exercise</span><span class="p">:</span>
+                    <span class="n">cash_flows</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">payoff</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                    <span class="c1"># Zero out future cash flows</span>
+                    <span class="n">cash_flows</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># for each path, find time when of exercise and discout it back to t=0</span>
+    <span class="n">option_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+        <span class="c1"># Find all times when this option has positive cf</span>
+        <span class="n">exercise_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cash_flows</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">exercise_times</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">t_exercise</span> <span class="o">=</span> <span class="n">exercise_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># per path 1 exercise</span>
+            <span class="n">option_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cash_flows</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">t_exercise</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="o">**</span><span class="n">t_exercise</span> <span class="c1"># dicsouting it to t=0</span>
+    
+    <span class="c1"># Return mean value (since path dependent) and standard error</span>
+    <span class="n">mean_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">option_values</span><span class="p">)</span> <span class="c1"># option PV </span>
+    <span class="n">std_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">option_values</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">mean_value</span><span class="p">,</span> <span class="n">std_error</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h2><span class="section-number">6.2. </span>TO DO:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<p>Add more theory! More equations, what exactly do we need to do? What are those operators that you are talking about?</p>
+<ul class="simple">
+<li><p>Make sure that you know exactly and correctly what you are doing; avoid fancy stuff without the knowledge = empty.</p></li>
+</ul>
+<section id="finite-difference-for-eu-put-option">
+<h3><span class="section-number">6.2.1. </span>Finite difference for EU put option<a class="headerlink" href="#finite-difference-for-eu-put-option" title="Link to this heading">#</a></h3>
+<p>Pricing an European put option:</p>
+<ul class="simple">
+<li><p>Path dependent case</p>
+<ul>
+<li><p>Trace whole path each <span class="math notranslate nohighlight">\(\omega\)</span>-path</p></li>
+<li><p>Feynman-Kac gives us the associated PDE to solve</p></li>
+<li><p>To solve the PDE - approximate by Finite Difference</p></li>
+<li><p>Moving forwards in time and central in space</p></li>
+<li></li>
+</ul>
+</li>
+<li><p>Trace the whole lattice (imagine binomial tree)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># forward finite difference </span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># keeping fixed as was provided by default</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">Nt</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="c1"># Numerical instability issues when Nt=1000 or lower; in paper they use Nt=40_000</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fd_european_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">Nt</span><span class="o">=</span><span class="mi">40000</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">Nx</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">T</span><span class="o">/</span><span class="n">Nt</span>
+    <span class="n">T1</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">T2</span>  <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">r</span><span class="o">*</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>  <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span><span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">T2</span> <span class="o">+</span>  <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">T1</span> <span class="c1"># European</span>
+
+    <span class="c1"># Creating (log)m-space</span>
+    <span class="n">mvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">)</span><span class="o">-</span><span class="n">L</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">)</span> <span class="o">+</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">h</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1">#mvec = np.linspace(start = -L/2 + h, stop = +L/2-h, num=Nx-1)</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Nt</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">U</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mvec</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># initial condition</span>
+    <span class="c1"># EU-FD pricer -----------</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nt</span><span class="p">):</span>
+        <span class="n">time2mat</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">k</span>
+        <span class="c1"># BC</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Left BC - as S -&gt; 0, PutVal -&gt; Ke^{-r(T-t)}</span>
+        <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="mf">0.5</span> <span class="o">*</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="n">K</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">time2mat</span><span class="p">)</span>
+        <span class="c1"># Right BC -&gt; PutVal -&gt; 0, no contribution to p; S -&gt; OOM</span>
+        <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="n">p</span>
+        <span class="c1">#U[:, i+1] = F @ U[:, i] + p </span>
+
+    <span class="n">ftcs_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">),</span> <span class="n">mvec</span><span class="p">,</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">Nt</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ftcs_price</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="finite-difference-for-american-put-option">
+<h3><span class="section-number">6.2.2. </span>Finite difference for American put option<a class="headerlink" href="#finite-difference-for-american-put-option" title="Link to this heading">#</a></h3>
+<p>Pricing an America put option:</p>
+<ul class="simple">
+<li><p>Path dependent case</p>
+<ul>
+<li><p>Trace whole path each <span class="math notranslate nohighlight">\(\omega\)</span>-path</p></li>
+<li><p>Feynman-Kac gives us the associated PDE to solve</p></li>
+<li><p>To solve the PDE - approximate by Finite Difference</p></li>
+<li><p>Key difference is that we need to move backwards in time.</p>
+<ul>
+<li><p>Since the payoff at the terminal time is known</p></li>
+</ul>
+</li>
+<li></li>
+</ul>
+</li>
+<li><p>Trace the whole lattice (imagine binomial tree)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">Nt</span><span class="o">=</span><span class="mi">40000</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Fast enough even for Nx=1000, Nt=40_000 </span>
+<span class="sd">    Q: Why does it not match the FD_AM col precisely? </span>
+<span class="sd">    A: Discretisation error? Different interpolation? Paper is from 2001, methods improved.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Grid parameters</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">Nx</span>  <span class="c1"># spatial step</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">T</span><span class="o">/</span><span class="n">Nt</span>  <span class="c1"># time step</span>
+
+    <span class="c1"># First derivative matrix (centered differences)</span>
+    <span class="c1"># T1 = np.zeros((Nx-1, Nx-1))</span>
+    <span class="c1"># for i in range(1, Nx-2):</span>
+    <span class="c1">#     T1[i, i-1] = -1</span>
+    <span class="c1">#     T1[i, i+1] = 1</span>
+    <span class="c1"># T1 = T1 / (2*h)</span>
+    <span class="c1">#print(T1)</span>
+    <span class="c1"># # Second derivative matrix</span>
+    <span class="c1"># T2 = np.zeros((Nx-1, Nx-1))</span>
+    <span class="c1"># for i in range(1, Nx-2):</span>
+    <span class="c1">#     T2[i, i-1] = 1</span>
+    <span class="c1">#     T2[i, i] = -2</span>
+    <span class="c1">#     T2[i, i+1] = 1</span>
+    <span class="c1"># T2 = T2 / (h**2)</span>
+    <span class="c1">#print(T2)</span>
+
+    <span class="n">T1</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1">#print(T1)</span>
+    <span class="n">T2</span>  <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 2nd order derivative</span>
+    <span class="c1">#print(T2)</span>
+
+    <span class="c1"># Grid in log-space </span>
+    <span class="n">mvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">)</span><span class="o">-</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">h</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">)</span><span class="o">+</span> <span class="n">L</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">h</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># shift grid by logS0 </span>
+    <span class="n">stock_prices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">mvec</span><span class="p">)</span>
+
+    <span class="c1"># Matrix for implicit scheme is (I - k*A)</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">T2</span> <span class="o">+</span> <span class="p">((</span><span class="n">r</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">))</span> <span class="o">*</span> <span class="n">T1</span> <span class="o">-</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># M = I - k*A</span>
+    <span class="c1">#M = (1 + r*k)*I - k*0.5*sigma**2*T2 - k*r*T1 + k*0.5*sigma**2*T1 </span>
+    <span class="c1">#   F = (1 - r*k) * np.diag([1] * (Nx-1))  + 0.5 *k * (sigma**2) /(h**2) * T2 +  k * (r-0.5*(sigma**2))/(2*h) * T1</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">r</span><span class="o">*</span><span class="n">k</span><span class="p">)</span><span class="o">*</span><span class="n">I</span> <span class="o">-</span> <span class="n">k</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">T2</span> <span class="o">-</span> <span class="n">k</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">T1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="o">*</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span><span class="o">*</span><span class="n">T1</span> 
+    <span class="c1">#M = np.eye(Nx-1) - k*A # both methods give the same cols results</span>
+    <span class="n">lu</span><span class="p">,</span> <span class="n">piv</span> <span class="o">=</span> <span class="n">lu_factor</span><span class="p">(</span><span class="n">M</span><span class="p">)</span> <span class="c1"># avoid computing inverse; lu-factorise M-matrix</span>
+
+    <span class="c1">## Initialise</span>
+    <span class="c1"># American put value at maturity</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">stock_prices</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># known payoff</span>
+    <span class="n">intrinsic_value</span><span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># Store values</span>
+    <span class="n">american_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nx</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">Nt</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">american_values</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span>
+    <span class="c1"># Boundary conditions S*N(-d2) - Ke^{-rT}*N(-d1)</span>
+    <span class="c1"># At S = 0 (m -&gt; -\infty), put value is K</span>
+    <span class="c1"># At S -&gt; \infty (m-&gt; \infty), put value is 0</span>
+
+    <span class="c1"># AM-pricer - backward induction with early exercise rule ---------</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nt</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Current time (working backward); recall k = T/Nt</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">k</span> <span class="c1"># start from terminal time</span>
+        <span class="c1"># rhs</span>
+        <span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">V</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># Apply boundary conditions</span>
+        <span class="c1"># Lower boundary: as S-&gt;0, American put value -&gt; K; without e^{-rt}</span>
+        <span class="c1">#b[0] += k * (0.5*sigma**2/h**2 - (r-0.5*sigma**2)/(2*h)) * K</span>
+        <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="mf">0.5</span> <span class="o">*</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">r</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="n">K</span>
+        <span class="c1"># Upper boundary: as S-&gt; \infty, put value -&gt; 0</span>
+            <span class="c1"># == 0</span>
+        <span class="c1"># Continuation value (if not exercised)</span>
+        <span class="c1"># Solve the linear system: M * V_new = b</span>
+        <span class="c1">#V_new = np.linalg.solve(M, b) # we are computing an inverse, not good. Can we do better?</span>
+        <span class="n">V_new</span> <span class="o">=</span> <span class="n">lu_solve</span><span class="p">((</span><span class="n">lu</span><span class="p">,</span> <span class="n">piv</span><span class="p">),</span> <span class="n">b</span><span class="p">)</span>
+
+        <span class="c1"># RULE FOR EARLY EXERICISE ---------</span>
+        <span class="c1"># Apply early exercise constraint: V &gt;= max(K - S, 0)</span>
+        <span class="n">intrinsic_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">stock_prices</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> 
+        <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">V_new</span><span class="p">,</span> <span class="n">intrinsic_value</span><span class="p">)</span>
+        
+        <span class="c1"># Store values</span>
+        <span class="n">american_values</span><span class="p">[:,</span> <span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span>
+
+    <span class="c1"># Interpolate to get price at S0</span>
+    <span class="n">american_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">),</span> <span class="n">mvec</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">american_price</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="define-table-replicating-functions">
+<h3><span class="section-number">6.2.3. </span>Define table replicating functions<a class="headerlink" href="#define-table-replicating-functions" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">replicate_table1_european</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Replicate European put values from Table 1 using FD method</span>
+<span class="sd">    Compare with Black-Scholes closed form</span>
+<span class="sd">    - noting early ex. values are also negative as this comparison is for 2 EU-put options</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fixed parameters from the paper</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">0.06</span>
+    
+    <span class="c1"># Parameters from Table 1</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finite Difference European Put Pricing&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;S&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;vol&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;T&#39;</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;FD European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;BS European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Difference&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="c1"># Calculate FD price</span>
+        <span class="n">fd_price</span> <span class="o">=</span> <span class="n">fd_european_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="c1"># Calculate Black-Scholes price</span>
+        <span class="n">bs_price</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="c1"># Calculate difference</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">fd_price</span> <span class="o">-</span> <span class="n">bs_price</span>
+        
+        <span class="c1"># Display results</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S0</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sigma</span><span class="si">:</span><span class="s2">&gt;5.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fd_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bs_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">&gt;10.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span>
+            <span class="s1">&#39;sigma&#39;</span><span class="p">:</span> <span class="n">sigma</span><span class="p">,</span>
+            <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+            <span class="s1">&#39;FD_European&#39;</span><span class="p">:</span> <span class="n">fd_price</span><span class="p">,</span>
+            <span class="s1">&#39;BS_European&#39;</span><span class="p">:</span> <span class="n">bs_price</span><span class="p">,</span>
+            <span class="s1">&#39;Early ex. value&#39;</span><span class="p">:</span> <span class="n">diff</span>
+        <span class="p">})</span>
+    
+    <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">df_results</span>
+
+<span class="n">df_results1</span> <span class="o">=</span> <span class="n">replicate_table1_european</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finite Difference European Put Pricing
+
+   S  vol   T |  FD European |  BS European | Difference
+----------------------------------------------------------------------
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   1         3.8445         3.8443     0.000170
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   2         3.7631         3.7630     0.000087
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   1         6.7114         6.7114     0.000045
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   2         7.7001         7.7000     0.000044
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   1         2.8515         2.8519    -0.000441
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   2         2.9903         2.9906    -0.000300
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   1         5.8341         5.8343    -0.000217
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   2         6.9787         6.9788    -0.000128
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   1         2.0655         2.0664    -0.000911
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   2         2.3553         2.3559    -0.000594
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   1         5.0592         5.0596    -0.000439
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   2         6.3257         6.3260    -0.000273
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   1         1.4640         1.4645    -0.000500
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   2         1.8410         1.8414    -0.000334
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   1         4.3785         4.3787    -0.000241
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   2         5.7355         5.7356    -0.000142
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   1         1.0169         1.0169    -0.000006
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   2         1.4292         1.4292    -0.000020
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   1         3.7828         3.7828     0.000027
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   2         5.2020         5.2020     0.000036
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">replicate_table1_american</span><span class="p">():</span> <span class="c1"># aside table</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Replicate American put values from Table 1 using FD method</span>
+<span class="sd">        Compare with Black-Scholes closed form</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fixed parameters from the paper</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">0.06</span>
+    
+    <span class="c1"># Parameters from Table 1</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finite Difference American Put Pricing vs. Closed form European (BS)&quot;</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="c1"># Calculate FD price</span>
+        <span class="n">fd_price</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="c1"># Calculate Black-Scholes price</span>
+        <span class="n">bs_price</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="c1"># Calculate difference</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">fd_price</span> <span class="o">-</span> <span class="n">bs_price</span>
+        
+        <span class="c1"># Display results</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S0</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sigma</span><span class="si">:</span><span class="s2">&gt;5.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fd_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bs_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">&gt;10.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span>
+            <span class="s1">&#39;sigma&#39;</span><span class="p">:</span> <span class="n">sigma</span><span class="p">,</span>
+            <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+            <span class="s1">&#39;FD_American&#39;</span><span class="p">:</span> <span class="n">fd_price</span><span class="p">,</span>
+            <span class="s1">&#39;BS_European&#39;</span><span class="p">:</span> <span class="n">bs_price</span><span class="p">,</span>
+            <span class="s1">&#39;Early exercise&#39;</span><span class="p">:</span> <span class="n">diff</span>
+        <span class="p">})</span>
+    
+    <span class="c1"># Create DataFrame for further analysis</span>
+    <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">df_results</span>
+
+<span class="n">df_results2</span> <span class="o">=</span> <span class="n">replicate_table1_american</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finite Difference American Put Pricing vs. Closed form European (BS)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   1         4.4860         3.8443     0.641698
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   2         4.8477         3.7630     1.084740
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   1         7.1087         6.7114     0.397328
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   2         8.5140         7.7000     0.813911
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   1         3.2563         2.8519     0.404407
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   2         3.7507         2.9906     0.760191
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   1         6.1542         5.8343     0.319844
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   2         7.6746         6.9788     0.695772
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   1         2.3185         2.0664     0.252081
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   2         2.8892         2.3559     0.533339
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   1         5.3177         5.0596     0.258088
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   2         6.9230         6.3260     0.597037
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   1         1.6204         1.4645     0.155880
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   2         2.2161         1.8414     0.374785
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   1         4.5877         4.3787     0.209016
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   2         6.2499         5.7356     0.514286
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   1         1.1126         1.0169     0.095697
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   2         1.6930         1.4292     0.263755
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   1         3.9526         3.7828     0.169779
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   2         5.6465         5.2020     0.444528
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">replicate_table1</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Replication of Table 1 format from the paper   &quot;&quot;&quot;</span>
+    <span class="c1"># Fixed parameters</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">0.06</span>
+    
+    <span class="c1"># Parameters</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Table 1: American put values, closed form European and early exercise value&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;                     American       BS European    Early Ex.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Price    vol    T    Put            Put            value&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">european</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">american</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">ex_value</span> <span class="o">=</span> <span class="n">american</span> <span class="o">-</span> <span class="n">european</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S0</span><span class="si">:</span><span class="s2">3.0f</span><span class="si">}</span><span class="s2">     </span><span class="si">{</span><span class="n">sigma</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">    </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">1.0f</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">american</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="n">european</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">         </span><span class="si">{</span><span class="n">ex_value</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span>
+            <span class="s1">&#39;vol&#39;</span><span class="p">:</span> <span class="n">sigma</span><span class="p">,</span>
+            <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+            <span class="s1">&#39;FD_American&#39;</span><span class="p">:</span> <span class="n">american</span><span class="p">,</span>
+            <span class="s1">&#39;BS_European&#39;</span><span class="p">:</span> <span class="n">european</span><span class="p">,</span>
+            <span class="s1">&#39;Early exercise&#39;</span><span class="p">:</span> <span class="n">ex_value</span>
+        <span class="p">})</span>
+    <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">df_results</span>
+
+<span class="n">df_results3</span> <span class="o">=</span> <span class="n">replicate_table1</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Table 1: American put values, closed form European and early exercise value
+
+                     American       BS European    Early Ex.
+Price    vol    T    Put            Put            value
+------------------------------------------------------------
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.20    1    4.4860         3.8443         0.6417
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.20    2    4.8477         3.7630         1.0847
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.40    1    7.1087         6.7114         0.3973
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.40    2    8.5140         7.7000         0.8139
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.20    1    3.2563         2.8519         0.4044
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.20    2    3.7507         2.9906         0.7602
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.40    1    6.1542         5.8343         0.3198
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.40    2    7.6746         6.9788         0.6958
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.20    1    2.3185         2.0664         0.2521
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.20    2    2.8892         2.3559         0.5333
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.40    1    5.3177         5.0596         0.2581
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.40    2    6.9230         6.3260         0.5970
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.20    1    1.6204         1.4645         0.1559
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.20    2    2.2161         1.8414         0.3748
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.40    1    4.5877         4.3787         0.2090
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.40    2    6.2499         5.7356         0.5143
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.20    1    1.1126         1.0169         0.0957
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.20    2    1.6930         1.4292         0.2638
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.40    1    3.9526         3.7828         0.1698
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.40    2    5.6465         5.2020         0.4445
+</pre></div>
+</div>
+</div>
+</div>
+<section id="convergence-analysis">
+<h4><span class="section-number">6.2.3.1. </span>Convergence analysis<a class="headerlink" href="#convergence-analysis" title="Link to this heading">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">convergence_plot</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; We want to use the MC with overkilled params to provide as accurate as possible price </span>
+<span class="sd">        and compare the fd_americal_put() implementation as grid sizes increases,</span>
+<span class="sd">        against the price provided by the LSMC-pricer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Parameters</span>
+    <span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="c1"># S0, K, r, sigma, T = 44, 40, 0.06, 0.20, 1</span>
+    <span class="c1"># S0, K, r, sigma, T = 36, 40, 0.06, 0.40, 1</span>
+    <span class="c1"># S0, K, r, sigma, T = 40, 40, 0.06, 0.40, 1</span>
+    <span class="c1"># Get LSMC benchmark with very high accuracy</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing LSMC benchmark value with 1 million paths&quot;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">S_paths</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">500000</span><span class="p">)</span>  <span class="c1"># 1mil paths total</span>
+    <span class="n">lsmc_value</span><span class="p">,</span> <span class="n">lsmc_se</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LSMC benchmark: </span><span class="si">{</span><span class="n">lsmc_value</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (s.e. = </span><span class="si">{</span><span class="n">lsmc_se</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test FD conv</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FD convergence&quot;</span><span class="p">)</span>
+    <span class="n">grid_sizes</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="p">(</span><span class="mi">750</span><span class="p">,</span> <span class="mi">20000</span><span class="p">),</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">)]</span> <span class="c1"># last is paper </span>
+    <span class="n">nx_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grid_sizes</span><span class="p">]</span>
+    <span class="n">fd_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Nt</span><span class="o">=</span><span class="n">Nt</span><span class="p">)</span> <span class="k">for</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Nt</span> <span class="ow">in</span> <span class="n">grid_sizes</span><span class="p">]</span>
+    
+    <span class="c1"># Test LSMC standard error conv</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LSMC standard error convergence&quot;</span><span class="p">)</span>
+    <span class="n">n_paths_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">25000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">75000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">]</span>
+    <span class="n">lsmc_ses</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">n_paths</span> <span class="ow">in</span> <span class="n">n_paths_list</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">S_paths</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">n_paths</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">lsmc_ses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">se</span><span class="p">)</span>
+    
+    <span class="c1"># Create subplots</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    
+    <span class="c1"># Left: FD price convergence</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nx_vals</span><span class="p">,</span> <span class="n">fd_vals</span><span class="p">,</span> <span class="s1">&#39;bo-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;FD Prices = </span><span class="si">{</span><span class="n">fd_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">lsmc_value</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LSMC = </span><span class="si">{</span><span class="n">lsmc_value</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Spatial Grid Points (Nx)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;American Put Price&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;FD Price Convergence&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    
+    <span class="c1"># Right: LSMC standard error reduction</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">n_paths_list</span><span class="p">,</span> <span class="n">lsmc_ses</span><span class="p">,</span> <span class="s1">&#39;ro-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;LSMC Std Error&#39;</span><span class="p">)</span>
+    
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Number of MC paths&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Standard Error (log scale)&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;LSMC Error&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;FD Convergence to LSMC &amp; Monte Carlo Standard Error&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Final Results:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FD (1000x40000): </span><span class="si">{</span><span class="n">fd_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LSMC benchmark: </span><span class="si">{</span><span class="n">lsmc_value</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Difference: </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">fd_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lsmc_value</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_table1</span><span class="p">():</span> <span class="c1"># Generates the complete Table 1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate complete Table 1 &quot;&quot;&quot;</span>
+    <span class="c1"># Fixed parameters</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">0.06</span>
+    
+    <span class="c1"># Table parameters</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="c1"># Closed form EU</span>
+        <span class="n">european</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        
+        <span class="c1"># FD AM put pricer</span>
+        <span class="n">american_fd</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">early_ex_fd</span> <span class="o">=</span> <span class="n">american_fd</span> <span class="o">-</span> <span class="n">european</span>
+        
+        <span class="c1"># LSMC-pricer</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">S_paths</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span> <span class="c1"># as in paper</span>
+        <span class="n">american_lsmc</span><span class="p">,</span> <span class="n">se_lsmc</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+        <span class="n">early_ex_lsmc</span> <span class="o">=</span> <span class="n">american_lsmc</span> <span class="o">-</span> <span class="n">european</span>
+        
+        <span class="c1"># Difference in early exercise </span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">early_ex_lsmc</span> <span class="o">-</span> <span class="n">early_ex_fd</span>
+        
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">:</span> <span class="n">sigma</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+            <span class="s1">&#39;FD_American&#39;</span><span class="p">:</span> <span class="n">american_fd</span><span class="p">,</span> <span class="s1">&#39;European&#39;</span><span class="p">:</span> <span class="n">european</span><span class="p">,</span> <span class="s1">&#39;FD_Early_Ex&#39;</span><span class="p">:</span> <span class="n">early_ex_fd</span><span class="p">,</span>
+            <span class="s1">&#39;LSMC_American&#39;</span><span class="p">:</span> <span class="n">american_lsmc</span><span class="p">,</span> <span class="s1">&#39;SE&#39;</span><span class="p">:</span> <span class="n">se_lsmc</span><span class="p">,</span> <span class="s1">&#39;LSMC_Early_Ex&#39;</span><span class="p">:</span> <span class="n">early_ex_lsmc</span><span class="p">,</span>
+            <span class="s1">&#39;Difference&#39;</span><span class="p">:</span> <span class="n">diff</span>
+        <span class="p">})</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">convergence_plot</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating Complete Table 1&quot;</span><span class="p">)</span>
+    <span class="n">generate_table1</span><span class="p">()</span> <span class="c1"># uncomment to generate complete Table 1 - same as the last Table in the report</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computing LSMC benchmark value with 1 million paths
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LSMC benchmark: 4.478278 (s.e. = 0.002902)
+
+FD convergence
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LSMC standard error convergence
+</pre></div>
+</div>
+<img alt="_images/09af84f9799f09c2b8231b25d8183b876027e0f5ca9b82f4e56ccc3a803b323c.png" src="_images/09af84f9799f09c2b8231b25d8183b876027e0f5ca9b82f4e56ccc3a803b323c.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final Results:
+FD (1000x40000): 4.486006
+LSMC benchmark: 4.478278
+Difference: 0.007728
+
+Generating Complete Table 1
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">50</span>
+<span class="g g-Whitespace">     </span><span class="mi">48</span> <span class="n">convergence_plot</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">49</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating Complete Table 1&quot;</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">50</span> <span class="n">generate_table1</span><span class="p">()</span> <span class="c1"># uncomment to generate complete Table 1 - same as the last Table in the report</span>
+
+<span class="nn">Cell In[10], line 30,</span> in <span class="ni">generate_table1</span><span class="nt">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span> <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="n">S_paths</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span> <span class="c1"># as in paper</span>
+<span class="ne">---&gt; </span><span class="mi">30</span> <span class="n">american_lsmc</span><span class="p">,</span> <span class="n">se_lsmc</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span> <span class="n">early_ex_lsmc</span> <span class="o">=</span> <span class="n">american_lsmc</span> <span class="o">-</span> <span class="n">european</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span> <span class="c1"># Difference in early exercise </span>
+
+<span class="nn">Cell In[3], line 93,</span> in <span class="ni">lsmc_american_put</span><span class="nt">(S, K, r, T, n_steps)</span>
+<span class="g g-Whitespace">     </span><span class="mi">90</span> <span class="n">exercise</span> <span class="o">=</span> <span class="n">payoff</span><span class="p">[</span><span class="n">itm</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont_value</span>
+<span class="g g-Whitespace">     </span><span class="mi">92</span> <span class="c1"># Update cash flows</span>
+<span class="ne">---&gt; </span><span class="mi">93</span> <span class="n">itm_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">itm</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="g g-Whitespace">     </span><span class="mi">94</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">should_exercise</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">exercise</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">95</span>     <span class="n">idx</span> <span class="o">=</span> <span class="n">itm_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="nn">File ~/miniforge3/lib/python3.10/site-packages/numpy/_core/multiarray.py:383,</span> in <span class="ni">where</span><span class="nt">(condition, x, y)</span>
+<span class="g g-Whitespace">    </span><span class="mi">291</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">292</span><span class="sd">     inner(a, b, /)</span>
+<span class="g g-Whitespace">    </span><span class="mi">293</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">378</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">379</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">380</span>     <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">383</span> <span class="nd">@array_function_from_c_func_and_dispatcher</span><span class="p">(</span><span class="n">_multiarray_umath</span><span class="o">.</span><span class="n">where</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">384</span> <span class="k">def</span><span class="w"> </span><span class="nf">where</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">385</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">386</span><span class="sd">     where(condition, [x, y], /)</span>
+<span class="g g-Whitespace">    </span><span class="mi">387</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">454</span><span class="sd">            [ 0,  3, -1]])</span>
+<span class="g g-Whitespace">    </span><span class="mi">455</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">456</span>     <span class="k">return</span> <span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -465,6 +1369,30 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-do">6.1. TO DO:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2. TO DO:</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-eu-put-option">6.2.1. Finite difference for EU put option</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-american-put-option">6.2.2. Finite difference for American put option</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-table-replicating-functions">6.2.3. Define table replicating functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#convergence-analysis">6.2.3.1. Convergence analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
