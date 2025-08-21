@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'COS_AMpricer';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -393,7 +395,34 @@ document.write(`
 <li><p>COS method has no problem finding the conditional expectation as it makes use of the distribution information directly.</p></li>
 </ul>
 <p>As shown in Longstaff and Schwartz’s method <span id="id1">[<a class="reference internal" href="intro.html#id9" title="Francis A Longstaff and Eduardo S Schwartz. Valuing american options by simulation: a simple least-squares approach. The review of financial studies, 14(1):113–147, 2001.">LS01</a>]</span>, we simulate early exercise.</p>
-<p>For more fundamentals, see Hull’s book <span id="id2">[]</span>.</p>
+<p>For more fundamentals, see Hull’s book <span id="id2">[<a class="reference internal" href="intro.html#id4" title="John C Hull. Options, futures, and other derivatives. Pearson Education, 2012.">Hul12</a>]</span>.</p>
+<ul class="simple">
+<li><p>Pricing formulation:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[ c(x, t_{n-1}) = e^{(-r\Delta t)}\mathbb{E}\left[ V(X_{t_n} \mid X_{t_{n-1}} = x \right] = e^{(-r\Delta t)} \int_{-\infty}^{+\infty} v(y, t_n) f(y \mid x) \, \mathrm{d}y \]</div>
+<div class="math notranslate nohighlight">
+\[ v(x, t_{n-1}) = \max\{ \Lambda(x, t_{n-1}), c(x, t_{n-1}) \} \]</div>
+<ul class="simple">
+<li><p>Replace <span class="math notranslate nohighlight">\(c(x, t_{n-1})\)</span> by the COS approximation, i.e.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[ c(x, t_{n-1}) \approx \hat{c}(x, t_{n-1}) = e^{(-r\Delta t)} {\sum^{+\infty}_{k=0}}' \mathfrak{Re}\left\{ \varphi\left( \frac{k\pi}{b-a} \right)\cdot \exp\left(i k \pi \frac{x -a}{b-a}\right)  \right\}V_k(t_n) \]</div>
+<p>where by <span class="math notranslate nohighlight">\('\)</span> we mean that the sum includes the <span class="math notranslate nohighlight">\(1/2\)</span>-coefficient.</p>
+<p>where:
+$<span class="math notranslate nohighlight">\( V_k(t_n) = \begin{cases} 
+C_k(a, x^{\star}_n, t_n) + G_k(x^{\star}_n, b) \text{, for a call, } \\
+G_k(a, x^{\star}_n) + C_k(a, x^{\star}_n, b) \text{, for a put. } 
+\end{cases}\)</span>$</p>
+<div class="math notranslate nohighlight">
+\[ G_k(x_1, x_2) = \frac{2}{b-a} \int^{x_2}_{x_1} \Lambda(x, t_n)\cos\left(k\pi \frac{x-a}{b-a}\right) \, \mathrm{d}x\]</div>
+<div class="math notranslate nohighlight">
+\[ C_k(x_1, x_2, t_n) = \frac{2}{b-a} \int^{x_2}_{x_1} c(x, t_n)\cos\left(k\pi \frac{x-a}{b-a}\right) \, \mathrm{d}x\]</div>
+<ul class="simple">
+<li><p>Further replacing <span class="math notranslate nohighlight">\(c(x, t_n)\)</span> by <span class="math notranslate nohighlight">\(\hat{c}(x, t_{n-1})\)</span> in the defintion of <span class="math notranslate nohighlight">\(V_k(t_n)\)</span>, yields <span class="math notranslate nohighlight">\(\hat{V}_k(t_n)\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[ \hat{V}_k(t_n) =  \]</div>
 </section>
 
     <script type="text/x-thebe-config">
