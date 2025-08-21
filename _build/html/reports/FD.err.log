@@ -32,8 +32,6 @@ nbclient.exceptions.CellTimeoutError: A cell timed out while it was being execut
 The message was: Cell execution timed out.
 Here is a preview of the cell contents:
 -------------------
-['def generate_table1(): # Generates the complete Table 1', '    """ Generate complete Table 1 """', '    # Fixed parameters', '    K = 40', '    r = 0.06']
-...
-['', 'if __name__ == "__main__":', '    convergence_plot()', '    print("\\nGenerating Complete Table 1")', '    generate_table1() # uncomment to generate complete Table 1 - same as the last Table in the report']
+generate_table1()
 -------------------
 

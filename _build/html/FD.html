@@ -389,7 +389,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-do">6.1. TO DO:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2. TO DO:</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.2. TO DO:</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-eu-put-option">6.2.1. Finite difference for EU put option</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-american-put-option">6.2.2. Finite difference for American put option</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-table-replicating-functions">6.2.3. Define table replicating functions</a><ul class="nav section-nav flex-column">
@@ -411,13 +411,11 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="pricing-american-options-by-finite-difference">
 <h1><span class="section-number">6. </span>Pricing American Options by Finite Difference<a class="headerlink" href="#pricing-american-options-by-finite-difference" title="Link to this heading">#</a></h1>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Replicating the Finite Difference implementation in {cite:p`longstaff2001valuing`
-
-- Replicating the values in Table 1.
-
-- Completely replicating the Table 1, as in the paper.
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Replicating the Finite Difference implementation in <span id="id1">[<a class="reference internal" href="intro.html#id9" title="Francis A Longstaff and Eduardo S Schwartz. Valuing american options by simulation: a simple least-squares approach. The review of financial studies, 14(1):113–147, 2001.">LS01</a>]</span>.</p></li>
+<li><p>Replicating the values in Table 1.</p></li>
+<li><p>Completely replicating the Table 1, as in the paper.</p></li>
+</ul>
 <section id="to-do">
 <h2><span class="section-number">6.1. </span>TO DO:<a class="headerlink" href="#to-do" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -436,6 +434,7 @@ document.write(`
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">lu_factor</span><span class="p">,</span> <span class="n">lu_solve</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 <span class="c1">#from LSMC import lsmc_american_put, simulate_gbm_paths, laguerre_polynomials</span>
 <span class="c1">#from Gaussian import gaussian_cf, sin_coeff</span>
@@ -459,7 +458,7 @@ document.write(`
 <ul class="simple">
 <li><p>Simulate stock prices under Geometric Brownian Motion</p></li>
 <li><p>Define Laugerre polynomials</p></li>
-<li><p>Define LSMC-pricer (as in <span id="id1">[<a class="reference internal" href="intro.html#id9" title="Francis A Longstaff and Eduardo S Schwartz. Valuing american options by simulation: a simple least-squares approach. The review of financial studies, 14(1):113–147, 2001.">LS01</a>]</span>)</p></li>
+<li><p>Define LSMC-pricer (as in <span id="id2">[<a class="reference internal" href="intro.html#id9" title="Francis A Longstaff and Eduardo S Schwartz. Valuing american options by simulation: a simple least-squares approach. The review of financial studies, 14(1):113–147, 2001.">LS01</a>]</span>)</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -583,8 +582,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="id2">
-<h2><span class="section-number">6.2. </span>TO DO:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<section id="id3">
+<h2><span class="section-number">6.2. </span>TO DO:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
 <p>Add more theory! More equations, what exactly do we need to do? What are those operators that you are talking about?</p>
 <ul class="simple">
 <li><p>Make sure that you know exactly and correctly what you are doing; avoid fancy stuff without the knowledge = empty.</p></li>
@@ -598,7 +597,7 @@ document.write(`
 <li><p>Trace whole path each <span class="math notranslate nohighlight">\(\omega\)</span>-path</p></li>
 <li><p>Feynman-Kac gives us the associated PDE to solve</p></li>
 <li><p>To solve the PDE - approximate by Finite Difference</p></li>
-<li><p>Moving forwards in time and central in space</p></li>
+<li><p>Moving forwards in time and central in space (FTCS)</p></li>
 <li></li>
 </ul>
 </li>
@@ -612,6 +611,7 @@ document.write(`
 <span class="n">Nt</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="c1"># Numerical instability issues when Nt=1000 or lower; in paper they use Nt=40_000</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fd_european_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">Nt</span><span class="o">=</span><span class="mi">40000</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">Nx</span>
     <span class="n">k</span> <span class="o">=</span> <span class="n">T</span><span class="o">/</span><span class="n">Nt</span>
     <span class="n">T1</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">Nx</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -633,9 +633,9 @@ document.write(`
         <span class="c1"># Right BC -&gt; PutVal -&gt; 0, no contribution to p; S -&gt; OOM</span>
         <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="n">p</span>
         <span class="c1">#U[:, i+1] = F @ U[:, i] + p </span>
-
+    <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
     <span class="n">ftcs_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">),</span> <span class="n">mvec</span><span class="p">,</span> <span class="n">U</span><span class="p">[:,</span> <span class="n">Nt</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">ftcs_price</span>
+    <span class="k">return</span> <span class="n">ftcs_price</span><span class="p">,</span> <span class="n">runtime</span>
 </pre></div>
 </div>
 </div>
@@ -650,9 +650,9 @@ document.write(`
 <li><p>Trace whole path each <span class="math notranslate nohighlight">\(\omega\)</span>-path</p></li>
 <li><p>Feynman-Kac gives us the associated PDE to solve</p></li>
 <li><p>To solve the PDE - approximate by Finite Difference</p></li>
-<li><p>Key difference is that we need to move backwards in time.</p>
+<li><p>Key difference is that we need to move backwards in time, so BTCS.</p>
 <ul>
-<li><p>Since the payoff at the terminal time is known</p></li>
+<li><p>Since the payoff at the terminal time is known.</p></li>
 </ul>
 </li>
 <li></li>
@@ -667,6 +667,7 @@ document.write(`
 <span class="sd">    Q: Why does it not match the FD_AM col precisely? </span>
 <span class="sd">    A: Discretisation error? Different interpolation? Paper is from 2001, methods improved.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
     <span class="c1"># Grid parameters</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">Nx</span>  <span class="c1"># spatial step</span>
     <span class="n">k</span> <span class="o">=</span> <span class="n">T</span><span class="o">/</span><span class="n">Nt</span>  <span class="c1"># time step</span>
@@ -743,10 +744,10 @@ document.write(`
         
         <span class="c1"># Store values</span>
         <span class="n">american_values</span><span class="p">[:,</span> <span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span>
-
+    <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
     <span class="c1"># Interpolate to get price at S0</span>
     <span class="n">american_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="p">),</span> <span class="n">mvec</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">american_price</span>
+    <span class="k">return</span> <span class="n">american_price</span><span class="p">,</span> <span class="n">runtime</span>
 </pre></div>
 </div>
 </div>
@@ -776,13 +777,13 @@ document.write(`
     
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finite Difference European Put Pricing&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;S&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;vol&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;T&#39;</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;FD European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;BS European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Difference&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;S&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;vol&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;T&#39;</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;FD European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;BS European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Difference&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Runtime&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
         <span class="c1"># Calculate FD price</span>
-        <span class="n">fd_price</span> <span class="o">=</span> <span class="n">fd_european_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">fd_price</span><span class="p">,</span> <span class="n">runtime_eu</span> <span class="o">=</span> <span class="n">fd_european_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
         <span class="c1"># Calculate Black-Scholes price</span>
         <span class="n">bs_price</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
         <span class="c1"># Calculate difference</span>
@@ -792,7 +793,8 @@ document.write(`
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S0</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sigma</span><span class="si">:</span><span class="s2">&gt;5.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   &quot;</span>
               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fd_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bs_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">&gt;10.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">&gt;10.6f</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">runtime_eu</span><span class="si">:</span><span class="s2">&gt;8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
             <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span>
@@ -800,7 +802,8 @@ document.write(`
             <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
             <span class="s1">&#39;FD_European&#39;</span><span class="p">:</span> <span class="n">fd_price</span><span class="p">,</span>
             <span class="s1">&#39;BS_European&#39;</span><span class="p">:</span> <span class="n">bs_price</span><span class="p">,</span>
-            <span class="s1">&#39;Early ex. value&#39;</span><span class="p">:</span> <span class="n">diff</span>
+            <span class="s1">&#39;Early ex. value&#39;</span><span class="p">:</span> <span class="n">diff</span><span class="p">,</span>
+            <span class="s1">&#39;Runtime&#39;</span><span class="p">:</span> <span class="n">runtime_eu</span>
         <span class="p">})</span>
     
     <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -814,68 +817,68 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finite Difference European Put Pricing
 
-   S  vol   T |  FD European |  BS European | Difference
+   S  vol   T |  FD European |  BS European | Difference |    Runtime
 ----------------------------------------------------------------------
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   1         3.8445         3.8443     0.000170
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   1         3.8445         3.8443     0.000170     4.7482
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   2         3.7631         3.7630     0.000087
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   2         3.7631         3.7630     0.000087     3.9907
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   1         6.7114         6.7114     0.000045
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   1         6.7114         6.7114     0.000045     3.8995
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   2         7.7001         7.7000     0.000044
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   2         7.7001         7.7000     0.000044     4.1361
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   1         2.8515         2.8519    -0.000441
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   1         2.8515         2.8519    -0.000441     4.1856
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   2         2.9903         2.9906    -0.000300
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   2         2.9903         2.9906    -0.000300     4.2867
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   1         5.8341         5.8343    -0.000217
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   1         5.8341         5.8343    -0.000217     4.6114
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   2         6.9787         6.9788    -0.000128
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   2         6.9787         6.9788    -0.000128     3.8269
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   1         2.0655         2.0664    -0.000911
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   1         2.0655         2.0664    -0.000911     4.0737
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   2         2.3553         2.3559    -0.000594
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   2         2.3553         2.3559    -0.000594     3.8738
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   1         5.0592         5.0596    -0.000439
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   1         5.0592         5.0596    -0.000439     4.0869
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   2         6.3257         6.3260    -0.000273
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   2         6.3257         6.3260    -0.000273     4.6119
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   1         1.4640         1.4645    -0.000500
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   1         1.4640         1.4645    -0.000500     4.5709
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   2         1.8410         1.8414    -0.000334
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   2         1.8410         1.8414    -0.000334     4.5049
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   1         4.3785         4.3787    -0.000241
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   1         4.3785         4.3787    -0.000241     4.5041
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   2         5.7355         5.7356    -0.000142
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   2         5.7355         5.7356    -0.000142     5.1228
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   1         1.0169         1.0169    -0.000006
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   1         1.0169         1.0169    -0.000006     3.2938
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   2         1.4292         1.4292    -0.000020
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   2         1.4292         1.4292    -0.000020     3.8493
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   1         3.7828         3.7828     0.000027
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   1         3.7828         3.7828     0.000027     3.8987
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   2         5.2020         5.2020     0.000036
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   2         5.2020         5.2020     0.000036     3.6853
 </pre></div>
 </div>
 </div>
@@ -900,10 +903,14 @@ document.write(`
     <span class="p">]</span>
     
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finite Difference American Put Pricing vs. Closed form European (BS)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;S&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;vol&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;T&#39;</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;FD European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;BS European&#39;</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Difference&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Runtime&#39;</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
         <span class="c1"># Calculate FD price</span>
-        <span class="n">fd_price</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">fd_price</span><span class="p">,</span> <span class="n">runtime_am</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
         <span class="c1"># Calculate Black-Scholes price</span>
         <span class="n">bs_price</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
         <span class="c1"># Calculate difference</span>
@@ -913,7 +920,9 @@ document.write(`
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S0</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sigma</span><span class="si">:</span><span class="s2">&gt;5.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   &quot;</span>
               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fd_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bs_price</span><span class="si">:</span><span class="s2">&gt;12.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">&gt;10.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">&gt;10.6f</span><span class="si">}</span><span class="s2">   &quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">runtime_am</span><span class="si">:</span><span class="s2">&gt;8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
         
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
             <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span>
@@ -921,7 +930,8 @@ document.write(`
             <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
             <span class="s1">&#39;FD_American&#39;</span><span class="p">:</span> <span class="n">fd_price</span><span class="p">,</span>
             <span class="s1">&#39;BS_European&#39;</span><span class="p">:</span> <span class="n">bs_price</span><span class="p">,</span>
-            <span class="s1">&#39;Early exercise&#39;</span><span class="p">:</span> <span class="n">diff</span>
+            <span class="s1">&#39;Early exercise&#39;</span><span class="p">:</span> <span class="n">diff</span><span class="p">,</span>
+            <span class="s1">&#39;Runtime&#39;</span><span class="p">:</span> <span class="n">runtime_am</span>
         <span class="p">})</span>
     
     <span class="c1"># Create DataFrame for further analysis</span>
@@ -935,66 +945,69 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Finite Difference American Put Pricing vs. Closed form European (BS)
+
+   S  vol   T |  FD European |  BS European | Difference |    Runtime
+----------------------------------------------------------------------
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   1         4.4860         3.8443     0.641698
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   1         4.4860         3.8443     0.641698    13.0204
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   2         4.8477         3.7630     1.084740
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   2         4.8477         3.7630     1.084740    15.0246
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   1         7.1087         6.7114     0.397328
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   1         7.1087         6.7114     0.397328    14.7521
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   2         8.5140         7.7000     0.813911
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   2         8.5140         7.7000     0.813911    13.7007
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   1         3.2563         2.8519     0.404407
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   1         3.2563         2.8519     0.404407    13.9257
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   2         3.7507         2.9906     0.760191
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   2         3.7507         2.9906     0.760191    13.1353
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   1         6.1542         5.8343     0.319844
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   1         6.1542         5.8343     0.319844    13.9744
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   2         7.6746         6.9788     0.695772
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   2         7.6746         6.9788     0.695772    13.3187
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   1         2.3185         2.0664     0.252081
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   1         2.3185         2.0664     0.252081    13.6907
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   2         2.8892         2.3559     0.533339
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   2         2.8892         2.3559     0.533339    13.8437
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   1         5.3177         5.0596     0.258088
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   1         5.3177         5.0596     0.258088    13.7186
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   2         6.9230         6.3260     0.597037
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   2         6.9230         6.3260     0.597037    13.6716
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   1         1.6204         1.4645     0.155880
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   1         1.6204         1.4645     0.155880    14.0175
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   2         2.2161         1.8414     0.374785
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   2         2.2161         1.8414     0.374785    13.8230
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   1         4.5877         4.3787     0.209016
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   1         4.5877         4.3787     0.209016    13.5780
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   2         6.2499         5.7356     0.514286
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   2         6.2499         5.7356     0.514286    14.3708
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   1         1.1126         1.0169     0.095697
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   1         1.1126         1.0169     0.095697    14.9628
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   2         1.6930         1.4292     0.263755
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   2         1.6930         1.4292     0.263755    13.1831
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   1         3.9526         3.7828     0.169779
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   1         3.9526         3.7828     0.169779    13.7485
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   2         5.6465         5.2020     0.444528
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   2         5.6465         5.2020     0.444528    14.4722
 </pre></div>
 </div>
 </div>
@@ -1018,18 +1031,18 @@ document.write(`
     
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Table 1: American put values, closed form European and early exercise value&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;                     American       BS European    Early Ex.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;                     American       BS European    Early Ex.    Runtime&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Price    vol    T    Put            Put            value&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">75</span><span class="p">)</span>
     
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
         <span class="n">european</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
-        <span class="n">american</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">american</span><span class="p">,</span> <span class="n">runtime_am</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
         <span class="n">ex_value</span> <span class="o">=</span> <span class="n">american</span> <span class="o">-</span> <span class="n">european</span>
         
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S0</span><span class="si">:</span><span class="s2">3.0f</span><span class="si">}</span><span class="s2">     </span><span class="si">{</span><span class="n">sigma</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">    </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">1.0f</span><span class="si">}</span><span class="s2">   &quot;</span>
-              <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">american</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="n">european</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">         </span><span class="si">{</span><span class="n">ex_value</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">american</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">        </span><span class="si">{</span><span class="n">european</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2">         </span><span class="si">{</span><span class="n">ex_value</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2">         </span><span class="si">{</span><span class="n">runtime_am</span><span class="si">:</span><span class="s2">6.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
     <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
             <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span>
@@ -1037,7 +1050,8 @@ document.write(`
             <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
             <span class="s1">&#39;FD_American&#39;</span><span class="p">:</span> <span class="n">american</span><span class="p">,</span>
             <span class="s1">&#39;BS_European&#39;</span><span class="p">:</span> <span class="n">european</span><span class="p">,</span>
-            <span class="s1">&#39;Early exercise&#39;</span><span class="p">:</span> <span class="n">ex_value</span>
+            <span class="s1">&#39;Early exercise&#39;</span><span class="p">:</span> <span class="n">ex_value</span><span class="p">,</span>
+            <span class="s1">&#39;Runtime&#39;</span><span class="p">:</span> <span class="n">runtime_am</span>
         <span class="p">})</span>
     <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     
@@ -1050,73 +1064,80 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Table 1: American put values, closed form European and early exercise value
 
-                     American       BS European    Early Ex.
+                     American       BS European    Early Ex.    Runtime
 Price    vol    T    Put            Put            value
-------------------------------------------------------------
+---------------------------------------------------------------------------
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.20    1    4.4860         3.8443         0.6417
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.20    1    4.4860         3.8443         0.6417         13.7476
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.20    2    4.8477         3.7630         1.0847
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.20    2    4.8477         3.7630         1.0847         13.6219
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.40    1    7.1087         6.7114         0.3973
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.40    1    7.1087         6.7114         0.3973         13.6714
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.40    2    8.5140         7.7000         0.8139
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36     0.40    2    8.5140         7.7000         0.8139         13.4594
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.20    1    3.2563         2.8519         0.4044
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.20    1    3.2563         2.8519         0.4044         13.6640
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.20    2    3.7507         2.9906         0.7602
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.20    2    3.7507         2.9906         0.7602         13.8273
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.40    1    6.1542         5.8343         0.3198
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.40    1    6.1542         5.8343         0.3198         13.3080
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.40    2    7.6746         6.9788         0.6958
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38     0.40    2    7.6746         6.9788         0.6958         13.5601
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.20    1    2.3185         2.0664         0.2521
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.20    1    2.3185         2.0664         0.2521         13.8811
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.20    2    2.8892         2.3559         0.5333
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.20    2    2.8892         2.3559         0.5333         13.6484
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.40    1    5.3177         5.0596         0.2581
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.40    1    5.3177         5.0596         0.2581         13.6260
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.40    2    6.9230         6.3260         0.5970
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40     0.40    2    6.9230         6.3260         0.5970         13.7605
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.20    1    1.6204         1.4645         0.1559
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.20    1    1.6204         1.4645         0.1559         13.7692
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.20    2    2.2161         1.8414         0.3748
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.20    2    2.2161         1.8414         0.3748         13.9529
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.40    1    4.5877         4.3787         0.2090
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.40    1    4.5877         4.3787         0.2090         13.4007
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.40    2    6.2499         5.7356         0.5143
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42     0.40    2    6.2499         5.7356         0.5143         13.7932
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.20    1    1.1126         1.0169         0.0957
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.20    1    1.1126         1.0169         0.0957         13.2478
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.20    2    1.6930         1.4292         0.2638
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.20    2    1.6930         1.4292         0.2638         13.7603
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.40    1    3.9526         3.7828         0.1698
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.40    1    3.9526         3.7828         0.1698         13.9261
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.40    2    5.6465         5.2020         0.4445
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44     0.40    2    5.6465         5.2020         0.4445         13.6192
 </pre></div>
 </div>
 </div>
 </div>
+<p>We notice that for the american option the FD pricer takes some time run.</p>
+<p>Can we improve this?</p>
+<ul class="simple">
+<li><p>COS method</p></li>
+<li><p>Implementation in C++</p></li>
+<li><p>Combination: Implement COS-method for pricing in C++</p></li>
+</ul>
 <section id="convergence-analysis">
 <h4><span class="section-number">6.2.3.1. </span>Convergence analysis<a class="headerlink" href="#convergence-analysis" title="Link to this heading">#</a></h4>
 <div class="cell docutils container">
@@ -1139,11 +1160,12 @@ Price    vol    T    Put            Put            value
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LSMC benchmark: </span><span class="si">{</span><span class="n">lsmc_value</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (s.e. = </span><span class="si">{</span><span class="n">lsmc_se</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
     
     <span class="c1"># Test FD conv</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FD convergence&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Testing FD convergence: computing prices&quot;</span><span class="p">)</span>
     <span class="n">grid_sizes</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="p">(</span><span class="mi">750</span><span class="p">,</span> <span class="mi">20000</span><span class="p">),</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">40000</span><span class="p">)]</span> <span class="c1"># last is paper </span>
     <span class="n">nx_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grid_sizes</span><span class="p">]</span>
-    <span class="n">fd_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Nt</span><span class="o">=</span><span class="n">Nt</span><span class="p">)</span> <span class="k">for</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Nt</span> <span class="ow">in</span> <span class="n">grid_sizes</span><span class="p">]</span>
-    
+    <span class="c1">#fd_vals = [fd_american_put(S0, K, r, sigma, T, Nx=Nx, Nt=Nt) for Nx, Nt in grid_sizes]</span>
+    <span class="n">fd_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Nx</span><span class="o">=</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Nt</span><span class="o">=</span><span class="n">Nt</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Nt</span> <span class="ow">in</span> <span class="n">grid_sizes</span><span class="p">]</span>
+
     <span class="c1"># Test LSMC standard error conv</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LSMC standard error convergence&quot;</span><span class="p">)</span>
     <span class="n">n_paths_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="mi">25000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">75000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">]</span>
@@ -1152,14 +1174,14 @@ Price    vol    T    Put            Put            value
     <span class="k">for</span> <span class="n">n_paths</span> <span class="ow">in</span> <span class="n">n_paths_list</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">S_paths</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">n_paths</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">se</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">se</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">50</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">lsmc_ses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">se</span><span class="p">)</span>
     
     <span class="c1"># Create subplots</span>
     <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
     
     <span class="c1"># Left: FD price convergence</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nx_vals</span><span class="p">,</span> <span class="n">fd_vals</span><span class="p">,</span> <span class="s1">&#39;bo-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;FD Prices = </span><span class="si">{</span><span class="n">fd_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nx_vals</span><span class="p">,</span> <span class="n">fd_vals</span><span class="p">,</span> <span class="s1">&#39;bo-&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;FD Prices = </span><span class="si">{</span><span class="n">fd_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.6f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">lsmc_value</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
                 <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;LSMC = </span><span class="si">{</span><span class="n">lsmc_value</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     
@@ -1193,7 +1215,13 @@ Price    vol    T    Put            Put            value
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_table1</span><span class="p">():</span> <span class="c1"># Generates the complete Table 1</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate complete Table 1 &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate complete Table 1 </span>
+<span class="sd">    Want to show: </span>
+<span class="sd">    - Use overkilled LSMC params to get as precise as possible price</span>
+<span class="sd">    - Does FD-price tend to that value?</span>
+<span class="sd">        - Plot suggests otherwise</span>
+<span class="sd">        - In Table there is a slight inaccuracy in AM-price [need to correct]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Fixed parameters</span>
     <span class="n">K</span> <span class="o">=</span> <span class="mi">40</span>
     <span class="n">r</span> <span class="o">=</span> <span class="mf">0.06</span>
@@ -1214,7 +1242,7 @@ Price    vol    T    Put            Put            value
         <span class="n">european</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
         
         <span class="c1"># FD AM put pricer</span>
-        <span class="n">american_fd</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        <span class="n">american_fd</span> <span class="o">=</span> <span class="n">fd_american_put</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">early_ex_fd</span> <span class="o">=</span> <span class="n">american_fd</span> <span class="o">-</span> <span class="n">european</span>
         
         <span class="c1"># LSMC-pricer</span>
@@ -1237,11 +1265,13 @@ Price    vol    T    Put            Put            value
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">convergence_plot</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating Complete Table 1&quot;</span><span class="p">)</span>
-    <span class="n">generate_table1</span><span class="p">()</span> <span class="c1"># uncomment to generate complete Table 1 - same as the last Table in the report</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">convergence_plot</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1251,59 +1281,42 @@ Price    vol    T    Put            Put            value
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LSMC benchmark: 4.478278 (s.e. = 0.002902)
 
-FD convergence
+Testing FD convergence: computing prices
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LSMC standard error convergence
 </pre></div>
 </div>
-<img alt="_images/09af84f9799f09c2b8231b25d8183b876027e0f5ca9b82f4e56ccc3a803b323c.png" src="_images/09af84f9799f09c2b8231b25d8183b876027e0f5ca9b82f4e56ccc3a803b323c.png" />
+<img alt="_images/8f9a3542df7970a0331e2173388bd68a7a673c7a25d54ccb2ce088b01dc7643c.png" src="_images/8f9a3542df7970a0331e2173388bd68a7a673c7a25d54ccb2ce088b01dc7643c.png" />
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final Results:
 FD (1000x40000): 4.486006
 LSMC benchmark: 4.478278
 Difference: 0.007728
-
-Generating Complete Table 1
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">generate_table1</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">50</span>
-<span class="g g-Whitespace">     </span><span class="mi">48</span> <span class="n">convergence_plot</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">49</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generating Complete Table 1&quot;</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">50</span> <span class="n">generate_table1</span><span class="p">()</span> <span class="c1"># uncomment to generate complete Table 1 - same as the last Table in the report</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">generate_table1</span><span class="p">()</span>
 
-<span class="nn">Cell In[10], line 30,</span> in <span class="ni">generate_table1</span><span class="nt">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">28</span> <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="n">S_paths</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span> <span class="c1"># as in paper</span>
-<span class="ne">---&gt; </span><span class="mi">30</span> <span class="n">american_lsmc</span><span class="p">,</span> <span class="n">se_lsmc</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">31</span> <span class="n">early_ex_lsmc</span> <span class="o">=</span> <span class="n">american_lsmc</span> <span class="o">-</span> <span class="n">european</span>
-<span class="g g-Whitespace">     </span><span class="mi">33</span> <span class="c1"># Difference in early exercise </span>
+<span class="nn">Cell In[10], line 36,</span> in <span class="ni">generate_table1</span><span class="nt">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span> <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="n">S_paths</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span> <span class="c1"># as in paper</span>
+<span class="ne">---&gt; </span><span class="mi">36</span> <span class="n">american_lsmc</span><span class="p">,</span> <span class="n">se_lsmc</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S_paths</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="n">early_ex_lsmc</span> <span class="o">=</span> <span class="n">american_lsmc</span> <span class="o">-</span> <span class="n">european</span>
+<span class="g g-Whitespace">     </span><span class="mi">39</span> <span class="c1"># Difference in early exercise </span>
 
-<span class="nn">Cell In[3], line 93,</span> in <span class="ni">lsmc_american_put</span><span class="nt">(S, K, r, T, n_steps)</span>
-<span class="g g-Whitespace">     </span><span class="mi">90</span> <span class="n">exercise</span> <span class="o">=</span> <span class="n">payoff</span><span class="p">[</span><span class="n">itm</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont_value</span>
-<span class="g g-Whitespace">     </span><span class="mi">92</span> <span class="c1"># Update cash flows</span>
-<span class="ne">---&gt; </span><span class="mi">93</span> <span class="n">itm_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">itm</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">94</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">should_exercise</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">exercise</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">95</span>     <span class="n">idx</span> <span class="o">=</span> <span class="n">itm_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
-<span class="nn">File ~/miniforge3/lib/python3.10/site-packages/numpy/_core/multiarray.py:383,</span> in <span class="ni">where</span><span class="nt">(condition, x, y)</span>
-<span class="g g-Whitespace">    </span><span class="mi">291</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">292</span><span class="sd">     inner(a, b, /)</span>
-<span class="g g-Whitespace">    </span><span class="mi">293</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">378</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">379</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">380</span>     <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">383</span> <span class="nd">@array_function_from_c_func_and_dispatcher</span><span class="p">(</span><span class="n">_multiarray_umath</span><span class="o">.</span><span class="n">where</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">384</span> <span class="k">def</span><span class="w"> </span><span class="nf">where</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">385</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">386</span><span class="sd">     where(condition, [x, y], /)</span>
-<span class="g g-Whitespace">    </span><span class="mi">387</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">454</span><span class="sd">            [ 0,  3, -1]])</span>
-<span class="g g-Whitespace">    </span><span class="mi">455</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">456</span>     <span class="k">return</span> <span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nn">Cell In[3], line -1,</span> in <span class="ni">lsmc_american_put</span><span class="nt">(S, K, r, T, n_steps)</span>
+<span class="g g-Whitespace">      </span><span class="mi">0</span> <span class="o">&lt;</span><span class="n">Error</span> <span class="n">retrieving</span> <span class="n">source</span> <span class="n">code</span> <span class="k">with</span> <span class="n">stack_data</span> <span class="n">see</span> <span class="n">ipython</span><span class="o">/</span><span class="n">ipython</span><span class="c1">#13598&gt;</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
@@ -1380,7 +1393,7 @@ Generating Complete Table 1
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#to-do">6.1. TO DO:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">6.2. TO DO:</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6.2. TO DO:</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-eu-put-option">6.2.1. Finite difference for EU put option</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-for-american-put-option">6.2.2. Finite difference for American put option</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-table-replicating-functions">6.2.3. Define table replicating functions</a><ul class="nav section-nav flex-column">
