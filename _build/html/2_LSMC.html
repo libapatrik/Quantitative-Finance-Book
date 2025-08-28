@@ -1,0 +1,1402 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>5. Pricing American Options by LSMC Method &#8212; Quantitative Finance Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2_LSMC';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="6. Pricing American Options by Finite Difference" href="2_FD.html" />
+    <link rel="prev" title="4. Intuition behind the Longstaff-Schwartz implementation" href="2_LSMC_Dialid.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.jpeg" class="logo__image only-light" alt="Quantitative Finance Book - Home"/>
+    <script>document.write(`<img src="_static/logo.jpeg" class="logo__image only-dark" alt="Quantitative Finance Book - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Quantitative Finance Book
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Methods for Option Pricing</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="1_c_pdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_HestonModelExact6.html">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QN_calibHeston.html">3. Calibration of Heston model</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_LSMC_Dialid.html">4. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_FD.html">6. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_COS_AM.html">7. Pricing American Options by COS method</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/libapatrik/Quantitative-Finance-Book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/libapatrik/Quantitative-Finance-Book/issues/new?title=Issue%20on%20page%20%2F2_LSMC.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/2_LSMC.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Pricing American Options by LSMC Method</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-initial-example">5.1. Simple initial example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-monte-carlo">5.2. Least-Squares Monte Carlo</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pricing-american-options-by-lsmc-method">
+<h1><span class="section-number">5. </span>Pricing American Options by LSMC Method<a class="headerlink" href="#pricing-american-options-by-lsmc-method" title="Link to this heading">#</a></h1>
+<section id="simple-initial-example">
+<h2><span class="section-number">5.1. </span>Simple initial example<a class="headerlink" href="#simple-initial-example" title="Link to this heading">#</a></h2>
+<p>The goal is to replicate the LSMC method implemented <a class="reference external" href="https://people.math.ethz.ch/~hjfurrer/teaching/LongstaffSchwartzAmericanOptionsLeastSquareMonteCarlo.pdf">here</a> which is considered to be an industry standard for pricing American (put) options.</p>
+<p>Other useful sources:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.youtube.com/watch?v=4KAqgK_85UI&amp;amp;list=PLJ9XZsVSloaQ3bkTpJvWHEEjWiW27F8Zx&amp;amp;index=29">Youtube lecture series</a> (1-3)</p></li>
+<li><p>Tools for Computational Finance by R. U. Seydel</p></li>
+</ul>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">=</span> <span class="mf">1.10</span>
+<span class="n">r</span> <span class="o">=</span> <span class="mf">0.06</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="p">)</span> <span class="c1"># one step df; t=1</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Discounting factor: &quot;</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># They simulated 8 paths, under r-n measure and put them in the table </span>
+<span class="c1"># -&gt; So we need to copy that table, to keep it the same -&gt; hard-code it.</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">1.09</span><span class="p">,</span> <span class="mf">1.08</span><span class="p">,</span> <span class="mf">1.34</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">1.16</span><span class="p">,</span> <span class="mf">1.26</span><span class="p">,</span> <span class="mf">1.54</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">1.22</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">,</span> <span class="mf">1.03</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.93</span><span class="p">,</span> <span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.92</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">1.11</span><span class="p">,</span> <span class="mf">1.56</span><span class="p">,</span> <span class="mf">1.52</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.76</span><span class="p">,</span> <span class="mf">0.77</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.92</span><span class="p">,</span> <span class="mf">0.84</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">1.00</span><span class="p">,</span> <span class="mf">0.88</span><span class="p">,</span> <span class="mf">1.22</span><span class="p">,</span> <span class="mf">1.34</span><span class="p">]</span>
+            <span class="p">])</span>
+<span class="n">n_paths</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1">#print(df_stock_paths)</span>
+
+<span class="c1"># exact price - Black-Scholes formula; from ftcs_bs_put</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="o">/</span><span class="n">K</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">T</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">T</span><span class="p">))</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">bs_put</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span><span class="o">*</span><span class="n">S0</span> <span class="o">+</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d2</span><span class="p">)</span><span class="o">*</span><span class="n">K</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="o">*</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bs_put</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Discounting factor:  0.9417645335842487
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TIME = 3</span>
+<span class="c1"># Payoff at maturity t=3</span>
+<span class="n">h3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">S</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span> <span class="c1"># put payoff</span>
+
+<span class="c1"># Table: Cashflow at time 3</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_paths</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">df_cash3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Path&quot;</span><span class="p">:</span> <span class="n">paths</span><span class="p">,</span>
+                        <span class="s2">&quot;t = 1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_paths</span><span class="p">,</span>   
+                        <span class="s2">&quot;t = 2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_paths</span><span class="p">,</span>
+                        <span class="s2">&quot;t = 3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)],</span>
+                        <span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+<span class="c1"># Fill in the values</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+    <span class="n">payoff</span> <span class="o">=</span> <span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">df_cash3</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">payoff</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Table 1: CF at t=3</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cashflow at time 3&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_cash3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cashflow at time 3
+     t = 1 t = 2    t = 3
+Path                     
+1        -     -  0.00000
+2        -     -  0.00000
+3        -     -  0.07000
+4        -     -  0.18000
+5        -     -  0.00000
+6        -     -  0.20000
+7        -     -  0.09000
+8        -     -  0.00000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TIME = 2</span>
+
+<span class="n">h2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">S</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span> <span class="c1"># put payoff</span>
+<span class="c1"># Are we In-the-Money? ie h2(i) = max(K - S(i, 2), 0) if h2(i) &gt; 0 -&gt; immediate exercise </span>
+<span class="n">itm2_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">h2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># indeces of those non-zero payoffs</span>
+
+<span class="c1"># Continuation from t=3 to t=2</span>
+<span class="n">Y3_disc</span> <span class="o">=</span> <span class="n">df</span> <span class="o">*</span> <span class="n">h3</span> <span class="c1"># response value in regression; </span>
+
+<span class="c1"># Matrix for regression</span>
+<span class="n">S2_itm</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">itm2_idx</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="c1"># Basis functions: 1, x, x^2 - as in paper</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">S2_itm</span><span class="p">),</span> 
+                <span class="n">S2_itm</span><span class="p">,</span> 
+                <span class="n">S2_itm</span><span class="o">**</span><span class="mi">2</span>
+                <span class="p">])</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># regression matrix X, col2</span>
+<span class="c1">#print(X2)</span>
+<span class="n">Y2</span> <span class="o">=</span> <span class="n">Y3_disc</span><span class="p">[</span><span class="n">itm2_idx</span><span class="p">]</span> <span class="c1"># response value in regression; discounted h3</span>
+
+<span class="c1"># Estimate regression coefficients betas b = [a0, b1, b2]</span>
+<span class="n">beta2</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span> <span class="n">Y2</span><span class="p">)</span>
+<span class="c1">#print(f&quot;beta2: &quot;, beta2)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Least squares formula at time 2:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;E[Y|X] = </span><span class="si">{</span><span class="n">beta2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">beta2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">.x + </span><span class="si">{</span><span class="n">beta2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">.x^2&quot;</span><span class="p">)</span>
+
+<span class="n">V2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span> <span class="c1"># allocate V2; </span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm2_idx</span><span class="p">:</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">cont_val</span> <span class="o">=</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s2</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">s2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont_val</span><span class="p">:</span>
+            <span class="n">V2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>            <span class="c1"># exercise at t=2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">V2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span> <span class="o">*</span> <span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>       <span class="c1"># continue -&gt; discounted h3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">V2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span> <span class="o">*</span> <span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>           <span class="c1"># out‐of‐money at t=2 -&gt; continue</span>
+
+<span class="n">actual_cf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm2_idx</span><span class="p">:</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">cont_val</span> <span class="o">=</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s2</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">s2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont_val</span><span class="p">:</span>
+            <span class="n">actual_cf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">actual_cf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">actual_cf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="c1"># -----------------------------</span>
+<span class="c1"># Table 2: Regression at time 2</span>
+<span class="c1"># -----------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Y - corresponding discounted cash flows received at time 3 = Y3_disc; if the put is not exercised at time 2</span>
+<span class="sd">X - stock prices at time 2</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># DataFrame with blanks</span>
+<span class="n">df_reg2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Path&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_paths</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>   
+    <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)],</span> <span class="c1"># fill empty rows</span>
+    <span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)]</span>
+<span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+<span class="c1"># Fill in those in‐the‐money rows</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm2_idx</span><span class="p">:</span>
+    <span class="n">df_reg2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">df</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">df_reg2</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Regression at time 2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_reg2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Least squares formula at time 2:
+E[Y|X] = -1.06999 + 2.98341.x + -1.81358.x^2
+
+Regression at time 2
+                      Y        X
+Path                            
+1     0.00000 x 0.94176  1.08000
+2                     -        -
+3     0.07000 x 0.94176  1.07000
+4     0.18000 x 0.94176  0.97000
+5                     -        -
+6     0.20000 x 0.94176  0.77000
+7     0.09000 x 0.94176  0.84000
+8                     -        -
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ------------------------------------------------</span>
+<span class="c1"># Table: Optimal early exercise decision at time 2</span>
+<span class="c1"># ------------------------------------------------</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_paths</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">df_dec2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Path&quot;</span><span class="p">:</span> <span class="n">paths</span><span class="p">,</span>
+                        <span class="s2">&quot;Exercise&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">),</span>
+                        <span class="s2">&quot;Continuation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+                        <span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm2_idx</span><span class="p">:</span>
+    <span class="c1"># Immediate payoff if exercise at t=2: h2[i]</span>
+    <span class="n">df_dec2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Exercise&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># Continuation: beta2[0] + beta2[1]*S2 + beta2[2]*S2^2</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">cont2</span> <span class="o">=</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s2</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">s2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">df_dec2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Continuation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cont2</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal early exercise decision at time 2&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_dec2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal early exercise decision at time 2
+     Exercise Continuation
+Path                      
+1     0.02000      0.03674
+2           -            -
+3     0.03000      0.04590
+4     0.13000      0.11753
+5           -            -
+6     0.33000      0.15197
+7     0.26000      0.15642
+8           -            -
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># -----------------------------------</span>
+<span class="c1"># Table 3: Cash-flow matrix at time 2</span>
+<span class="c1"># -----------------------------------</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_paths</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">df_cash2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Path&quot;</span><span class="p">:</span> <span class="n">paths</span><span class="p">,</span>
+                        <span class="s2">&quot;t = 1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span><span class="p">,</span>   <span class="c1"># no exercises at t=1 </span>
+                        <span class="s2">&quot;t = 2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)],</span>
+                        <span class="s2">&quot;t = 3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)],</span>
+                        <span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+
+<span class="c1"># Fill in undiscounted cashflows at t=2 or t=3, path by path:</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm2_idx</span><span class="p">:</span>
+        <span class="c1"># continuation estimate at t=2 for path i</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">cont_val</span> <span class="o">=</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s2</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">s2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># if exercise at t=2:</span>
+        <span class="k">if</span> <span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont_val</span><span class="p">:</span>
+            <span class="n">df_cash2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">5f</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">df_cash2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># continue, collect h3 at t=3</span>
+            <span class="n">df_cash2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="c1"># fill 0s</span>
+            <span class="n">df_cash2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># out of the money at t=2 -&gt; cashflow is 0 at t=2, pay h3 at t=3</span>
+        <span class="n">df_cash2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_cash2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Display the final table</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cash‐flow matrix at time 2:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_cash2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Cash‐flow matrix at time 2:
+     t = 1     t = 2    t = 3
+Path                         
+1        -   0.00000  0.00000
+2        -   0.00000  0.00000
+3        -   0.00000  0.07000
+4        -  0.130000  0.00000
+5        -   0.00000  0.00000
+6        -  0.330000  0.00000
+7        -  0.260000  0.00000
+8        -   0.00000  0.00000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TIME = 1</span>
+
+<span class="c1"># Compute h1 at t=1 and discount V2 back to t=1:</span>
+<span class="n">h1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">S</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>    <span class="c1"># immediate payoff at t=1</span>
+<span class="n">Y2_disc</span> <span class="o">=</span> <span class="n">V2</span> <span class="o">*</span> <span class="n">df</span>                   <span class="c1"># discounted V2 back to t=1</span>
+
+<span class="c1"># Identify which paths are in-the-money at t=1</span>
+<span class="n">itm1_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">h1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Build the regression matrix at t=1:  Y2_disc vs {1, S1, (S1)^2}</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">itm1_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span>   <span class="c1"># column of 1’s</span>
+    <span class="n">S</span><span class="p">[</span><span class="n">itm1_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>                 <span class="c1"># column of S(t=1)</span>
+    <span class="n">S</span><span class="p">[</span><span class="n">itm1_idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>               <span class="c1"># column of S(t=1)^2</span>
+<span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">Y2_disc</span><span class="p">[</span><span class="n">itm1_idx</span><span class="p">]</span>
+
+<span class="n">beta1</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">Y1</span><span class="p">)</span>
+<span class="c1"># beta1 = [beta1[0], beta1[1], beta1[2]]</span>
+<span class="c1"># beta1 = np.array([2.038, -3.335, 1.356]) - appears as in paper they used 3 d.p.</span>
+
+<span class="c1"># -----------------------------</span>
+<span class="c1"># Table 4: “Regression at time 1”</span>
+<span class="c1"># -----------------------------</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_paths</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">df_reg1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Path&quot;</span><span class="p">:</span> <span class="n">paths</span><span class="p">,</span>
+    <span class="s2">&quot;Y&quot;</span><span class="p">:</span>    <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_paths</span><span class="p">,</span>
+    <span class="s2">&quot;X&quot;</span><span class="p">:</span>    <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_paths</span>
+<span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+<span class="c1">#print(f&quot;h2:&quot;, h2)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm1_idx</span><span class="p">:</span>
+    <span class="c1"># Y = h2[i] × 0.94176 e.g. “0.13 × 0.94176”</span>
+    <span class="n">df_reg1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actual_cf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">df</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># X = S(t=1) at path i</span>
+    <span class="n">df_reg1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Least‐squares formula at time 1:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;E[Y|X] = </span><span class="si">{</span><span class="n">beta1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">beta1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">.x + </span><span class="si">{</span><span class="n">beta1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">.x^2&quot;</span><span class="p">)</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Regression at time 1&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_reg1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Least‐squares formula at time 1:
+E[Y|X] = 2.03751 + -3.33544.x + 1.35646.x^2
+
+Regression at time 1
+                      Y        X
+Path                            
+1     0.00000 x 0.94176  1.09000
+2                     -        -
+3                     -        -
+4     0.13000 x 0.94176  0.93000
+5                     -        -
+6     0.33000 x 0.94176  0.76000
+7     0.26000 x 0.94176  0.92000
+8     0.00000 x 0.94176  0.88000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Table 5: “Optimal early exercise decision at time 1”</span>
+
+<span class="n">df_dec1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Path&quot;</span><span class="p">:</span> <span class="n">paths</span><span class="p">,</span>
+    <span class="s2">&quot;Exercise&quot;</span><span class="p">:</span>     <span class="p">[</span><span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)],</span>
+    <span class="s2">&quot;Continuation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)]</span>
+<span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm1_idx</span><span class="p">:</span>
+    <span class="c1"># Compute continuation estimate at t=1:</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">cont1</span> <span class="o">=</span> <span class="n">beta1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x1</span> <span class="o">+</span> <span class="n">beta1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">x1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># Fill “Exercise” = h1[i]  </span>
+    <span class="n">df_dec1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Exercise&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># Fill “Continuation” = cont1 </span>
+    <span class="n">df_dec1</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Continuation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cont1</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimal early exercise decision at time 1&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_dec1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimal early exercise decision at time 1
+     Exercise Continuation
+Path                      
+1     0.01000      0.01349
+2           -            -
+3           -            -
+4     0.17000      0.10875
+5           -            -
+6     0.34000      0.28606
+7     0.18000      0.11701
+8     0.22000      0.15276
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Stopping time</span>
+
+<span class="c1"># Stopping means exercise</span>
+<span class="c1"># Determine stop1 (exercise at t=1) using exact continuation</span>
+<span class="n">stop1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm1_idx</span><span class="p">:</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">cont1</span> <span class="o">=</span> <span class="n">beta1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s1</span> <span class="o">+</span> <span class="n">beta1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">s1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">h1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont1</span><span class="p">:</span>
+        <span class="n">stop1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Determine stop2 (exercise at t=2) for those which did not stop at t=1:</span>
+<span class="n">stop2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itm2_idx</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">stop1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s2</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">cont2</span> <span class="o">=</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s2</span> <span class="o">+</span> <span class="n">beta2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">s2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont2</span><span class="p">:</span>
+            <span class="n">stop2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Determine stop3 (must stop at t=3 if not stopped earlier):</span>
+<span class="n">stop3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">stop1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">stop2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">stop3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">stop3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Build the DataFrame exactly as in the paper:</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_paths</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df_stop</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Path&quot;</span><span class="p">:</span>  <span class="n">paths</span><span class="p">,</span>
+    <span class="s2">&quot;t = 1&quot;</span><span class="p">:</span> <span class="n">stop1</span><span class="p">,</span>
+    <span class="s2">&quot;t = 2&quot;</span><span class="p">:</span> <span class="n">stop2</span><span class="p">,</span>
+    <span class="s2">&quot;t = 3&quot;</span><span class="p">:</span> <span class="n">stop3</span>
+<span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Stopping rule&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_stop</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Stopping rule
+      t = 1  t = 2  t = 3
+Path                     
+1         0      0      0
+2         0      0      0
+3         0      0      1
+4         1      0      0
+5         0      0      0
+6         1      0      0
+7         1      0      0
+8         1      0      0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Option cash flow matrix</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_paths</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> 
+
+<span class="c1"># Build a DataFrame with blanks for every (t=1, t=2, t=3) - fill later</span>
+<span class="n">df_opt_cf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;Path&quot;</span><span class="p">:</span>  <span class="n">paths</span><span class="p">,</span>
+    <span class="s2">&quot;t = 1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)],</span>
+    <span class="s2">&quot;t = 2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)],</span>
+    <span class="s2">&quot;t = 3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)]</span>
+<span class="p">})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+    <span class="c1"># If stop1[i]==1, we exercise at t=1</span>
+    <span class="k">if</span> <span class="n">stop1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># Else if stop2[i]==1, we exercise at t=2</span>
+    <span class="k">elif</span> <span class="n">stop2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># Else if stop3[i]==1, we exercise at t=3</span>
+    <span class="k">elif</span> <span class="n">stop3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If a path never exercises (all stops zero), pay zero everywhere</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">df_opt_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;t = 3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mf">0.00</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Option cash flow matrix&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_opt_cf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Option cash flow matrix
+        t = 1    t = 2    t = 3
+Path                           
+1     0.00000  0.00000  0.00000
+2     0.00000  0.00000  0.00000
+3     0.00000  0.00000  0.07000
+4     0.17000  0.00000  0.00000
+5     0.00000  0.00000  0.00000
+6     0.34000  0.00000  0.00000
+7     0.18000  0.00000  0.00000
+8     0.22000  0.00000  0.00000
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pricing AM-option</span>
+
+<span class="n">discounted_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span>
+<span class="c1"># We need to go path-by-path</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+    <span class="c1"># Determine at which time t* this i-th path exercises</span>
+    <span class="k">if</span> <span class="n">stop1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">t_star</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">cf</span> <span class="o">=</span> <span class="n">h1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">stop2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">t_star</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">cf</span> <span class="o">=</span> <span class="n">h2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">stop3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">t_star</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">cf</span> <span class="o">=</span> <span class="n">h3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># path never exercises, so CF = 0</span>
+        <span class="n">t_star</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">cf</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="c1"># Discount that single cash flow back to time zero</span>
+    <span class="k">if</span> <span class="n">t_star</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">discounted_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cf</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">t_star</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">discounted_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+
+<span class="sd">&quot;&quot;&quot; From the paper: option can now be valued by discounting each cash</span>
+<span class="sd">flow in the option cash flow matrix back to time zero, and averaging over all paths.</span>
+<span class="sd">For EU: value of .0564 for the European put obtained </span>
+<span class="sd">        by discounting back the cash flows at time 3 from the first cash flow matrix.</span>
+<span class="sd">            - So, also the EU-put is valued a some kind of of MC-average? So, no closed form BS price.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># American‐put price is avg of discounted values</span>
+<span class="n">american_put_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">discounted_values</span><span class="p">)</span>
+<span class="c1"># EU-put</span>
+<span class="c1"># path-by-path: h3[i] = max(K - S(i, 3), 0)</span>
+<span class="c1"># PV = e^{-3*r} 1/n sum(h3[i])</span>
+<span class="c1"># Discount factor from t=3 back to 0:</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1"># Compute the European‐put price as the average of (df3 * h3):</span>
+<span class="n">european_put_price1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">h3</span> <span class="o">*</span> <span class="n">df3</span><span class="p">)</span> <span class="c1"># matches the paper 0.0564</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;American put price = </span><span class="si">{</span><span class="n">american_put_price</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;European put price = </span><span class="si">{</span><span class="n">european_put_price1</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Early exercise premium = </span><span class="si">{</span><span class="n">american_put_price</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">european_put_price1</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>American put price = 0.11443
+European put price = 0.05638
+Early exercise premium = 0.05805
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="least-squares-monte-carlo">
+<h2><span class="section-number">5.2. </span>Least-Squares Monte Carlo<a class="headerlink" href="#least-squares-monte-carlo" title="Link to this heading">#</a></h2>
+<p>Now, instead of considering the fixed paths, we will generate the paths by Monte Carlo under the standard Geometric Brownian motion, $<span class="math notranslate nohighlight">\(\mathrm{d}S_t = \mu S_t \mathrm{d}t + \sigma S_t \mathrm{d}W_t,\)</span><span class="math notranslate nohighlight">\( 
+where \)</span>S_t<span class="math notranslate nohighlight">\( - stock price, \)</span>W_t$ - standard Brownian motion.</p>
+<p>First, we will consider the exact price given by Black-Scholes model and simulate the paths under GBM.</p>
+<p>Second, we will develop LSMC-pricer function using the Laguerre polynomials as implemented in the paper.</p>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Exact price - Black-Scholes formula</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+    <span class="n">d1</span> <span class="o">=</span> <span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S0</span><span class="o">/</span><span class="n">K</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">T</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">T</span><span class="p">))</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">-</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">bs_put</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span><span class="o">*</span><span class="n">S0</span> <span class="o">+</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="n">d2</span><span class="p">)</span><span class="o">*</span><span class="n">K</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="o">*</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bs_put</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MC paths generator with antithetic sampling</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">n_paths</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Antithetic: We input 50,000 paths and we get 100,000 paths &quot;&quot;&quot;</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> 
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="n">n_steps</span>
+
+    <span class="c1"># Generate randoms for half of n_paths</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_paths</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+    
+    <span class="c1"># Create vector of paths and antithetic paths</span>
+    <span class="n">Z_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">Z</span><span class="p">,</span> <span class="o">-</span><span class="n">Z</span><span class="p">])</span>  
+    
+    <span class="c1"># Initialize paths</span>
+    <span class="n">n_total</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_paths</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_total</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">S</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">S0</span>
+    
+    <span class="c1"># Simulate paths</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+        <span class="n">S</span><span class="p">[:,</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">S</span><span class="p">[:,</span> <span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">r</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">dt</span> <span class="o">+</span> <span class="n">sigma</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span><span class="o">*</span><span class="n">Z_all</span><span class="p">[:,</span> <span class="n">t</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">S</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>As considered in the paper, we define the Laguerre polynomials which we will use as basis functions for the linear regression.</p>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">laguerre_polynomials</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Calculate first three Laguerre polynomials</span>
+<span class="sd">    x_scaled as x / K - to account for moneyness &quot;&quot;&quot;</span>
+    <span class="c1"># Scale x </span>
+    <span class="n">x_scaled</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">K</span>  <span class="c1"># Normalize by strike price </span>
+    
+    <span class="c1"># Calculate e^(-x/2) </span>
+    <span class="n">exp_term</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x_scaled</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Laguerre polynomials</span>
+    <span class="n">L0</span> <span class="o">=</span> <span class="n">exp_term</span>
+    <span class="n">L1</span> <span class="o">=</span> <span class="n">exp_term</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x_scaled</span><span class="p">)</span>
+    <span class="n">L2</span> <span class="o">=</span> <span class="n">exp_term</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x_scaled</span> <span class="o">+</span> <span class="n">x_scaled</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we define LSMC-pricer function.</p>
+<p>Now instead of fixed paths we consider <span class="math notranslate nohighlight">\(n\)</span> paths indexed by time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<p>Pricing:</p>
+<ul class="simple">
+<li><p>The payoff at terminal time is known, so we trace the path backwards.</p></li>
+<li><p>Use linear regression to estimate continuation value.</p></li>
+<li><p>Decide if early exercise is optimal.</p></li>
+</ul>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">lsmc_american_put</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Least Squares Monte Carlo for American Put Option &quot;&quot;&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+    <span class="n">n_paths</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="n">n_steps</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span>
+    
+    <span class="c1"># Initialize cash flow matrix</span>
+    <span class="n">cash_flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_paths</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    
+    <span class="c1"># Terminal payoff</span>
+    <span class="n">cash_flows</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">S</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        
+    <span class="c1"># Backward induction</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Current payoff if exercised</span>
+        <span class="n">payoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">S</span><span class="p">[:,</span> <span class="n">t</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Find in-the-money paths</span>
+        <span class="n">itm</span> <span class="o">=</span> <span class="n">payoff</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="c1"># will use as index for tracking</span>
+        
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">itm</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Get stock prices for ITM paths</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">itm</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span>
+            
+            <span class="c1"># Calculate basis functions according to paper</span>
+            <span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span> <span class="o">=</span> <span class="n">laguerre_polynomials</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+            
+            <span class="c1"># Data matrix: constant (intercept) + 3 Laguerre polynomials</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">L0</span><span class="p">,</span> <span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">])</span>
+            
+            <span class="c1"># Calculate discounted future cash flows Y - response variable</span>
+                <span class="c1"># Continuation value we are want to estimate</span>
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span> <span class="c1">#</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">Y</span> <span class="o">+=</span> <span class="n">cash_flows</span><span class="p">[:,</span> <span class="n">s</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="o">**</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> 
+            <span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">itm</span><span class="p">]</span>
+            
+            <span class="c1"># Regression to estimate continuation value</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">Y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># prediction</span>
+            <span class="c1">#print(beta)</span>
+            <span class="n">cont_value</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">beta</span>
+            <span class="c1">#print(cont_value)</span>
+            
+            <span class="c1"># Exercise decision: exercise if immediate payoff &gt;= continuation value</span>
+            <span class="n">exercise</span> <span class="o">=</span> <span class="n">payoff</span><span class="p">[</span><span class="n">itm</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cont_value</span>
+            
+            <span class="c1"># Update cash flows</span>
+            <span class="n">itm_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">itm</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">should_exercise</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">exercise</span><span class="p">):</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">itm_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">should_exercise</span><span class="p">:</span>
+                    <span class="n">cash_flows</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">payoff</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                    <span class="c1"># Zero out future cash flows</span>
+                    <span class="n">cash_flows</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># for each path, find time when of exercise and discout it back to t=0</span>
+    <span class="n">option_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_paths</span><span class="p">):</span>
+        <span class="c1"># Find all times when this option has positive cf</span>
+        <span class="n">exercise_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cash_flows</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">exercise_times</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">t_exercise</span> <span class="o">=</span> <span class="n">exercise_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># per path 1 exercise</span>
+            <span class="n">option_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cash_flows</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">t_exercise</span><span class="p">]</span> <span class="o">*</span> <span class="n">df</span><span class="o">**</span><span class="n">t_exercise</span> <span class="c1"># dicsouting it to t=0</span>
+    
+    <span class="c1"># Return mean value (since path dependent) and standard error</span>
+    <span class="n">mean_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">option_values</span><span class="p">)</span> <span class="c1"># option PV </span>
+    <span class="n">std_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">option_values</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_paths</span><span class="p">)</span>
+    <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+    
+    <span class="k">return</span> <span class="n">mean_value</span><span class="p">,</span> <span class="n">std_error</span><span class="p">,</span> <span class="n">runtime</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Combining the above, we are able to replicate the Table 1 in the paper.</p>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">replicate_table1_row</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span> <span class="n">n_paths</span><span class="o">=</span><span class="mi">50000</span><span class="p">,</span> <span class="n">n_steps_per_year</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span> <span class="c1"># exercisable 50x per year = n_steps</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Replicate one row of Table 1 </span>
+<span class="sd">    Goal is to replicate the table row-by-row and compute the required cols &quot;&quot;&quot;</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># We fix the seed for each row, so its the same</span>
+    
+    <span class="c1"># Number of time steps</span>
+    <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">T</span> <span class="o">*</span> <span class="n">n_steps_per_year</span><span class="p">)</span> <span class="c1"># T is either 1 or 2, so 50 or 100</span>
+    
+    <span class="c1"># Simulate paths with antithetic variates</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">simulate_gbm_paths</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">n_paths</span><span class="p">)</span>
+
+    <span class="c1"># Calculate American put value using LSMC</span>
+    <span class="n">american_value</span><span class="p">,</span> <span class="n">std_error</span><span class="p">,</span> <span class="n">runtime</span> <span class="o">=</span> <span class="n">lsmc_american_put</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate EU put value (closed form)</span>
+    <span class="n">european_value</span> <span class="o">=</span> <span class="n">bs_put_price</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+    
+    <span class="c1"># Early exercise value</span>
+    <span class="n">early_exercise_value</span> <span class="o">=</span> <span class="n">american_value</span> <span class="o">-</span> <span class="n">european_value</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;American&#39;</span><span class="p">:</span> <span class="n">american_value</span><span class="p">,</span>
+        <span class="s1">&#39;Std_Error&#39;</span><span class="p">:</span> <span class="n">std_error</span><span class="p">,</span>
+        <span class="s1">&#39;European&#39;</span><span class="p">:</span> <span class="n">european_value</span><span class="p">,</span>
+        <span class="s1">&#39;Early_Exercise&#39;</span><span class="p">:</span> <span class="n">early_exercise_value</span><span class="p">,</span>
+        <span class="s1">&#39;Runtime&#39;</span><span class="p">:</span> <span class="n">runtime</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-code docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replicate Table 1</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># We replicate specific rows from Table 1</span>
+    <span class="n">table_data</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Define parameters S, \sigma, T rows in Table 1</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">38</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="c1"># Printing the table row-by-row; </span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Replicating Table 1&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;S&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;vol&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;T&#39;</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;American&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;(s.e.)&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Runtime&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;European&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;Early Ex&#39;</span><span class="si">:</span><span class="s2">&gt;8</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">70</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">replicate_table1_row</span><span class="p">(</span><span class="n">S0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+        
+        <span class="c1"># Display with 3 decimal places for values, 3 for standard errors</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">S0</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sigma</span><span class="si">:</span><span class="s2">&gt;5.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">   &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;American&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;Std_Error&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;5.4f</span><span class="si">}</span><span class="s2">)   &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;Runtime&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;European&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;Early_Exercise&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;8.4f</span><span class="si">}</span><span class="s2">   &quot;</span>
+            <span class="p">)</span>
+        
+        <span class="n">table_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">S0</span><span class="p">,</span>
+            <span class="s1">&#39;sigma&#39;</span><span class="p">:</span> <span class="n">sigma</span><span class="p">,</span>
+            <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span>
+            <span class="s1">&#39;Simulated_American&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;American&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Runtime&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Runtime&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;SE&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Std_Error&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;European&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;European&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Early_Exercise_Value&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;Early_Exercise&#39;</span><span class="p">]</span>
+        <span class="p">})</span>
+
+
+    <span class="c1"># Store the data</span>
+    <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">table_data</span><span class="p">)</span>
+    <span class="c1">#print(df_results)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Replicating Table 1
+======================================================================
+   S  vol   T | American   (s.e.) |  Runtime | European | Early Ex
+----------------------------------------------------------------------
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   1     4.4773 (0.0092)     1.4859     3.8443     0.6330   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.20   2     4.8323 (0.0110)     3.3412     3.7630     1.0693   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   1     7.0876 (0.0190)     1.2419     6.7114     0.3762   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  36  0.40   2     8.4976 (0.0225)     3.1392     7.7000     0.7976   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   1     3.2473 (0.0094)     1.2580     2.8519     0.3953   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.20   2     3.7342 (0.0110)     2.9360     2.9906     0.7437   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   1     6.1405 (0.0187)     1.1413     5.8343     0.3061   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  38  0.40   2     7.6557 (0.0224)     3.0885     6.9788     0.6769   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   1     2.3081 (0.0087)     1.0082     2.0664     0.2417   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.20   2     2.8805 (0.0106)     2.5650     2.3559     0.5246   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   1     5.3108 (0.0181)     1.0465     5.0596     0.2512   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  40  0.40   2     6.9127 (0.0219)     2.7157     6.3260     0.5867   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   1     1.6168 (0.0077)     0.8131     1.4645     0.1523   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.20   2     2.2044 (0.0097)     2.4872     1.8414     0.3630   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   1     4.5887 (0.0173)     0.9796     4.3787     0.2100   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  42  0.40   2     6.2382 (0.0213)     2.6911     5.7356     0.5026   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   1     1.1154 (0.0066)     0.7116     1.0169     0.0985   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.20   2     1.6907 (0.0087)     2.1821     1.4292     0.2615   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   1     3.9486 (0.0164)     0.8693     3.7828     0.1658   
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  44  0.40   2     5.6410 (0.0208)     2.5970     5.2020     0.4391   
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="2_LSMC_Dialid.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Intuition behind the Longstaff-Schwartz implementation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="2_FD.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Pricing American Options by Finite Difference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-initial-example">5.1. Simple initial example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-monte-carlo">5.2. Least-Squares Monte Carlo</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Patrik Liba
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1500 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2. Exact Heston Model Simuations for Characteristic Function Methods &#8212; Quantitative Finance Book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '1_HestonModelExact6';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Calibration of Heston model" href="QN_calibHeston.html" />
+    <link rel="prev" title="1. Characteristic Functions Methods Approximating CDF/PDF" href="1_c_pdf_recovery.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.jpeg" class="logo__image only-light" alt="Quantitative Finance Book - Home"/>
+    <script>document.write(`<img src="_static/logo.jpeg" class="logo__image only-dark" alt="Quantitative Finance Book - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Quantitative Finance Book
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Project - Characteristic Functions Methods for Option Pricing</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="1_c_pdf_recovery.html">1. Characteristic Functions Methods Approximating CDF/PDF</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Exact Heston Model Simuations for Characteristic Function Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QN_calibHeston.html">3. Calibration of Heston model</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pricing American Options - replicating Longstaff-Schwarz (2001)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="2_LSMC_Dialid.html">4. Intuition behind the Longstaff-Schwartz implementation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_LSMC.html">5. Pricing American Options by LSMC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_FD.html">6. Pricing American Options by Finite Difference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_COS_AM.html">7. Pricing American Options by COS method</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/libapatrik/Quantitative-Finance-Book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/libapatrik/Quantitative-Finance-Book/issues/new?title=Issue%20on%20page%20%2F1_HestonModelExact6.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/1_HestonModelExact6.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Exact Heston Model Simuations for Characteristic Function Methods</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-raphson-method-for-efficient-cdf-inversion">2.1. Newton-Raphson method for efficient CDF inversion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observations">2.2. Observations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison">2.3. Comparison</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cos-method-is-the-winner">2.3.1. COS method is the winner</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-raphson-method-vs-brute-force-approach-for-cdf-inversion">2.3.2. Newton-Raphson method vs. brute force approach for CDF inversion</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="exact-heston-model-simuations-for-characteristic-function-methods">
+<h1><span class="section-number">2. </span>Exact Heston Model Simuations for Characteristic Function Methods<a class="headerlink" href="#exact-heston-model-simuations-for-characteristic-function-methods" title="Link to this heading">#</a></h1>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ss</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">trapezoid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># COS</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cos_cdf</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">F_k</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">chf</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">omega</span> <span class="o">*</span> <span class="n">a</span><span class="p">))</span>
+    <span class="n">cdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">F_k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">a</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">F_k</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="n">omega</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">omega</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">x</span> <span class="o">-</span> <span class="n">a</span><span class="p">)))</span>
+    
+    <span class="k">return</span> <span class="n">cdf</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cos_pdf</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="c1"># chf(omega)</span>
+    <span class="c1">#i = np.complex(0.0, 1.0)  # assigning i=sqrt(-1)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="c1">#u = np.zeros([1,N]) # Num of arguments for ch.f.</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span> <span class="c1"># scale; frequencies -- u = omega </span>
+    <span class="c1"># F_k coefficients</span>
+    <span class="n">F_k</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">chf</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">a</span><span class="p">))</span>
+    <span class="n">F_k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">F_k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.5</span>  <span class="c1"># first term</span>
+    <span class="c1"># Final calculation</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">F_k</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">a</span><span class="p">)))</span>
+    
+    <span class="k">return</span> <span class="n">pdf</span>
+
+<span class="c1"># Carr-Madan</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">carr_madan_cdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_grid</span><span class="p">,</span> <span class="n">u_max</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="c1"># Starting from close to 0</span>
+    <span class="n">u_min</span> <span class="o">=</span> <span class="mf">1e-10</span>  <span class="c1"># Smaller starting point to capture low-frequency behavior</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">u_min</span><span class="p">,</span> <span class="n">u_max</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    
+    <span class="c1"># Apply damping to char function</span>
+    <span class="c1"># chf_damped = lambda u_val: chf(u_val - 1j * alpha) * np.exp(-alpha * x_grid[:, np.newaxis])</span>
+    
+    <span class="c1"># Compute integrand for each x (unchanged)</span>
+    <span class="n">integrand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">x_grid</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span> <span class="o">*</span> <span class="n">chf</span><span class="p">(</span><span class="n">u</span><span class="p">))</span> <span class="o">/</span> <span class="n">u</span>  <span class="c1"># shape: (len(x), N)</span>
+    <span class="c1"># Integrate using trapezoidal rule along frequency axis (unchanged)</span>
+    <span class="n">integral</span> <span class="o">=</span> <span class="n">trapezoid</span><span class="p">(</span><span class="n">integrand</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Apply Gil-Pelaez inversion formula</span>
+    <span class="n">cdf</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">integral</span>
+    <span class="n">cdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">cdf</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Clamp in [0,1]</span>
+    <span class="k">return</span> <span class="n">cdf</span>
+
+<span class="c1"># Recover PDF</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">carr_madan_pdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_grid</span><span class="p">,</span> <span class="n">u_max</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">du</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">u_max</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">u_max</span><span class="p">,</span> <span class="n">u_max</span> <span class="o">-</span> <span class="n">du</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="c1"># Compute integrand of inverse Fourier transform</span>
+    <span class="n">integrand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">x_grid</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span> <span class="o">*</span> <span class="n">chf</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="c1"># Numerical integration using trapezoidal rule</span>
+    <span class="n">integral</span> <span class="o">=</span> <span class="n">trapezoid</span><span class="p">(</span><span class="n">integrand</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">integral</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pdf</span>
+
+
+<span class="c1"># CONV</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">conv_pdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">):</span>    
+    <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">x_range</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span>  <span class="c1"># Total length of spatial domain</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">L</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">du</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">L</span>
+    <span class="n">u_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">dx</span>  <span class="c1"># Nyquist frequency</span>
+
+    <span class="c1"># Create frequency array in &quot;standard&quot; order from -u_max to u_max</span>
+    <span class="k">if</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># For even N: [-N/2, -N/2+1, ..., -1, 0, 1, ..., N/2-1] x du</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">//</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># For odd N: [-(N-1)/2, ..., -1, 0, 1, ..., (N-1)/2] x du</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="n">du</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+
+    <span class="n">phi_damped</span> <span class="o">=</span> <span class="n">chf</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span>
+    <span class="n">integrand</span> <span class="o">=</span> <span class="n">phi_damped</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">x_min</span><span class="p">)</span>
+    <span class="n">integrand_fft_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">integrand</span><span class="p">)</span>
+    <span class="n">fft_result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">integrand_fft_order</span><span class="p">)</span>
+
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">fft_result</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">du</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="c1"># Ensure non-negativity (small numerical errors can cause negative values)</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Check: Normalize to ensure integral equals 1</span>
+    <span class="n">integral</span> <span class="o">=</span> <span class="n">trapezoid</span><span class="p">(</span><span class="n">pdf</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">integral</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pdf</span> <span class="o">=</span> <span class="n">pdf</span> <span class="o">/</span> <span class="n">integral</span>
+    
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">pdf</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">conv_cdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">13</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Automatically choose a domain that covers x_vals with some padding</span>
+        <span class="c1"># This ensures we capture the full probability mass</span>
+        <span class="n">x_min_req</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x_vals</span><span class="p">)</span>
+        <span class="n">x_max_req</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x_vals</span><span class="p">)</span>
+        <span class="n">padding</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_max_req</span> <span class="o">-</span> <span class="n">x_min_req</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>  <span class="c1"># 50% padding on each side</span>
+        <span class="n">x_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_min_req</span> <span class="o">-</span> <span class="n">padding</span><span class="p">,</span> <span class="n">x_max_req</span> <span class="o">+</span> <span class="n">padding</span><span class="p">)</span>
+    <span class="n">x_grid</span><span class="p">,</span> <span class="n">pdf_grid</span> <span class="o">=</span> <span class="n">conv_pdf</span><span class="p">(</span><span class="n">chf</span><span class="o">=</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="n">x_range</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">x_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Grid spacing (uniform)</span>
+    <span class="n">cdf_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">pdf_grid</span><span class="p">)</span>
+   
+    <span class="n">cdf_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># CDF starts at 0 at the leftmost point</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cdf_grid</span><span class="p">)):</span>
+        <span class="c1"># Add the area of the trapezoid between points i-1 and i</span>
+        <span class="n">cdf_grid</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cdf_grid</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">pdf_grid</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pdf_grid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="n">dx</span>
+
+    <span class="n">cdf_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">x_grid</span><span class="p">,</span> <span class="n">cdf_grid</span><span class="p">)</span>
+    <span class="c1"># Step 5: Ensure CDF properties are satisfied</span>
+    <span class="c1"># CDF should be between 0 and 1, and monotonically increasing</span>
+    <span class="n">cdf_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">cdf_vals</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">cdf_vals</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">carr_madan_pdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span> <span class="o">=</span> <span class="n">x_range</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">L</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">du</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">L</span>
+
+    <span class="c1"># Build symmetric frequency grid compatible with FFT ordering</span>
+    <span class="c1"># Use np.fft.fftfreq to avoid off-by-one mishaps, then scale &amp; shift.</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">dx</span><span class="p">)</span>  <span class="c1"># cycles per unit x</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">k</span>               <span class="c1"># angular frequencies</span>
+    <span class="c1"># Put into &quot;FFT input order&quot;: DC at index 0, positives up, then negatives</span>
+    <span class="c1"># u returned by fftfreq is already in that order; for explicit symmetry handling:</span>
+    <span class="c1"># (no shift needed for input to np.fft.fft)</span>
+    
+    <span class="c1"># Real-space grid in the desired interval</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x_min</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+
+    <span class="c1"># Damping (optional): evaluate at u - i*alpha</span>
+    <span class="k">if</span> <span class="n">alpha</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">chf</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">chf</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+    <span class="c1"># Phase to anchor the transform at x_min</span>
+    <span class="n">integrand</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">x_min</span><span class="p">)</span>
+
+    <span class="c1"># FFT of the frequency samples</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">integrand</span><span class="p">)</span>
+
+    <span class="c1"># Scale and undamp</span>
+    <span class="n">pdf</span> <span class="o">=</span> <span class="p">(</span><span class="n">du</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">alpha</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">pdf</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">pdf</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">CIR_Sample</span><span class="p">(</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">v_s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Sampling from noncentral-chiSquared distribution </span>
+<span class="sd">    tau = (t - s) - time to maturity, for s&lt;t</span>
+<span class="sd">    delta = degrees of freedom</span>
+<span class="sd">    Squared Bessel process - delta =&gt; 2, -&gt; unique solution + 0 is not attainable!</span>
+<span class="sd">                           </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">vbar</span> <span class="o">/</span> <span class="n">gamma</span> <span class="o">/</span> <span class="n">gamma</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">kappa</span> <span class="o">/</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">s</span><span class="p">))))</span>
+    <span class="n">kappaBar</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">c</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">s</span><span class="p">))</span> <span class="o">*</span> <span class="n">v_s</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">noncentral_chisquare</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">kappaBar</span><span class="p">,</span> <span class="n">NoOfPaths</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sample</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ChFIntegratedVariance</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">vu</span><span class="p">,</span> <span class="n">vt</span><span class="p">,</span> <span class="n">tau</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Broadie-Kaya -&gt; Exact sampling scheme (see paper) &quot;&quot;&quot;</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">kappa</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">gamma</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">omega</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">vbar</span> <span class="o">/</span> <span class="n">gamma</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="n">temp1</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">tau</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">kappa</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">tau</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">R</span> <span class="o">*</span> <span class="n">tau</span><span class="p">)))</span>
+
+    <span class="n">temp2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="n">vu</span> <span class="o">+</span> <span class="n">vt</span><span class="p">)</span> <span class="o">/</span> <span class="n">gamma</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">kappa</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">tau</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">tau</span><span class="p">))</span> <span class="o">-</span> <span class="n">R</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">R</span> <span class="o">*</span> <span class="n">tau</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">R</span> <span class="o">*</span> <span class="n">tau</span><span class="p">))))</span>
+    
+    <span class="c1"># Bessel functions</span>
+    <span class="n">temp3</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">iv</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">d</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vt</span> <span class="o">*</span> <span class="n">vu</span><span class="p">)</span> <span class="o">*</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">R</span> <span class="o">*</span> <span class="n">tau</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">R</span> <span class="o">*</span> <span class="n">tau</span><span class="p">))))</span>
+
+    <span class="n">temp4</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">iv</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">d</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vt</span> <span class="o">*</span> <span class="n">vu</span><span class="p">)</span> <span class="o">*</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">tau</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">gamma</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">kappa</span> <span class="o">*</span> <span class="n">tau</span><span class="p">))))</span>
+
+    <span class="n">chf</span> <span class="o">=</span> <span class="n">temp1</span> <span class="o">*</span> <span class="n">temp2</span> <span class="o">*</span> <span class="n">temp3</span> <span class="o">/</span> <span class="n">temp4</span> 
+    <span class="c1">#chf = temp1 * temp2 * temp3 / (np.maximum(temp4, 0.01)) # fix for preventing the divBy0</span>
+    
+    <span class="k">return</span> <span class="n">chf</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="newton-raphson-method-for-efficient-cdf-inversion">
+<h2><span class="section-number">2.1. </span>Newton-Raphson method for efficient CDF inversion<a class="headerlink" href="#newton-raphson-method-for-efficient-cdf-inversion" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>We make use of Newton-Raphon method to provide more efficient way of inverting CDF.</p></li>
+<li><p>For comparison of Newton-Raphson method and Brute method, please refer to the bottom of jupyter notebook.</p></li>
+</ul>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CDF_Inverter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="n">nr_expansion</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">u_max</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nr_expansion</span> <span class="o">=</span> <span class="n">nr_expansion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_max</span> <span class="o">=</span> <span class="n">u_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_cdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;cos&quot;</span><span class="p">:</span>
+            <span class="c1"># omega array</span>
+            <span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nr_expansion</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span>
+            <span class="n">chf_values</span> <span class="o">=</span> <span class="n">chf</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">cos_cdf</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">chf_values</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;carr_madan&quot;</span><span class="p">:</span>
+            <span class="c1"># result = carr_madan_pdf(chf, x_vals, u_max=self.u_max, N=self.N)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">carr_madan_cdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;conv&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">conv_cdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR CDF: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;cos&quot;</span><span class="p">:</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">chf_wrapper</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">chf</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">cos_pdf</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nr_expansion</span><span class="p">,</span> <span class="n">chf_wrapper</span><span class="p">,</span> <span class="n">x_vals</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;carr_madan&quot;</span><span class="p">:</span>
+            <span class="c1"># result = carr_madan_pdf(chf, x_vals, u_max=self.u_max, N=self.N)</span>
+            <span class="c1"># return result</span>
+            <span class="n">x_cm</span><span class="p">,</span> <span class="n">pdf_vals_cm</span> <span class="o">=</span> <span class="n">carr_madan_pdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">),</span> <span class="n">N</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">x_cm</span><span class="p">,</span> <span class="n">pdf_vals_cm</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;conv&quot;</span><span class="p">:</span>
+            <span class="n">x_grid</span><span class="p">,</span> <span class="n">pdf_grid</span> <span class="o">=</span> <span class="n">conv_pdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">x_grid</span><span class="p">,</span> <span class="n">pdf_grid</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR PDF: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+
+    <span class="c1"># Newton function for cdf inversion</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invert_cdf_newton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; 1.ii.d - Using Newton&#39;s method to find the inverse CDF </span>
+<span class="sd">            - CDF recovered by COS method (cos_cdf)</span>
+<span class="sd">            - for derivative of CDF we recover density (PDF) by COS method (cos_pdf) </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initial checks</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>  <span class="c1"># Ensure p is in [0,1]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1e-12</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">lower_bound</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">upper_bound</span>
+        
+        <span class="c1"># Evaluate CDF at a few points to provide better initial guess</span>
+            <span class="c1"># For 20 - few issues in IntVar hitting 0</span>
+            <span class="c1"># For 25 - hits fewer 0s</span>
+            <span class="c1"># For 50 - seems good</span>
+            <span class="c1"># Sweetspot = around 30</span>
+            <span class="c1"># Will depend on the params chosen for Heston; ie kappa, gamma, vbar, v0</span>
+        <span class="n">initial_points</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="n">x_initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">initial_points</span><span class="p">)</span>
+        <span class="c1">#cdf_initial = cos_cdf(lower_bound, upper_bound, omega, chf, x_initial) # Evaluade cdf at 30 points</span>
+        <span class="n">cdf_initial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_cdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">x_initial</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span> <span class="c1"># Evaluade cdf at 30 points</span>
+        
+        <span class="c1"># Find closest point to target probability</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">cdf_initial</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span> <span class="c1"># Pick the closes</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x_initial</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>  <span class="c1"># Initial guess &quot;best&quot;</span>
+        
+        <span class="c1"># Newton-Raphson iteration</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
+            <span class="c1"># Calculate CDF at current point</span>
+            <span class="n">cdf_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_cdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">]),</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="c1"># Calculate distance from target f(x) = CDF(x) - p</span>
+            <span class="n">fx</span> <span class="o">=</span> <span class="n">cdf_x</span> <span class="o">-</span> <span class="n">p</span>
+            
+            <span class="c1"># Check: If |F(x) - p| &lt; tol.</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x</span>
+            
+            <span class="c1"># Calculate F&#39;(x) = PDF at current point using cos_pdf</span>
+            <span class="n">pdf_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_pdf</span><span class="p">(</span><span class="n">chf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">]),</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="c1"># Safeguard against division by very small numbers</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pdf_x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+                <span class="n">pdf_x</span> <span class="o">=</span> <span class="mf">1e-10</span> <span class="k">if</span> <span class="n">pdf_x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1e-10</span>
+            
+            <span class="c1"># Update using Newton step</span>
+            <span class="n">x_new</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">fx</span> <span class="o">/</span> <span class="n">pdf_x</span>
+            
+            <span class="c1"># Keep within bounds</span>
+            <span class="n">x_new</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">,</span> <span class="n">x_new</span><span class="p">))</span>
+            
+            <span class="c1"># Check for convergence</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x_new</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">x_new</span>
+            
+            <span class="c1"># Update for next iteration</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x_new</span>
+
+        <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">GeneratePathsHestonES</span><span class="p">(</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">S_0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">nr_expansion</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> 
+                            <span class="n">recovery_method</span><span class="o">=</span><span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">method_kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Exact Simulation - exact sampling from the non-central chi-squared distribution</span>
+<span class="sd">        &quot;cos&quot;, &quot;carr_madan&quot;, &quot;conv&quot; methods for recovery of the pdf &quot;&quot;&quot;</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">NoOfSteps</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">])</span> <span class="c1"># cdf_inversion_newton tries to find this p</span>
+
+    <span class="n">Z1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="p">[</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">])</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">V_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">V</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span>
+    <span class="n">V_int</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">*</span> <span class="n">dt</span>
+    <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S_0</span><span class="p">)</span>
+    
+    <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Initialise the CDF_Inverter with the method of choice</span>
+    <span class="n">inverter</span> <span class="o">=</span> <span class="n">CDF_Inverter</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">recovery_method</span><span class="p">,</span> <span class="n">nr_expansion</span><span class="o">=</span><span class="n">nr_expansion</span><span class="p">,</span> <span class="o">**</span><span class="n">method_kwargs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using </span><span class="si">{</span><span class="n">recovery_method</span><span class="si">}</span><span class="s2"> method for CDF recovery and inversion&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">):</span>
+        <span class="c1"># making sure that samples from normal have mean 0 and variance 1</span>
+        <span class="k">if</span> <span class="n">NoOfPaths</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> 
+        
+        <span class="c1"># STEP 1: Exact samles for the variance process</span>
+        <span class="n">V</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">CIR_Sample</span><span class="p">(</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># STEP 2: Generate a sample from the distribution of the integrated variance process</span>
+
+        <span class="c1"># We will first have to find a bound on which we want to compute our distribution. We can do this using the</span>
+        <span class="c1"># relation between the second moment and the second derivative of the characteristic function at w = 0. We use</span>
+        <span class="c1"># a finite difference approximation.</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">NoOfPaths</span><span class="p">):</span>
+            <span class="n">chf_omega</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">ChFIntegratedVariance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">V</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">V</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">)</span> <span class="c1"># dt = tau! Here does NoOfSteps come in</span>
+            <span class="n">first_moment</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">chf_omega</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span>
+            <span class="n">second_moment</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">chf_omega</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">chf_omega</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            
+            <span class="n">standard_deviation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">second_moment</span><span class="p">)</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">first_moment</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># standard_deviation = np.sqrt(variance)</span>
+            
+            <span class="c1"># Lower bound of the variance process is 0, the upperbound we will take L * standard deviation.</span>
+            <span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">upper_bound</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">first_moment</span><span class="p">)</span> <span class="o">+</span> <span class="n">L</span> <span class="o">*</span> <span class="n">standard_deviation</span>
+
+            <span class="n">V_int</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">inverter</span><span class="o">.</span><span class="n">invert_cdf_newton</span><span class="p">(</span><span class="n">chf_omega</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            
+
+        <span class="c1"># STEP 3: Recover a sample from the expression of the Ito integral using the solution of the CIR process</span>
+        <span class="n">ito_integral_Ws1</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">vbar</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">+</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">V_int</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+        <span class="c1"># ito_integral_Ws1 = 1.0 / gamma * (V[:, i + 1] - V[:, i] - kappa*(vbar - V_int[:, i])*dt</span>
+
+        <span class="c1"># STEP 4: Generate a sample of St</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">V_int</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">ito_integral_Ws1</span><span class="p">)</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rho</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">V_int</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> 
+    
+        <span class="n">X</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span> <span class="o">*</span> <span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> 
+
+        <span class="n">time</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span>
+
+    <span class="c1"># Compute exponent</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="n">S</span><span class="p">,</span> <span class="s2">&quot;Vint&quot;</span><span class="p">:</span> <span class="n">V_int</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">paths</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Parameters</span>
+    <span class="n">NoOfPaths</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">NoOfSteps</span> <span class="o">=</span> <span class="mi">50</span>
+
+    
+    <span class="c1"># Heston model parameters</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="c1"># vol of vol</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># speed of mean reversion</span>
+    <span class="n">vbar</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="c1"># long-term mean</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.9</span> <span class="c1"># negative correlation</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="c1"># initial variance</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">S_0</span> <span class="o">=</span> <span class="mf">100.0</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">0.1</span>
+    
+    <span class="n">nr_expansion</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="mi">10</span>
+    
+    <span class="c1"># Set random seed for reproducibility</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Test all three methods</span>
+    <span class="n">methods_to_test</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;cos&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;carr_madan&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">},</span>
+        <span class="s2">&quot;conv&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="mi">13</span><span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">methods_to_test</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Testing </span><span class="si">{</span><span class="n">method_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> Method ===&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Reset random seed to ensure fair comparison</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="n">GeneratePathsHestonES</span><span class="p">(</span>
+            <span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">S_0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span>
+            <span class="n">nr_expansion</span><span class="o">=</span><span class="n">nr_expansion</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">recovery_method</span><span class="o">=</span><span class="n">method_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        
+        <span class="n">results</span><span class="p">[</span><span class="n">method_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;paths&quot;</span><span class="p">:</span> <span class="n">paths</span><span class="p">,</span>
+            <span class="s2">&quot;computation_time&quot;</span><span class="p">:</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="p">}</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Computation time: </span><span class="si">{</span><span class="n">end_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Plot comparison</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">method_name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">timeGrid</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">][</span><span class="s2">&quot;S&quot;</span><span class="p">]</span>
+        <span class="n">V_int</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">][</span><span class="s2">&quot;Vint&quot;</span><span class="p">]</span>
+        
+        <span class="c1"># Plot integrated variance</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timeGrid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">V_int</span><span class="p">))</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\int_0^t V_s ds$&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">method_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">: Integrated Variance</span><span class="se">\n</span><span class="s1">Time: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;computation_time&quot;</span><span class="p">]</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">s&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Plot stock price paths</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">timeGrid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$S_t$&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">method_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">: Stock Prices&#39;</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="c1"># Print timing comparison</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== Performance Comparison ===&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;computation_time&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Testing COS Method ===
+Using cos method for CDF recovery and inversion
+Computation time: 0.133 seconds
+
+=== Testing CARR_MADAN Method ===
+Using carr_madan method for CDF recovery and inversion
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computation time: 14.640 seconds
+
+=== Testing CONV Method ===
+Using conv method for CDF recovery and inversion
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Computation time: 10.209 seconds
+</pre></div>
+</div>
+<img alt="_images/018dca9f80ffb997c3800b3534b05f629d52841309618004e53d4160413844c8.png" src="_images/018dca9f80ffb997c3800b3534b05f629d52841309618004e53d4160413844c8.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>=== Performance Comparison ===
+COS: 0.133 seconds
+CARR_MADAN: 14.640 seconds
+CONV: 10.209 seconds
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="observations">
+<h2><span class="section-number">2.2. </span>Observations<a class="headerlink" href="#observations" title="Link to this heading">#</a></h2>
+<p>1 Comparison:</p>
+<ul class="simple">
+<li><p>COS method is the fastest - avoids using integration, most stable.</p></li>
+<li><p>Carr-Madan method seems unstable due to stability issues likely due to very small values when inverting CDF.</p></li>
+<li><p>CONV method is the slowest due to expensive convolution operations.</p></li>
+</ul>
+<p>2 Stock Prices:</p>
+<ul class="simple">
+<li><p>Each method produces similar final stock trajectories</p></li>
+</ul>
+<p>3 Integrated variance process hits zeros for Carr-Madan method</p>
+<ul class="simple">
+<li><p>compute_pdf() - returns small value for derivated, so Newton’s step collapses to 0.</p></li>
+<li><p>compute_cdf() - may be non-monotone or “too flat” near 0, so the best initial guess is (at/near) 0.</p></li>
+<li><p>COS and CONV methods have built-in numerical stabilization mechanisms that prevent PDFs from getting too close to zero, while Carr-Madan is more susceptible to producing extreme values that break Newton’s method.</p></li>
+<li><p>This explains why only Carr-Madan causes the integrated variance to hit zero - its PDF can become numerically zero, making Newton’s method unstable, which cascades into the path simulation hitting boundary conditions.</p></li>
+</ul>
+<p>3</p>
+</section>
+<section id="comparison">
+<h2><span class="section-number">2.3. </span>Comparison<a class="headerlink" href="#comparison" title="Link to this heading">#</a></h2>
+<section id="cos-method-is-the-winner">
+<h3><span class="section-number">2.3.1. </span>COS method is the winner<a class="headerlink" href="#cos-method-is-the-winner" title="Link to this heading">#</a></h3>
+<p>Use cases:</p>
+<ul class="simple">
+<li><p>Option Pricing: replacing the Monte Carlo with COS method.</p></li>
+<li><p>Model Calibration: Can be used to fit Heston parameters.</p></li>
+<li><p>Trading Systems: Enables fast Greeks and sensitivity analysis.</p></li>
+<li><p>Real-time Risk Management: Very fast calculations of VaR.</p></li>
+</ul>
+</section>
+<section id="newton-raphson-method-vs-brute-force-approach-for-cdf-inversion">
+<h3><span class="section-number">2.3.2. </span>Newton-Raphson method vs. brute force approach for CDF inversion<a class="headerlink" href="#newton-raphson-method-vs-brute-force-approach-for-cdf-inversion" title="Link to this heading">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">GeneratePathsHestonES</span><span class="p">(</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">S_0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">nr_expansion</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Exact Simulation - exact sampling from the non-central chi-squared distribution</span>
+<span class="sd">    - method: &quot;brute&quot; - initially provided brute force approach; </span>
+<span class="sd">              &quot;newton&quot; - newton method (default) &quot;&quot;&quot;</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">NoOfSteps</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">])</span> <span class="c1"># cdf_inversion_newton tries to find this p</span>
+
+    <span class="n">Z1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="p">[</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">])</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">V_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">V</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span>
+    <span class="n">V_int</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span> <span class="o">*</span> <span class="n">dt</span>
+    <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">S_0</span><span class="p">)</span>
+    
+    <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">NoOfSteps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">):</span>
+        <span class="c1"># making sure that samples from normal have mean 0 and variance 1</span>
+        <span class="k">if</span> <span class="n">NoOfPaths</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> 
+        
+        <span class="c1"># STEP 1: Exact samles for the variance process</span>
+        <span class="n">V</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">CIR_Sample</span><span class="p">(</span><span class="n">NoOfPaths</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># STEP 2: Generate a sample from the distribution of the integrated variance process</span>
+
+        <span class="c1"># We will first have to find a bound on which we want to compute our distribution. We can do this using the</span>
+        <span class="c1"># relation between the second moment and the second derivative of the characteristic function at w = 0. We use</span>
+        <span class="c1"># a finite difference approximation.</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">NoOfPaths</span><span class="p">):</span>
+            <span class="n">chf_omega</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">ChFIntegratedVariance</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">V</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">V</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">)</span> <span class="c1"># dt = tau! Here does NoOfSteps come in</span>
+            <span class="n">first_moment</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">chf_omega</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">dt</span>
+            <span class="n">second_moment</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">chf_omega</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dt</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">chf_omega</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">dt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            
+            <span class="n">standard_deviation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">second_moment</span><span class="p">)</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">first_moment</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="c1"># standard_deviation = np.sqrt(variance)</span>
+            
+            <span class="c1"># Lower bound of the variance process is 0, the upperbound we will take L * standard deviation.</span>
+            <span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">upper_bound</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">first_moment</span><span class="p">)</span> <span class="o">+</span> <span class="n">L</span> <span class="o">*</span> <span class="n">standard_deviation</span>
+            <span class="c1">#upper_bound = L * np.sqrt(abs(second_moment))</span>
+
+            <span class="n">omega</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nr_expansion</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span>
+
+            <span class="c1"># Calculate the ch.f.</span>
+            <span class="n">chf_integrated</span> <span class="o">=</span> <span class="n">ChFIntegratedVariance</span><span class="p">(</span><span class="n">omega</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">V</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">V</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dt</span><span class="p">)</span> <span class="c1"># NoOfSteps are here too.</span>
+
+            <span class="c1"># Choose method</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;brute&quot;</span><span class="p">:</span>
+                <span class="c1"># Calculate the CDF on 10000 points between the lower and upper bound of our approximation</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+                <span class="n">cdf_integratedvar</span> <span class="o">=</span> <span class="n">cos_cdf</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">chf_integrated</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                
+                <span class="c1"># Visualise cdfs</span>
+                <span class="c1"># plt.figure()</span>
+                <span class="c1"># plt.grid()</span>
+                <span class="c1"># plt.plot(x, cdf_integratedvar)</span>
+                <span class="c1"># plt.show()</span>
+                
+                    <span class="c1">## Make Newton&#39;s method s.t. it addresses:</span>
+                    <span class="c1">#  - 1. steepness - high rise over small run</span>
+                    <span class="c1">#  - 2. flat regions </span>
+            
+                <span class="c1"># Find the values of the random variable that match our randomly sampled p</span>
+                <span class="c1"># for j in range(0, NoOfPaths):</span>
+                <span class="n">V_int</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">cdf_integratedvar</span> <span class="o">-</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">argmin</span><span class="p">()]</span>
+                
+
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># method == &quot;newton&quot;</span>
+                <span class="n">V_int</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cdf_inversion_newton</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">chf_integrated</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+            
+
+        <span class="c1"># STEP 3: Recover a sample from the expression of the Ito integral using the solution of the CIR process</span>
+        <span class="n">ito_integral_Ws1</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="n">V</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">V</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">vbar</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">+</span> <span class="n">kappa</span> <span class="o">*</span> <span class="n">V_int</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+        <span class="c1"># ito_integral_Ws1 = 1.0 / gamma * (V[:, i + 1] - V[:, i] - kappa*(vbar - V_int[:, i])*dt</span>
+
+        <span class="c1"># STEP 4: Generate a sample of St</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="n">dt</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">V_int</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">ito_integral_Ws1</span><span class="p">)</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rho</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">V_int</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> 
+    
+        <span class="n">X</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span> <span class="o">*</span> <span class="n">Z1</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> 
+
+        <span class="n">time</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span>
+
+    <span class="c1"># Compute exponent</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="n">S</span><span class="p">,</span> <span class="s2">&quot;Vint&quot;</span><span class="p">:</span> <span class="n">V_int</span><span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">paths</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cdf_inversion_newton</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; 1.ii.d - Using Newton&#39;s method to find the inverse CDF </span>
+<span class="sd">        - CDF recovered by COS method (cos_cdf)</span>
+<span class="sd">        - for derivative of CDF we recover density (PDF) by COS method (cos_pdf) </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initial checks</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>  <span class="c1"># Ensure p is in [0,1]</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lower_bound</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">upper_bound</span>
+    
+    <span class="c1"># Evaluate CDF at a few points to provide better initial guess</span>
+        <span class="c1"># For 20 - few issues in IntVar hitting 0</span>
+        <span class="c1"># For 25 - hits fewer 0s</span>
+        <span class="c1"># For 50 - seems good</span>
+        <span class="c1"># Sweetspot = around 30</span>
+        <span class="c1"># Will depend on the params chosen for Heston; ie kappa, gamma, vbar, v0</span>
+    <span class="n">initial_points</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">x_initial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">initial_points</span><span class="p">)</span>
+    <span class="n">cdf_initial</span> <span class="o">=</span> <span class="n">cos_cdf</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">x_initial</span><span class="p">)</span> <span class="c1"># Evaluade cdf at 30 points</span>
+    
+    <span class="c1"># Find closest point to target probability</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">cdf_initial</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span> <span class="c1"># Pick the closes</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x_initial</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>  <span class="c1"># Initial guess &quot;best&quot;</span>
+    
+    <span class="c1"># Define a function to compute the PDF using cos_pdf</span>
+    <span class="c1"># Wrapper to match the inputs of cos_pdf</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">chf_wrapper</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">chf</span>
+    
+    <span class="c1"># Number of terms to use in COS expansion (reuse the same as for CDF)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">omega</span><span class="p">)</span>
+    
+    <span class="c1"># Newton-Raphson iteration</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
+        <span class="c1"># Calculate CDF at current point</span>
+        <span class="n">cdf_x</span> <span class="o">=</span> <span class="n">cos_cdf</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">chf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="c1"># Calculate distance from target f(x) = CDF(x) - p</span>
+        <span class="n">fx</span> <span class="o">=</span> <span class="n">cdf_x</span> <span class="o">-</span> <span class="n">p</span>
+        
+        <span class="c1"># Check: If |F(x) - p| &lt; tol.</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x</span>
+        
+        <span class="c1"># Calculate F&#39;(x) = PDF at current point using cos_pdf</span>
+        <span class="n">pdf_x</span> <span class="o">=</span> <span class="n">cos_pdf</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">chf_wrapper</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="c1"># Safeguard against division by very small numbers</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pdf_x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+            <span class="n">pdf_x</span> <span class="o">=</span> <span class="mf">1e-10</span> <span class="k">if</span> <span class="n">pdf_x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1e-10</span>
+        
+        <span class="c1"># Update using Newton step</span>
+        <span class="n">x_new</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">fx</span> <span class="o">/</span> <span class="n">pdf_x</span>
+        
+        <span class="c1"># Keep within bounds</span>
+        <span class="n">x_new</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">,</span> <span class="n">x_new</span><span class="p">))</span>
+        
+        <span class="c1"># Check for convergence</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x_new</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x_new</span>
+        
+        <span class="c1"># Update for next iteration</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x_new</span>
+
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_cdf_inversion_methods</span><span class="p">():</span>
+    <span class="c1"># Heston model parameters</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.4</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">vbar</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.9</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">S_0</span> <span class="o">=</span> <span class="mf">100.0</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+    <span class="c1"># Simulation parameters</span>
+    <span class="n">NoOfPaths</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">NoOfSteps</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># Optimal is 21</span>
+    <span class="n">nr_expansion</span> <span class="o">=</span> <span class="mi">100</span>  
+    <span class="n">L</span> <span class="o">=</span> <span class="mi">10</span>  
+
+    <span class="c1"># Values of N to test</span>
+    <span class="n">N_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">]</span> 
+
+    <span class="c1"># Arrays to store results</span>
+    <span class="n">brute_times</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">newton_times</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">vint_brute_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">vint_newton_values</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">N</span> <span class="ow">in</span> <span class="n">N_values</span><span class="p">:</span>
+        <span class="c1">#print(f&quot;Testing with N = {N}&quot;)</span>
+        
+        <span class="c1"># Run brute force method</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Use same seed for fair comparison</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">paths_brute</span> <span class="o">=</span> <span class="n">GeneratePathsHestonES</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">S_0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> 
+                                            <span class="n">rho</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">nr_expansion</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;brute&quot;</span><span class="p">)</span>
+        <span class="n">brute_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">brute_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">brute_time</span><span class="p">)</span>
+        
+        <span class="c1"># Run Newton method</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> 
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">paths_newton</span> <span class="o">=</span> <span class="n">GeneratePathsHestonES</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">NoOfSteps</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">S_0</span><span class="p">,</span> <span class="n">kappa</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> 
+                                            <span class="n">rho</span><span class="p">,</span> <span class="n">vbar</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">nr_expansion</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span><span class="p">)</span>
+        <span class="n">newton_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">newton_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newton_time</span><span class="p">)</span>
+        
+        <span class="n">vint_brute</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">paths_brute</span><span class="p">[</span><span class="s2">&quot;Vint&quot;</span><span class="p">])</span>
+        <span class="n">vint_newton</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">paths_newton</span><span class="p">[</span><span class="s2">&quot;Vint&quot;</span><span class="p">])</span>
+        
+        <span class="n">vint_brute_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vint_brute</span><span class="p">)</span>
+        <span class="n">vint_newton_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vint_newton</span><span class="p">)</span>
+        
+        <span class="c1">#print(vint_newton_values)</span>
+        
+    <span class="c1"># Create results dataframe</span>
+    <span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="n">N_values</span><span class="p">,</span>
+        <span class="s1">&#39;Brute Time (s)&#39;</span><span class="p">:</span> <span class="n">brute_times</span><span class="p">,</span>
+        <span class="s1">&#39;Newton Time (s)&#39;</span><span class="p">:</span> <span class="n">newton_times</span><span class="p">,</span>
+        <span class="s1">&#39;vint_brute_values&#39;</span><span class="p">:</span> <span class="n">vint_brute_values</span><span class="p">,</span>
+        <span class="s1">&#39;vint_newton_values&#39;</span><span class="p">:</span> <span class="n">vint_newton_values</span>
+    <span class="p">})</span>
+
+    <span class="c1">#print(&quot;\nResults:&quot;)</span>
+    <span class="c1">#print(results_df.to_string(index=False))</span>
+
+    <span class="c1"># Create 1 fig 2 plots</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+    <span class="c1"># Plot 1: Computation Time Comparison</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_values</span><span class="p">,</span> <span class="n">brute_times</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Brute&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_values</span><span class="p">,</span> <span class="n">newton_times</span><span class="p">,</span> <span class="s1">&#39;s-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Newton&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Add value annotations</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">N_values</span><span class="p">):</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">brute_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">,</span> 
+                    <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">brute_times</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> 
+                    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">newton_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">,</span> 
+                    <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">newton_times</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> 
+                    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">)</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Paths (N)&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Computation Time (seconds)&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Computation Time vs. N&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Plot 2: Accuracy Comparison</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_values</span><span class="p">,</span> <span class="n">vint_brute_values</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Brute&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">N_values</span><span class="p">,</span> <span class="n">vint_newton_values</span><span class="p">,</span> <span class="s1">&#39;s-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Netwon&#39;</span><span class="p">)</span>
+    <span class="c1"># Add value annotations</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">N_values</span><span class="p">):</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">vint_brute_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
+                    <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">vint_brute_values</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> 
+                    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">vint_newton_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
+                    <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">vint_newton_values</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> 
+                    <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                    <span class="n">textcoords</span><span class="o">=</span><span class="s2">&quot;offset points&quot;</span><span class="p">)</span>
+
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Number of Paths (N)&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Difference from p&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Accuracy vs. N&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="c1">#plt.savefig(&#39;Newton_comp.pdf&#39;)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">results_df</span>
+<span class="c1"># RuntimeWarning is due to division by a number very close to 0</span>
+<span class="n">compare_cdf_inversion_methods</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_50683/2954915863.py:28: RuntimeWarning: invalid value encountered in scalar multiply
+  chf = temp1 * temp2 * temp3 / temp4
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_50683/2954915863.py:28: RuntimeWarning: invalid value encountered in scalar divide
+  chf = temp1 * temp2 * temp3 / temp4
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_50683/2954915863.py:19: RuntimeWarning: invalid value encountered in divide
+  temp1 = R * np.exp(-tau / 2.0 * (R - kappa)) * (1 - np.exp(-kappa * tau)) / (kappa * (1 - np.exp(-R * tau)))
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_50683/2954915863.py:21: RuntimeWarning: invalid value encountered in divide
+  temp2 = np.exp((vu + vt) / gamma ** 2 * (kappa * (1 + np.exp(-kappa * tau)) / (1 - np.exp(-kappa * tau)) - R * (1 + np.exp(-R * tau)) / (1 - np.exp(-R * tau))))
+/var/folders/1p/dh14fkh53hddc1l6713y6pmm0000gn/T/ipykernel_50683/2954915863.py:24: RuntimeWarning: invalid value encountered in divide
+  temp3 = ss.iv(0.5 * d - 1.0, np.sqrt(vt * vu) * 4.0 * R * np.exp(-R * tau / 2.0) / (gamma ** 2 * (1 - np.exp(-R * tau))))
+</pre></div>
+</div>
+<img alt="_images/e3d5a8db153d032a323bc9da0a037af0701a0ca1fc7a5378b7297bb61543057b.png" src="_images/e3d5a8db153d032a323bc9da0a037af0701a0ca1fc7a5378b7297bb61543057b.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>N</th>
+      <th>Brute Time (s)</th>
+      <th>Newton Time (s)</th>
+      <th>vint_brute_values</th>
+      <th>vint_newton_values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>4</td>
+      <td>1.067958</td>
+      <td>0.042575</td>
+      <td>0.003782</td>
+      <td>0.003759</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>8</td>
+      <td>2.090244</td>
+      <td>0.082991</td>
+      <td>0.002805</td>
+      <td>0.002788</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>16</td>
+      <td>4.223453</td>
+      <td>0.173367</td>
+      <td>0.003679</td>
+      <td>0.003659</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>32</td>
+      <td>8.425363</td>
+      <td>0.331068</td>
+      <td>0.003089</td>
+      <td>0.003083</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>64</td>
+      <td>16.857103</td>
+      <td>0.666625</td>
+      <td>NaN</td>
+      <td>0.003533</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="1_c_pdf_recovery.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Characteristic Functions Methods Approximating CDF/PDF</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="QN_calibHeston.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Calibration of Heston model</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-raphson-method-for-efficient-cdf-inversion">2.1. Newton-Raphson method for efficient CDF inversion</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observations">2.2. Observations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comparison">2.3. Comparison</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cos-method-is-the-winner">2.3.1. COS method is the winner</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#newton-raphson-method-vs-brute-force-approach-for-cdf-inversion">2.3.2. Newton-Raphson method vs. brute force approach for CDF inversion</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Patrik Liba
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

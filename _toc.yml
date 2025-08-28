@@ -9,15 +9,16 @@ parts:
 - caption: Project - Characteristic Functions Methods for Option Pricing
   numbered: True
   chapters:
-  - file: cpdf_recovery
-  - file: HestonModelExact6
-  - file: rHeston
+  - file: 1_c_pdf_recovery
+  - file: 1_HestonModelExact6
+  - file: QN_calibHeston
+  
 
 
 - caption: Pricing American Options - replicating Longstaff-Schwarz (2001)
   numbered: True
   chapters:
-  - file: LongSchAlgo
-  - file: LSMC
-  - file: FD
-  - file: COS_AMpricer
+  - file: 2_LSMC_Dialid
+  - file: 2_LSMC
+  - file: 2_FD
+  - file: 2_COS_AM
