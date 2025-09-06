@@ -12,6 +12,8 @@
 **Part 1**
 - [CDF-PDF Recovery by COS, Carr-Madan, CONV Methods](https://libapatrik.github.io/Quantitative-Finance-Book/cpdf_recovery.html)
 - [Exact Simulation of Heston Model with Characteristic Function Methods](https://libapatrik.github.io/Quantitative-Finance-Book/HestonModelExact6.html)
+- [Calibration of Heston Model](https://libapatrik.github.io/Quantitative-Finance-Book/QN_calibHeston.html)
+- 
 
 **Part 2**
 - [Intuition behind the Longstaff-Schwartz implementation](https://libapatrik.github.io/Quantitative-Finance-Book/LongSchAlgo.html)
