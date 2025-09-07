@@ -22,3 +22,11 @@ parts:
   - file: 2_LSMC
   - file: 2_FD
   - file: 2_COS_AM
+
+- caption: Greeks Computation
+  numbered: True
+  chapters:
+  - file: 3_Greeks_BS
+#  - file: 3_Greeks_FD
+#  - file: 3_Greeks_LSMC
+#  - file: 3_Greeks_COS
