@@ -12,6 +12,7 @@ parts:
   - file: 1_c_pdf_recovery
   - file: 1_HestonModelExact6
   - file: QN_calibHeston
+#  - file: 1_HestonCalibration
   
 
 
@@ -21,12 +22,34 @@ parts:
   - file: 2_LSMC_Dialid
   - file: 2_LSMC
   - file: 2_FD
-  - file: 2_COS_AM
+  - file: 2_COS_AM # Extend the COS method to American options WIP
 
-- caption: Greeks Computation
+- caption: Hedging and Greeks
   numbered: True
   chapters:
   - file: 3_Greeks_BS
 #  - file: 3_Greeks_FD
 #  - file: 3_Greeks_LSMC
 #  - file: 3_Greeks_COS
+
+
+# Project in Cpp
+#- caption: Study of Volatility
+#  - numbered: True
+#    chapters:
+#      - file: 5_ImpliedVolatility
+#      - file: 5_LocalVolatility
+#      - file: 5_StochasticVolatility
+
+
+# From the Stochastic Calculus Course taught by K. Kirchner
+#- caption: Stochastic Calculus
+#  numbered: True
+#  chapters:
+#    - file: 4_SC_Ex1
+#    - file: 4_SC_Ex2
+#    - file: 4_SC_Ex3
+#    - file: 4_SC_Ex4
+#    - file: 4_SC_Ex5
+#    - file: 4_SC_Ex6
+
