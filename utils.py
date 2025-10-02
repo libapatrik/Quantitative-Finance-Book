@@ -19,7 +19,6 @@ import time
 import scipy.special as ss
 from scipy.stats import norm
 from scipy.integrate import trapezoid
-from scipy.optimize import newton
 import pandas as pd
 
 # ===========================================a==================================
