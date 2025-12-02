@@ -22,7 +22,7 @@ parts:
   - file: 2_LSMC_Dialid
   - file: 2_LSMC
   - file: 2_FD
-#  - file: 2_COS_AM # Extend the COS method to American options WIP
+  - file: 2_COS_AM # Extend the COS method to American options WIP
 
 - caption: Hedging and Greeks
   numbered: True
