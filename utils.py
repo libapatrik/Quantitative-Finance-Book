@@ -1,7 +1,3 @@
-
-# Version identifier for debugging
-UTILS_VERSION = "2.0-FIXED-CARR-MADAN"
-
 import numpy as np
 import matplotlib.pyplot as plt
 import time
