@@ -28,11 +28,21 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -U jupyter-book
 
       - name: Build the book
         run: |
           jupyter-book build .
+
+      - name: Show build output
+        run: |
+          echo "Working directory:"
+          pwd
+          echo "Build output:"
+          ls -la _build || true
+          ls -la _build/html || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -40,7 +50,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./_build/html
+          path: _build/html
 
   deploy:
     environment:
