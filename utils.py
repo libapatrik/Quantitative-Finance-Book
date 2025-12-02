@@ -1,14 +1,3 @@
-"""
-Quantitative Finance Book - Utilities Module
-===========================================
-
-This module contains all shared functions used across the QFB notebooks.
-Consolidates duplicated code and provides a single source of truth for
-financial modeling functions.
-
-Author: Patrik Liba
-Version: 2.0 - Fixed Carr-Madan zeros issue
-"""
 
 # Version identifier for debugging
 UTILS_VERSION = "2.0-FIXED-CARR-MADAN"
