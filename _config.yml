@@ -4,9 +4,10 @@ copyright: "2025"
 logo: logo.jpeg
 
 execute:
-  execute_notebooks: cache
-  allow_errors: true
-  timeout: 300
+  execute_notebooks: cache  # Use cached outputs when available, execute when changed
+  allow_errors: false  # Fail the build if there are errors (better for CI/CD)
+  timeout: 600  # Increased timeout for complex notebooks
+  stderr_output: show  # Show error messages for debugging
 
 latex:
   latex_documents:
