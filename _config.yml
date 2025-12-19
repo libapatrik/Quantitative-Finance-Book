@@ -28,3 +28,9 @@ parse:
   myst_enable_extensions:
     - dollarmath
     - amsmath
+
+sphinx:
+  extra_extensions:
+    - sphinxcontrib.bibtex
+  config:
+    bibtex_reference_style: author_year

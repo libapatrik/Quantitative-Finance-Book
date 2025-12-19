@@ -4,32 +4,28 @@
 format: jb-book
 root: intro
 options:
-  numbered: True
+    numbered: True
 parts:
-- caption: Project - Characteristic Functions Methods for Option Pricing
-  numbered: True
-  chapters:
-  - file: 1_c_pdf_recovery
-  - file: 1_HestonModelExact6
-  - file: QN_calibHeston
-#  - file: 1_HestonCalibration
-  
+    - caption: Characteristic Functions Methods for Option Pricing
+      numbered: True
+      chapters:
+          - file: char_functions/01_pdf_cdf_recovery
+          - file: char_functions/02_heston_exact_simulation
+          - file: char_functions/03_heston_calibration
+          - file: char_functions/04_heston_calibration_qn
+          - file: char_functions/05_heston_exotic_options
+          - file: char_functions/06_rough_heston
 
+    - caption: Pricing American Options
+      numbered: True
+      chapters:
+          - file: american_options/01_lsmc_intuition
+          - file: american_options/02_lsmc_pricing
+          - file: american_options/03_finite_difference
+          - file: american_options/04_cos_american
+      #- file: american_options/05_american_comparison
 
-- caption: Pricing American Options - replicating Longstaff-Schwarz (2001)
-  numbered: True
-  chapters:
-  - file: 2_LSMC_Dialid
-  - file: 2_LSMC
-  - file: 2_FD
-  - file: 2_COS_AM # Extend the COS method to American options WIP
-
-- caption: Hedging and Greeks
-  numbered: True
-  chapters:
-  - file: 3_Greeks_BS
-#  - file: 3_Greeks_FD
-#  - file: 3_Greeks_LSMC
-#  - file: 3_Greeks_COS
-
-
+    - caption: Hedging and Greeks
+      numbered: True
+      chapters:
+          - file: greeks/01_greeks_black_scholes

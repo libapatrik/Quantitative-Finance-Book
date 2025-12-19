@@ -10,15 +10,16 @@ import pandas as pd
 # COS METHOD FUNCTIONS
 # =============================================================================
 
+
 def cos_cdf(a, b, omega, chf, x):
     """
     Compute CDF using the COS method.
-    
+
     Parameters:
     -----------
     a : float
         Lower bound of the integration domain
-    b : float  
+    b : float
         Upper bound of the integration domain
     omega : np.ndarray
         Frequency array
@@ -26,41 +27,43 @@ def cos_cdf(a, b, omega, chf, x):
         Characteristic function values at omega frequencies
     x : np.ndarray
         Evaluation points for CDF
-        
+
     Returns:
     --------
     np.ndarray
         CDF values at x points
     """
     F_k = 2.0 / (b - a) * np.real(chf * np.exp(-1j * omega * a))
-    cdf = np.squeeze(F_k[0] / 2.0 * (x - a)) + np.matmul(F_k[1:] / omega[1:], np.sin(np.outer(omega[1:], x - a)))
+    cdf = np.squeeze(F_k[0] / 2.0 * (x - a)) + np.matmul(
+        F_k[1:] / omega[1:], np.sin(np.outer(omega[1:], x - a))
+    )
     return cdf
 
 
 def cos_pdf(a, b, N, chf, x):
     """
     Compute PDF using the COS method.
-    
+
     Parameters:
     -----------
     a : float
         Lower bound of the integration domain
     b : float
-        Upper bound of the integration domain  
+        Upper bound of the integration domain
     N : int
         Number of terms in COS expansion
     chf : callable
         Characteristic function
     x : np.ndarray
         Evaluation points for PDF
-        
+
     Returns:
     --------
     np.ndarray
         PDF values at x points
     """
-    k = np.linspace(0, N-1, N)
-    u = k * np.pi / (b-a)  # frequencies -- u = omega 
+    k = np.linspace(0, N - 1, N)
+    u = k * np.pi / (b - a)  # frequencies -- u = omega
     # F_k coefficients
     F_k = 2.0 / (b - a) * np.real(chf(u) * np.exp(-1j * u * a))
     F_k[0] = F_k[0] * 0.5  # first term
@@ -70,13 +73,14 @@ def cos_pdf(a, b, N, chf, x):
 
 
 # =============================================================================
-# CARR-MADAN METHOD FUNCTIONS  
+# CARR-MADAN METHOD FUNCTIONS
 # =============================================================================
+
 
 def carr_madan_cdf(chf, x_grid, u_max=200, N=2**12, alpha=1.0):
     """
     Recover CDF from characteristic function using Gil-Pelaez inversion formula.
-    
+
     Parameters:
     -----------
     chf : callable
@@ -89,7 +93,7 @@ def carr_madan_cdf(chf, x_grid, u_max=200, N=2**12, alpha=1.0):
         Number of integration points
     alpha : float, default=1.0
         Damping parameter (not used in current implementation)
-        
+
     Returns:
     --------
     np.ndarray
@@ -97,55 +101,57 @@ def carr_madan_cdf(chf, x_grid, u_max=200, N=2**12, alpha=1.0):
     """
     # Use adaptive integration bounds based on characteristic function decay
     u_min = 1e-8  # Start from very small but not zero
-    
+
     # Create integration grid with higher density near zero
-    u_dense = np.concatenate([
-        np.linspace(u_min, 1.0, N//4),      # Dense sampling near 0
-        np.linspace(1.0, 10.0, N//4),       # Medium sampling 
-        np.linspace(10.0, u_max, N//2)      # Coarse sampling at high frequencies
-    ])
-    
+    u_dense = np.concatenate(
+        [
+            np.linspace(u_min, 1.0, N // 4),  # Dense sampling near 0
+            np.linspace(1.0, 10.0, N // 4),  # Medium sampling
+            np.linspace(10.0, u_max, N // 2),  # Coarse sampling at high frequencies
+        ]
+    )
+
     # Remove duplicates and sort
     u = np.unique(u_dense)
-    
+
     # Evaluate characteristic function with error handling
     try:
         chf_vals = chf(u)
-        
+
         # Check for numerical issues in CF
         if np.any(~np.isfinite(chf_vals)):
             # Fallback to simpler grid if CF has issues
-            u = np.linspace(u_min, min(50, u_max), N//2)
+            u = np.linspace(u_min, min(50, u_max), N // 2)
             chf_vals = chf(u)
-            
+
     except Exception:
         # Emergency fallback
-        u = np.linspace(u_min, 50, N//2)
+        u = np.linspace(u_min, 50, N // 2)
         chf_vals = chf(u)
-    
+
     # Compute integrand for each x using Gil-Pelaez formula
     # CDF(x) = 0.5 - (1/π) * ∫[0,∞] Im(exp(-iux) * φ(u)) / u du
     integrand = np.imag(np.exp(-1j * np.outer(x_grid, u)) * chf_vals) / u
-    
+
     # Integrate using trapezoidal rule
     integral = trapezoid(integrand, u, axis=1)
-    
+
     # Apply Gil-Pelaez inversion formula
     cdf = 0.5 - (1 / np.pi) * integral
-    
+
     # Apply soft clipping to handle numerical errors while preserving the fact
     # that some distributions don't span [0,1]
     cdf = np.clip(cdf, -0.1, 1.1)  # Allow some overshoot for numerical errors
-    
+
     return np.squeeze(cdf)
 
 
 def carr_madan_pdf(chf, x_grid, u_max=200, N=2**12):
     """
     Recover PDF from characteristic function using inverse Fourier transform.
-    
+
     Parameters:
-    -----------
+    ------------
     chf : callable
         Characteristic function phi(u)
     x_grid : np.ndarray
@@ -154,9 +160,9 @@ def carr_madan_pdf(chf, x_grid, u_max=200, N=2**12):
         Maximum frequency for integration
     N : int, default=2**12
         Number of integration points
-        
+
     Returns:
-    --------
+    ------------
     np.ndarray
         PDF values at x_grid points
     """
@@ -175,10 +181,11 @@ def carr_madan_pdf(chf, x_grid, u_max=200, N=2**12):
 # CONV METHOD FUNCTIONS
 # =============================================================================
 
+
 def conv_pdf(chf, x_range=(-5, 5), alpha=0.5, N=2**12):
     """
     Compute PDF using the CONV method (FFT-based).
-    
+
     Parameters:
     -----------
     chf : callable
@@ -189,9 +196,9 @@ def conv_pdf(chf, x_range=(-5, 5), alpha=0.5, N=2**12):
         Damping parameter
     N : int, default=2**12
         Number of grid points
-        
+
     Returns:
-    --------
+    ------------
     tuple
         (x_grid, pdf_values) - spatial grid and corresponding PDF values
     """
@@ -231,7 +238,7 @@ def conv_pdf(chf, x_range=(-5, 5), alpha=0.5, N=2**12):
 def conv_cdf(chf, x_vals, x_range=None, alpha=0.5, N=2**12):
     """
     Compute CDF using the CONV method.
-    
+
     Parameters:
     -----------
     chf : callable
@@ -244,9 +251,9 @@ def conv_cdf(chf, x_vals, x_range=None, alpha=0.5, N=2**12):
         Damping parameter
     N : int, default=2**12
         Number of grid points
-        
+
     Returns:
-    --------
+    ------------
     np.ndarray
         CDF values at x_vals points
     """
@@ -256,7 +263,7 @@ def conv_cdf(chf, x_vals, x_range=None, alpha=0.5, N=2**12):
         x_max_req = np.max(x_vals)
         padding = (x_max_req - x_min_req) * 0.5  # 50% padding on each side
         x_range = (x_min_req - padding, x_max_req + padding)
-    
+
     x_grid, pdf_grid = conv_pdf(chf=chf, x_range=x_range, alpha=alpha, N=N)
 
     dx = x_grid[1] - x_grid[0]  # Grid spacing (uniform)
@@ -278,17 +285,18 @@ def conv_cdf(chf, x_vals, x_range=None, alpha=0.5, N=2**12):
 # CDF INVERTER CLASS
 # =============================================================================
 
+
 class CDF_Inverter:
     """
     Unified CDF inversion class supporting multiple methods.
-    
+
     Supports COS, Carr-Madan, and CONV methods for CDF recovery and inversion.
     """
-    
+
     def __init__(self, method="cos", nr_expansion=100, u_max=200, N=2**12, alpha=0.5):
         """
         Initialize CDF inverter.
-        
+
         Parameters:
         -----------
         method : str, default="cos"
@@ -311,7 +319,7 @@ class CDF_Inverter:
     def compute_cdf(self, chf, x_vals, lower_bound, upper_bound):
         """
         Compute CDF using the specified method.
-        
+
         Parameters:
         -----------
         chf : callable
@@ -322,9 +330,9 @@ class CDF_Inverter:
             Lower bound of domain
         upper_bound : float
             Upper bound of domain
-            
+
         Returns:
-        --------
+        ------------
         np.ndarray
             CDF values at x_vals
         """
@@ -339,7 +347,13 @@ class CDF_Inverter:
             return np.atleast_1d(result)
 
         elif self.method == "conv":
-            return conv_cdf(chf, x_vals, x_range=(lower_bound, upper_bound), alpha=self.alpha, N=self.N)
+            return conv_cdf(
+                chf,
+                x_vals,
+                x_range=(lower_bound, upper_bound),
+                alpha=self.alpha,
+                N=self.N,
+            )
 
         else:
             raise ValueError(f"Unknown CDF method: {self.method}")
@@ -347,7 +361,7 @@ class CDF_Inverter:
     def compute_pdf(self, chf, x_vals, lower_bound, upper_bound):
         """
         Compute PDF using the specified method.
-        
+
         Parameters:
         -----------
         chf : callable
@@ -358,32 +372,40 @@ class CDF_Inverter:
             Lower bound of domain
         upper_bound : float
             Upper bound of domain
-            
+
         Returns:
-        --------
+        ------------
         np.ndarray
             PDF values at x_vals
         """
         if self.method == "cos":
+
             def chf_wrapper(u):
                 return chf(u)
-            return cos_pdf(lower_bound, upper_bound, self.nr_expansion, chf_wrapper, x_vals)
+
+            return cos_pdf(
+                lower_bound, upper_bound, self.nr_expansion, chf_wrapper, x_vals
+            )
 
         elif self.method == "carr_madan":
             return carr_madan_pdf(chf, x_vals, u_max=self.u_max, N=self.N)
 
         elif self.method == "conv":
-            x_grid, pdf_grid = conv_pdf(chf, x_range=(lower_bound, upper_bound), alpha=self.alpha, N=self.N)
+            x_grid, pdf_grid = conv_pdf(
+                chf, x_range=(lower_bound, upper_bound), alpha=self.alpha, N=self.N
+            )
             return np.interp(x_vals, x_grid, pdf_grid)
 
         else:
             raise ValueError(f"Unknown PDF method: {self.method}")
 
-    def invert_cdf_newton(self, chf, lower_bound, upper_bound, p, max_iter=100, tol=1e-8):
+    def invert_cdf_newton(
+        self, chf, lower_bound, upper_bound, p, max_iter=100, tol=1e-8
+    ):
         """
         Invert CDF using Newton's method with robust handling for distributions
         that don't have support starting at 0.
-        
+
         Parameters:
         -----------
         chf : callable
@@ -398,25 +420,25 @@ class CDF_Inverter:
             Maximum number of iterations
         tol : float, default=1e-8
             Convergence tolerance
-            
+
         Returns:
-        --------
+        ------------
         float
             x value such that CDF(x) ≈ p
         """
         # Initial checks
         p = np.maximum(0.0, np.minimum(1.0, p))  # Ensure p is in [0,1]
         p = np.maximum(1e-12, np.minimum(1.0 - 1e-12, p))
-        
+
         # Evaluate CDF at initial points for better initial guess
         initial_points = 50  # Increased for better resolution
         x_initial = np.linspace(lower_bound, upper_bound, initial_points)
         cdf_initial = self.compute_cdf(chf, x_initial, lower_bound, upper_bound)
-        
+
         # Find the actual CDF range - important for distributions that don't start at 0
         cdf_min = np.min(cdf_initial)
         cdf_max = np.max(cdf_initial)
-        
+
         # Handle case where p is outside the actual CDF range
         if p < cdf_min:
             # If p is below minimum CDF, return the x value that gives minimum CDF
@@ -487,10 +509,11 @@ class CDF_Inverter:
 # HESTON MODEL FUNCTIONS
 # =============================================================================
 
+
 def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
     """
     Heston model characteristic function.
-    
+
     Parameters:
     -----------
     u : np.ndarray
@@ -511,13 +534,13 @@ def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
         Volatility of volatility
     rho : float
         Correlation between stock and variance
-        
+
     Returns:
-    --------
+    ------------
     np.ndarray
         Characteristic function values
     """
-    alpha = - u**2 / 2 - 1j * u / 2
+    alpha = -(u**2) / 2 - 1j * u / 2
     beta = kappa - rho * xi * 1j * u
     gamma = xi**2 / 2
     h = np.sqrt(beta**2 - 4 * alpha * gamma)
@@ -533,7 +556,7 @@ def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
 def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
     """
     Heston call option price using midpoint rule integration.
-    
+
     Parameters:
     -----------
     S0 : float
@@ -554,9 +577,9 @@ def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
         Volatility of volatility
     rho : float
         Correlation between stock and variance
-        
+
     Returns:
-    --------
+    ------------
     float
         Call option price
     """
@@ -568,7 +591,11 @@ def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
     du = umax / n
     u = du / 2
     for i in range(n):
-        temp1 = np.exp(-1j * u * np.log(K)) * Heston_CF(u - 1j, *params) / (1j * u * Heston_CF(-1j, *params))
+        temp1 = (
+            np.exp(-1j * u * np.log(K))
+            * Heston_CF(u - 1j, *params)
+            / (1j * u * Heston_CF(-1j, *params))
+        )
         temp2 = np.exp(-1j * u * np.log(K)) * Heston_CF(u, *params) / (1j * u)
         P1 = P1 + 1 / np.pi * temp1 * du
         P2 = P2 + 1 / np.pi * temp2 * du
@@ -580,7 +607,7 @@ def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
 def ChFIntegratedVariance(omega, kappa, gamma, vbar, vu, vt, tau):
     """
     Characteristic function of integrated variance (Broadie-Kaya).
-    
+
     Parameters:
     -----------
     omega : np.ndarray
@@ -597,27 +624,49 @@ def ChFIntegratedVariance(omega, kappa, gamma, vbar, vu, vt, tau):
         Final variance
     tau : float
         Time interval
-        
+
     Returns:
-    --------
+    ------------
     np.ndarray
         Characteristic function values
     """
-    R = np.sqrt(kappa ** 2 - 2.0 * gamma ** 2 * 1j * omega)
-    d = 4 * kappa * vbar / gamma ** 2
+    R = np.sqrt(kappa**2 - 2.0 * gamma**2 * 1j * omega)
+    d = 4 * kappa * vbar / gamma**2
 
-    temp1 = R * np.exp(-tau / 2.0 * (R - kappa)) * (1 - np.exp(-kappa * tau)) / (kappa * (1 - np.exp(-R * tau)))
+    temp1 = (
+        R
+        * np.exp(-tau / 2.0 * (R - kappa))
+        * (1 - np.exp(-kappa * tau))
+        / (kappa * (1 - np.exp(-R * tau)))
+    )
 
-    temp2 = np.exp((vu + vt) / gamma ** 2 * (
-                kappa * (1 + np.exp(-kappa * tau)) / (1 - np.exp(-kappa * tau)) - R * (1 + np.exp(-R * tau)) / (
-                    1 - np.exp(-R * tau))))
+    temp2 = np.exp(
+        (vu + vt)
+        / gamma**2
+        * (
+            kappa * (1 + np.exp(-kappa * tau)) / (1 - np.exp(-kappa * tau))
+            - R * (1 + np.exp(-R * tau)) / (1 - np.exp(-R * tau))
+        )
+    )
 
     # Bessel functions
-    temp3 = ss.iv(0.5 * d - 1.0,
-                  np.sqrt(vt * vu) * 4.0 * R * np.exp(-R * tau / 2.0) / (gamma ** 2 * (1 - np.exp(-R * tau))))
+    temp3 = ss.iv(
+        0.5 * d - 1.0,
+        np.sqrt(vt * vu)
+        * 4.0
+        * R
+        * np.exp(-R * tau / 2.0)
+        / (gamma**2 * (1 - np.exp(-R * tau))),
+    )
 
-    temp4 = ss.iv(0.5 * d - 1.0, np.sqrt(vt * vu) * 4.0 * kappa * np.exp(-kappa * tau / 2.0) / (
-                gamma ** 2 * (1 - np.exp(-kappa * tau))))
+    temp4 = ss.iv(
+        0.5 * d - 1.0,
+        np.sqrt(vt * vu)
+        * 4.0
+        * kappa
+        * np.exp(-kappa * tau / 2.0)
+        / (gamma**2 * (1 - np.exp(-kappa * tau))),
+    )
 
     chf = temp1 * temp2 * temp3 / temp4
     return chf
@@ -626,7 +675,7 @@ def ChFIntegratedVariance(omega, kappa, gamma, vbar, vu, vt, tau):
 def CIR_Sample(NoOfPaths, kappa, gamma, vbar, s, t, v_s):
     """
     Sample from CIR process using noncentral chi-squared distribution.
-    
+
     Parameters:
     -----------
     NoOfPaths : int
@@ -643,14 +692,14 @@ def CIR_Sample(NoOfPaths, kappa, gamma, vbar, s, t, v_s):
         End time
     v_s : np.ndarray
         Initial variance values
-        
+
     Returns:
-    --------
+    ------------
     np.ndarray
         Sampled variance values
     """
     delta = 4.0 * kappa * vbar / gamma / gamma
-    c = 2 * kappa / (gamma ** 2 * (1 - np.exp(-kappa * (t - s))))
+    c = 2 * kappa / (gamma**2 * (1 - np.exp(-kappa * (t - s))))
     kappaBar = 2 * c * np.exp(-kappa * (t - s)) * v_s
     sample = np.random.noncentral_chisquare(delta, kappaBar, NoOfPaths) / (2 * c)
     return sample
@@ -660,11 +709,26 @@ def CIR_Sample(NoOfPaths, kappa, gamma, vbar, s, t, v_s):
 # HESTON EXACT SIMULATION
 # =============================================================================
 
-def GeneratePathsHestonES(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, rho, vbar, v0, nr_expansion, L,
-                          recovery_method="cos", **method_kwargs):
+
+def GeneratePathsHestonES(
+    NoOfPaths,
+    NoOfSteps,
+    T,
+    r,
+    S_0,
+    kappa,
+    gamma,
+    rho,
+    vbar,
+    v0,
+    nr_expansion,
+    L,
+    recovery_method="cos",
+    **method_kwargs,
+):
     """
     Generate Heston model paths using exact simulation.
-    
+
     Parameters:
     -----------
     NoOfPaths : int
@@ -695,9 +759,9 @@ def GeneratePathsHestonES(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, rho, vb
         Method for CDF recovery: "cos", "carr_madan", or "conv"
     **method_kwargs
         Additional arguments for the recovery method
-        
+
     Returns:
-    --------
+    ------------
     dict
         Dictionary containing time grid, stock paths, and integrated variance paths
     """
@@ -715,7 +779,9 @@ def GeneratePathsHestonES(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, rho, vb
     time = np.zeros([NoOfSteps + 1])
 
     # Initialize the CDF_Inverter
-    inverter = CDF_Inverter(method=recovery_method, nr_expansion=nr_expansion, **method_kwargs)
+    inverter = CDF_Inverter(
+        method=recovery_method, nr_expansion=nr_expansion, **method_kwargs
+    )
     print(f"Using {recovery_method} method for CDF recovery and inversion")
 
     for i in range(0, NoOfSteps):
@@ -728,30 +794,36 @@ def GeneratePathsHestonES(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, rho, vb
 
         # STEP 2: Sample from integrated variance distribution
         for j in range(0, NoOfPaths):
-            chf_omega = lambda w: ChFIntegratedVariance(w, kappa, gamma, vbar, V[j, i], V[j, i + 1], dt)
-            
+            chf_omega = lambda w: ChFIntegratedVariance(
+                w, kappa, gamma, vbar, V[j, i], V[j, i + 1], dt
+            )
+
             # Compute moments for bounds
             first_moment = -1j * (chf_omega(dt) - 1) / dt
-            second_moment = -1 * (chf_omega(2 * dt) - 2 * chf_omega(dt) + 1) / (dt ** 2)
+            second_moment = -1 * (chf_omega(2 * dt) - 2 * chf_omega(dt) + 1) / (dt**2)
             standard_deviation = np.sqrt(abs(second_moment) - abs(first_moment) ** 2)
 
             # Improved bounds calculation for integrated variance
             # The integrated variance has a minimum value > 0 in the Heston model
             mean_val = np.real(first_moment)
             std_val = standard_deviation
-            
+
             # Use asymmetric bounds that respect the distribution's actual support
             # For integrated variance, the theoretical minimum is always > 0
-            theoretical_min = min(V[j, i], V[j, i + 1]) * dt * 0.1  # At least 10% of min variance * dt
-            lower_bound = max(theoretical_min, mean_val - 2 * std_val)  # More conservative bound
+            theoretical_min = (
+                min(V[j, i], V[j, i + 1]) * dt * 0.1
+            )  # At least 10% of min variance * dt
+            lower_bound = max(
+                theoretical_min, mean_val - 2 * std_val
+            )  # More conservative bound
             upper_bound = mean_val + L * std_val
-            
+
             # Ensure bounds are reasonable and lower_bound is always > 0
             if lower_bound <= 0:
                 lower_bound = max(1e-6, mean_val * 0.01)  # Ensure positive lower bound
             if upper_bound - lower_bound < 1e-6:
                 upper_bound = lower_bound + max(1e-5, mean_val * 0.1)
-            
+
             # For Carr-Madan method, we need to handle the case where the requested
             # probability might be outside the actual CDF range
             if recovery_method == "carr_madan":
@@ -760,58 +832,76 @@ def GeneratePathsHestonES(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, rho, vb
                     # First, validate the characteristic function
                     test_chf = chf_omega(np.array([0.1, 1.0]))
                     if np.any(np.isnan(test_chf)) or np.any(np.isinf(test_chf)):
-                        raise ValueError("Characteristic function produces NaN/Inf values")
-                    
+                        raise ValueError(
+                            "Characteristic function produces NaN/Inf values"
+                        )
+
                     x_check = np.array([lower_bound, upper_bound])
-                    cdf_check = inverter.compute_cdf(chf_omega, x_check, lower_bound, upper_bound)
-                    
+                    cdf_check = inverter.compute_cdf(
+                        chf_omega, x_check, lower_bound, upper_bound
+                    )
+
                     # Validate CDF values
                     if np.any(np.isnan(cdf_check)) or np.any(np.isinf(cdf_check)):
                         raise ValueError("CDF computation produces NaN/Inf values")
-                    
-                    # If the probability is outside the achievable range, 
+
+                    # If the probability is outside the achievable range,
                     # clamp it to the achievable range
-                    p_clamped = np.clip(p[j, i], min(cdf_check) + 1e-6, max(cdf_check) - 1e-6)
-                    
-                    result = inverter.invert_cdf_newton(chf_omega, lower_bound, upper_bound, p_clamped)
-                    
+                    p_clamped = np.clip(
+                        p[j, i], min(cdf_check) + 1e-6, max(cdf_check) - 1e-6
+                    )
+
+                    result = inverter.invert_cdf_newton(
+                        chf_omega, lower_bound, upper_bound, p_clamped
+                    )
+
                     # Validate result
                     if np.isnan(result) or np.isinf(result) or result <= 0:
                         raise ValueError(f"Invalid CDF inversion result: {result}")
-                    
+
                     V_int[j, i + 1] = result
-                    
+
                 except Exception as e:
                     # Fallback to a safer method if Carr-Madan fails
                     # Use a reasonable positive value based on the variance process
                     fallback_val = max(
                         theoretical_min,  # Use the theoretical minimum we calculated
-                        mean_val * 0.5 if not np.isnan(mean_val) else theoretical_min,   # Or 50% of expected value
-                        min(V[j, i], V[j, i + 1]) * dt * 0.5  # Or 50% of variance * dt
+                        mean_val * 0.5
+                        if not np.isnan(mean_val)
+                        else theoretical_min,  # Or 50% of expected value
+                        min(V[j, i], V[j, i + 1]) * dt * 0.5,  # Or 50% of variance * dt
                     )
-                    V_int[j, i + 1] = max(fallback_val, 1e-5)  # Ensure it's never too small
+                    V_int[j, i + 1] = max(
+                        fallback_val, 1e-5
+                    )  # Ensure it's never too small
             else:
                 # For COS and CONV methods, use the original approach
-                result = inverter.invert_cdf_newton(chf_omega, lower_bound, upper_bound, p[j, i])
-                
+                result = inverter.invert_cdf_newton(
+                    chf_omega, lower_bound, upper_bound, p[j, i]
+                )
+
                 # Ensure result is always positive
                 if np.isnan(result) or np.isinf(result) or result <= 0:
                     # Use fallback for other methods too
                     fallback_val = max(
                         theoretical_min,
                         mean_val * 0.5 if not np.isnan(mean_val) else theoretical_min,
-                        min(V[j, i], V[j, i + 1]) * dt * 0.5
+                        min(V[j, i], V[j, i + 1]) * dt * 0.5,
                     )
                     result = max(fallback_val, 1e-5)
-                
+
                 V_int[j, i + 1] = result
 
         # STEP 3: Compute Ito integral
-        ito_integral_Ws1 = 1.0 / gamma * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i])
+        ito_integral_Ws1 = (
+            1.0
+            / gamma
+            * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i])
+        )
 
         # STEP 4: Generate stock price sample
         m = X[:, i] + (r * dt - 1.0 / 2.0 * V_int[:, i] + rho * ito_integral_Ws1)
-        variance = (1 - rho ** 2) * V_int[:, i]
+        variance = (1 - rho**2) * V_int[:, i]
 
         X[:, i + 1] = m + np.sqrt(variance) * Z1[:, i]
         time[i + 1] = time[i] + dt
@@ -827,10 +917,13 @@ def GeneratePathsHestonES(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, rho, vb
 # CDF Inversion Function with
 # =============================================================================
 
-def cdf_inversion_newton(lower_bound, upper_bound, omega, chf, p, max_iter=100, tol=1e-8):
+
+def cdf_inversion_newton(
+    lower_bound, upper_bound, omega, chf, p, max_iter=100, tol=1e-8
+):
     """
     Legacy Newton CDF inversion function (COS method only).
-    
+
     DEPRECATED: Use CDF_Inverter.invert_cdf_newton() instead.
     """
     # Initial checks
@@ -881,10 +974,11 @@ def cdf_inversion_newton(lower_bound, upper_bound, omega, chf, p, max_iter=100, 
 # UTILITY FUNCTIONS
 # =============================================================================
 
+
 def bs_put_price(S0, K, r, sigma, T):
     """
     Black-Scholes put option price.
-    
+
     Parameters:
     -----------
     S0 : float
@@ -897,22 +991,22 @@ def bs_put_price(S0, K, r, sigma, T):
         Volatility
     T : float
         Time to maturity
-        
+
     Returns:
     --------
     float
         Put option price
     """
-    d1 = (np.log(S0/K) + (r + 0.5*sigma**2) * T) / (sigma * np.sqrt(T))
+    d1 = (np.log(S0 / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
-    bs_put = -1 * norm.cdf(-d1)*S0 + norm.cdf(-d2)*K*np.exp(-r*T)
+    bs_put = -1 * norm.cdf(-d1) * S0 + norm.cdf(-d2) * K * np.exp(-r * T)
     return bs_put
 
 
 def compare_cdf_inversion_methods():
     """
     Compare brute force vs Newton CDF inversion methods.
-    
+
     Returns:
     --------
     pd.DataFrame
@@ -947,16 +1041,42 @@ def compare_cdf_inversion_methods():
         # Run brute force method
         np.random.seed(3)
         start_time = time.time()
-        paths_brute = GeneratePathsHestonES_suppl(N, NoOfSteps, T, r, S_0, kappa, gamma,
-                                            rho, vbar, v0, nr_expansion, L, method="brute")
+        paths_brute = GeneratePathsHestonES_suppl(
+            N,
+            NoOfSteps,
+            T,
+            r,
+            S_0,
+            kappa,
+            gamma,
+            rho,
+            vbar,
+            v0,
+            nr_expansion,
+            L,
+            method="brute",
+        )
         brute_time = time.time() - start_time
         brute_times.append(brute_time)
 
         # Run Newton method
         np.random.seed(3)
         start_time = time.time()
-        paths_newton = GeneratePathsHestonES_suppl(N, NoOfSteps, T, r, S_0, kappa, gamma,
-                                             rho, vbar, v0, nr_expansion, L, method="newton")
+        paths_newton = GeneratePathsHestonES_suppl(
+            N,
+            NoOfSteps,
+            T,
+            r,
+            S_0,
+            kappa,
+            gamma,
+            rho,
+            vbar,
+            v0,
+            nr_expansion,
+            L,
+            method="newton",
+        )
         newton_time = time.time() - start_time
         newton_times.append(newton_time)
 
@@ -967,54 +1087,64 @@ def compare_cdf_inversion_methods():
         vint_newton_values.append(vint_newton)
 
     # Create results dataframe
-    results_df = pd.DataFrame({
-        'N': N_values,
-        'Brute Time (s)': brute_times,
-        'Newton Time (s)': newton_times,
-        'vint_brute_values': vint_brute_values,
-        'vint_newton_values': vint_newton_values
-    })
+    results_df = pd.DataFrame(
+        {
+            "N": N_values,
+            "Brute Time (s)": brute_times,
+            "Newton Time (s)": newton_times,
+            "vint_brute_values": vint_brute_values,
+            "vint_newton_values": vint_newton_values,
+        }
+    )
 
     # Create comparison plots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
     # Plot 1: Computation Time Comparison
-    ax1.plot(N_values, brute_times, 'o-', color='blue', label='Brute')
-    ax1.plot(N_values, newton_times, 's-', color='green', label='Newton')
+    ax1.plot(N_values, brute_times, "o-", color="blue", label="Brute")
+    ax1.plot(N_values, newton_times, "s-", color="green", label="Newton")
 
     for i, n in enumerate(N_values):
-        ax1.annotate(f"{brute_times[i]:.3f}s",
-                     xy=(n, brute_times[i]),
-                     xytext=(5, 5),
-                     textcoords="offset points")
-        ax1.annotate(f"{newton_times[i]:.3f}s",
-                     xy=(n, newton_times[i]),
-                     xytext=(5, 5),
-                     textcoords="offset points")
+        ax1.annotate(
+            f"{brute_times[i]:.3f}s",
+            xy=(n, brute_times[i]),
+            xytext=(5, 5),
+            textcoords="offset points",
+        )
+        ax1.annotate(
+            f"{newton_times[i]:.3f}s",
+            xy=(n, newton_times[i]),
+            xytext=(5, 5),
+            textcoords="offset points",
+        )
 
-    ax1.set_xlabel('Number of Paths (N)')
-    ax1.set_ylabel('Computation Time (seconds)')
-    ax1.set_title('Computation Time vs. N')
+    ax1.set_xlabel("Number of Paths (N)")
+    ax1.set_ylabel("Computation Time (seconds)")
+    ax1.set_title("Computation Time vs. N")
     ax1.legend()
     ax1.grid(True)
 
     # Plot 2: Accuracy Comparison
-    ax2.plot(N_values, vint_brute_values, 'o-', color='blue', label='Brute')
-    ax2.plot(N_values, vint_newton_values, 's-', color='green', label='Newton')
+    ax2.plot(N_values, vint_brute_values, "o-", color="blue", label="Brute")
+    ax2.plot(N_values, vint_newton_values, "s-", color="green", label="Newton")
 
     for i, n in enumerate(N_values):
-        ax2.annotate(f"{vint_brute_values[i]:.2e}",
-                     xy=(n, vint_brute_values[i]),
-                     xytext=(5, 5),
-                     textcoords="offset points")
-        ax2.annotate(f"{vint_newton_values[i]:.2e}",
-                     xy=(n, vint_newton_values[i]),
-                     xytext=(5, 5),
-                     textcoords="offset points")
+        ax2.annotate(
+            f"{vint_brute_values[i]:.2e}",
+            xy=(n, vint_brute_values[i]),
+            xytext=(5, 5),
+            textcoords="offset points",
+        )
+        ax2.annotate(
+            f"{vint_newton_values[i]:.2e}",
+            xy=(n, vint_newton_values[i]),
+            xytext=(5, 5),
+            textcoords="offset points",
+        )
 
-    ax2.set_xlabel('Number of Paths (N)')
-    ax2.set_ylabel('Integrated Variance')
-    ax2.set_title('Accuracy vs. N')
+    ax2.set_xlabel("Number of Paths (N)")
+    ax2.set_ylabel("Integrated Variance")
+    ax2.set_title("Accuracy vs. N")
     ax2.grid(True)
     ax2.legend()
 
@@ -1024,8 +1154,21 @@ def compare_cdf_inversion_methods():
     return results_df
 
 
-def GeneratePathsHestonES_suppl(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, rho, vbar, v0, nr_expansion, L,
-                          method="newton"):
+def GeneratePathsHestonES_suppl(
+    NoOfPaths,
+    NoOfSteps,
+    T,
+    r,
+    S_0,
+    kappa,
+    gamma,
+    rho,
+    vbar,
+    v0,
+    nr_expansion,
+    L,
+    method="newton",
+):
     dt = T / float(NoOfSteps)
     p = np.random.uniform(0, 1, [NoOfPaths, NoOfSteps])
 
@@ -1046,9 +1189,11 @@ def GeneratePathsHestonES_suppl(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, r
         V[:, i + 1] = CIR_Sample(NoOfPaths, kappa, gamma, vbar, 0, dt, V[:, i])
 
         for j in range(0, NoOfPaths):
-            chf_omega = lambda w: ChFIntegratedVariance(w, kappa, gamma, vbar, V[j, i], V[j, i + 1], dt)
+            chf_omega = lambda w: ChFIntegratedVariance(
+                w, kappa, gamma, vbar, V[j, i], V[j, i + 1], dt
+            )
             first_moment = -1j * (chf_omega(dt) - 1) / dt
-            second_moment = -1 * (chf_omega(2 * dt) - 2 * chf_omega(dt) + 1) / (dt ** 2)
+            second_moment = -1 * (chf_omega(2 * dt) - 2 * chf_omega(dt) + 1) / (dt**2)
 
             standard_deviation = np.sqrt(abs(second_moment) - abs(first_moment) ** 2)
 
@@ -1056,19 +1201,29 @@ def GeneratePathsHestonES_suppl(NoOfPaths, NoOfSteps, T, r, S_0, kappa, gamma, r
             upper_bound = abs(first_moment) + L * standard_deviation
 
             omega = np.arange(nr_expansion) * np.pi / (upper_bound - lower_bound)
-            chf_integrated = ChFIntegratedVariance(omega, kappa, gamma, vbar, V[j, i], V[j, i + 1], dt)
+            chf_integrated = ChFIntegratedVariance(
+                omega, kappa, gamma, vbar, V[j, i], V[j, i + 1], dt
+            )
 
             if method == "brute":
                 x = np.linspace(lower_bound, upper_bound, 10000)
-                cdf_integratedvar = cos_cdf(lower_bound, upper_bound, omega, chf_integrated, x)
+                cdf_integratedvar = cos_cdf(
+                    lower_bound, upper_bound, omega, chf_integrated, x
+                )
                 V_int[j, i + 1] = x[np.abs(cdf_integratedvar - p[j, i]).argmin()]
             else:  # method == "newton"
-                V_int[j, i + 1] = cdf_inversion_newton(lower_bound, upper_bound, omega, chf_integrated, p[j, i])
+                V_int[j, i + 1] = cdf_inversion_newton(
+                    lower_bound, upper_bound, omega, chf_integrated, p[j, i]
+                )
 
         # Compute stock paths
-        ito_integral_Ws1 = 1.0 / gamma * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i])
+        ito_integral_Ws1 = (
+            1.0
+            / gamma
+            * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i])
+        )
         m = X[:, i] + (r * dt - 1.0 / 2.0 * V_int[:, i] + rho * ito_integral_Ws1)
-        variance = (1 - rho ** 2) * V_int[:, i]
+        variance = (1 - rho**2) * V_int[:, i]
         X[:, i + 1] = m + np.sqrt(variance) * Z1[:, i]
         time[i + 1] = time[i] + dt
 
