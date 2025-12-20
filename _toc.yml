@@ -14,7 +14,7 @@ parts:
           - file: char_functions/03_heston_calibration
           - file: char_functions/04_heston_calibration_qn
           - file: char_functions/05_heston_exotic_options
-          - file: char_functions/06_rough_heston
+          #- file: char_functions/06_rough_heston
 
     - caption: Pricing American Options
       numbered: True
@@ -23,7 +23,7 @@ parts:
           - file: american_options/02_lsmc_pricing
           - file: american_options/03_finite_difference
           - file: american_options/04_cos_american
-      #- file: american_options/05_american_comparison
+          #- file: american_options/05_american_comparison
 
     - caption: Hedging and Greeks
       numbered: True
