@@ -24,3 +24,5 @@
 
 **Part 3: Hedging and Greeks**
 - [Greeks in Black-Scholes Model](https://libapatrik.github.io/Quantitative-Finance-Book/greeks/01_greeks_black_scholes.html)
+
+
