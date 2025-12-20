@@ -512,7 +512,10 @@ class CDF_Inverter:
 
 def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
     """
-    Heston model characteristic function.
+    Heston model characteristic function with stable branch selection.
+
+    Uses the formulation from Albrecher et al. (2007) "The Little Heston Trap"
+    to avoid discontinuities caused by the complex square root branch cut.
 
     Parameters:
     -----------
@@ -536,20 +539,36 @@ def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
         Correlation between stock and variance
 
     Returns:
-    ------------
+    --------
     np.ndarray
         Characteristic function values
     """
-    alpha = -(u**2) / 2 - 1j * u / 2
-    beta = kappa - rho * xi * 1j * u
-    gamma = xi**2 / 2
-    h = np.sqrt(beta**2 - 4 * alpha * gamma)
-    rm = (beta - h) / xi**2
-    rp = (beta + h) / xi**2
-    g = rm / rp
-    C = kappa * (rm * T - 2 / xi**2 * np.log((1 - g * np.exp(-h * T)) / (1 - g)))
-    D = rm * (1 - np.exp(-h * T)) / (1 - g * np.exp(-h * T))
-    cf = np.exp(C * theta + D * nu0 + 1j * u * np.log(S0 * np.exp(r * T)))
+    i = 1j
+
+    # Discriminant with stable formulation
+    d = np.sqrt((kappa - rho * xi * i * u) ** 2 + xi**2 * (i * u + u**2))
+
+    # Force branch selection: Re(d) > 0 to avoid discontinuity
+    d = np.where(np.real(d) < 0, -d, d)
+
+    # g ratio (stable formulation uses minus sign in numerator)
+    g = (kappa - rho * xi * i * u - d) / (kappa - rho * xi * i * u + d)
+
+    # Coefficients C and D
+    exp_neg_dT = np.exp(-d * T)
+
+    C = (kappa * theta / xi**2) * (
+        (kappa - rho * xi * i * u - d) * T
+        - 2 * np.log((1 - g * exp_neg_dT) / (1 - g))
+    )
+
+    D = ((kappa - rho * xi * i * u - d) / xi**2) * (
+        (1 - exp_neg_dT) / (1 - g * exp_neg_dT)
+    )
+
+    # Characteristic function
+    cf = np.exp(C + D * nu0 + i * u * np.log(S0) + i * u * r * T)
+
     return cf
 
 

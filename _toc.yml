@@ -11,7 +11,7 @@ parts:
       chapters:
           - file: char_functions/01_pdf_cdf_recovery
           - file: char_functions/02_heston_exact_simulation
-          - file: char_functions/03_heston_calibration
+          #- file: char_functions/03_heston_calibration
           - file: char_functions/04_heston_calibration_qn
           - file: char_functions/05_heston_exotic_options
           #- file: char_functions/06_rough_heston
