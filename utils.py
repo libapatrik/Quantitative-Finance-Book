@@ -12,27 +12,7 @@ import pandas as pd
 
 
 def cos_cdf(a, b, omega, chf, x):
-    """
-    Compute CDF using the COS method.
-
-    Parameters:
-    -----------
-    a : float
-        Lower bound of the integration domain
-    b : float
-        Upper bound of the integration domain
-    omega : np.ndarray
-        Frequency array
-    chf : np.ndarray
-        Characteristic function values at omega frequencies
-    x : np.ndarray
-        Evaluation points for CDF
-
-    Returns:
-    --------
-    np.ndarray
-        CDF values at x points
-    """
+    """ Compute CDF using the COS method."""
     F_k = 2.0 / (b - a) * np.real(chf * np.exp(-1j * omega * a))
     cdf = np.squeeze(F_k[0] / 2.0 * (x - a)) + np.matmul(
         F_k[1:] / omega[1:], np.sin(np.outer(omega[1:], x - a))
@@ -41,27 +21,7 @@ def cos_cdf(a, b, omega, chf, x):
 
 
 def cos_pdf(a, b, N, chf, x):
-    """
-    Compute PDF using the COS method.
-
-    Parameters:
-    -----------
-    a : float
-        Lower bound of the integration domain
-    b : float
-        Upper bound of the integration domain
-    N : int
-        Number of terms in COS expansion
-    chf : callable
-        Characteristic function
-    x : np.ndarray
-        Evaluation points for PDF
-
-    Returns:
-    --------
-    np.ndarray
-        PDF values at x points
-    """
+    """ Compute PDF using the COS method. """
     k = np.linspace(0, N - 1, N)
     u = k * np.pi / (b - a)  # frequencies -- u = omega
     # F_k coefficients
@@ -78,27 +38,7 @@ def cos_pdf(a, b, N, chf, x):
 
 
 def carr_madan_cdf(chf, x_grid, u_max=200, N=2**12, alpha=1.0):
-    """
-    Recover CDF from characteristic function using Gil-Pelaez inversion formula.
-
-    Parameters:
-    -----------
-    chf : callable
-        Characteristic function phi(u)
-    x_grid : np.ndarray
-        Evaluation points for CDF
-    u_max : float, default=200
-        Maximum frequency for integration
-    N : int, default=2**12
-        Number of integration points
-    alpha : float, default=1.0
-        Damping parameter (not used in current implementation)
-
-    Returns:
-    --------
-    np.ndarray
-        CDF values at x_grid points
-    """
+    """ Recover CDF from characteristic function using Gil-Pelaez inversion formula.  """
     # Use adaptive integration bounds based on characteristic function decay
     u_min = 1e-8  # Start from very small but not zero
 
@@ -139,7 +79,7 @@ def carr_madan_cdf(chf, x_grid, u_max=200, N=2**12, alpha=1.0):
     # Apply Gil-Pelaez inversion formula
     cdf = 0.5 - (1 / np.pi) * integral
 
-    # Apply soft clipping to handle numerical errors while preserving the fact
+    # Apply clipp to handle numerical errors while preserving the fact
     # that some distributions don't span [0,1]
     cdf = np.clip(cdf, -0.1, 1.1)  # Allow some overshoot for numerical errors
 
@@ -147,25 +87,7 @@ def carr_madan_cdf(chf, x_grid, u_max=200, N=2**12, alpha=1.0):
 
 
 def carr_madan_pdf(chf, x_grid, u_max=200, N=2**12):
-    """
-    Recover PDF from characteristic function using inverse Fourier transform.
-
-    Parameters:
-    ------------
-    chf : callable
-        Characteristic function phi(u)
-    x_grid : np.ndarray
-        Evaluation points for PDF
-    u_max : float, default=200
-        Maximum frequency for integration
-    N : int, default=2**12
-        Number of integration points
-
-    Returns:
-    ------------
-    np.ndarray
-        PDF values at x_grid points
-    """
+    """ Recover PDF from characteristic function using inverse Fourier transform. """
     du = 2 * u_max / N
     u = np.linspace(-u_max, u_max - du, N)
     # Compute integrand of inverse Fourier transform
@@ -183,25 +105,7 @@ def carr_madan_pdf(chf, x_grid, u_max=200, N=2**12):
 
 
 def conv_pdf(chf, x_range=(-5, 5), alpha=0.5, N=2**12):
-    """
-    Compute PDF using the CONV method (FFT-based).
-
-    Parameters:
-    -----------
-    chf : callable
-        Characteristic function
-    x_range : tuple, default=(-5, 5)
-        Spatial domain range (x_min, x_max)
-    alpha : float, default=0.5
-        Damping parameter
-    N : int, default=2**12
-        Number of grid points
-
-    Returns:
-    ------------
-    tuple
-        (x_grid, pdf_values) - spatial grid and corresponding PDF values
-    """
+    """ Compute PDF using the CONV method (FFT-based). """
     x_min, x_max = x_range
     L = x_max - x_min  # Total length of spatial domain
     dx = L / N
@@ -236,27 +140,7 @@ def conv_pdf(chf, x_range=(-5, 5), alpha=0.5, N=2**12):
 
 
 def conv_cdf(chf, x_vals, x_range=None, alpha=0.5, N=2**12):
-    """
-    Compute CDF using the CONV method.
-
-    Parameters:
-    -----------
-    chf : callable
-        Characteristic function
-    x_vals : np.ndarray
-        Evaluation points for CDF
-    x_range : tuple, optional
-        Spatial domain range. If None, automatically determined from x_vals
-    alpha : float, default=0.5
-        Damping parameter
-    N : int, default=2**12
-        Number of grid points
-
-    Returns:
-    ------------
-    np.ndarray
-        CDF values at x_vals points
-    """
+    """ Compute CDF using the CONV method."""
     if x_range is None:
         # Automatically choose a domain that covers x_vals with some padding
         x_min_req = np.min(x_vals)
@@ -294,22 +178,6 @@ class CDF_Inverter:
     """
 
     def __init__(self, method="cos", nr_expansion=100, u_max=200, N=2**12, alpha=0.5):
-        """
-        Initialize CDF inverter.
-
-        Parameters:
-        -----------
-        method : str, default="cos"
-            Method to use: "cos", "carr_madan", or "conv"
-        nr_expansion : int, default=100
-            Number of terms for COS expansion
-        u_max : float, default=200
-            Maximum frequency for Carr-Madan method
-        N : int, default=2**12
-            Number of grid points
-        alpha : float, default=0.5
-            Damping parameter for CONV method
-        """
         self.method = method
         self.nr_expansion = nr_expansion
         self.u_max = u_max
@@ -317,25 +185,7 @@ class CDF_Inverter:
         self.alpha = alpha
 
     def compute_cdf(self, chf, x_vals, lower_bound, upper_bound):
-        """
-        Compute CDF using the specified method.
-
-        Parameters:
-        -----------
-        chf : callable
-            Characteristic function
-        x_vals : np.ndarray
-            Evaluation points
-        lower_bound : float
-            Lower bound of domain
-        upper_bound : float
-            Upper bound of domain
-
-        Returns:
-        ------------
-        np.ndarray
-            CDF values at x_vals
-        """
+        """ Compute CDF using the specified method. """
         if self.method == "cos":
             # omega array
             omega = np.arange(self.nr_expansion) * np.pi / (upper_bound - lower_bound)
@@ -359,25 +209,7 @@ class CDF_Inverter:
             raise ValueError(f"Unknown CDF method: {self.method}")
 
     def compute_pdf(self, chf, x_vals, lower_bound, upper_bound):
-        """
-        Compute PDF using the specified method.
-
-        Parameters:
-        -----------
-        chf : callable
-            Characteristic function
-        x_vals : np.ndarray
-            Evaluation points
-        lower_bound : float
-            Lower bound of domain
-        upper_bound : float
-            Upper bound of domain
-
-        Returns:
-        ------------
-        np.ndarray
-            PDF values at x_vals
-        """
+        """ Compute PDF using the specified method. """
         if self.method == "cos":
 
             def chf_wrapper(u):
@@ -400,32 +232,9 @@ class CDF_Inverter:
             raise ValueError(f"Unknown PDF method: {self.method}")
 
     def invert_cdf_newton(
-        self, chf, lower_bound, upper_bound, p, max_iter=100, tol=1e-8
-    ):
-        """
-        Invert CDF using Newton's method with robust handling for distributions
-        that don't have support starting at 0.
-
-        Parameters:
-        -----------
-        chf : callable
-            Characteristic function
-        lower_bound : float
-            Lower bound of domain
-        upper_bound : float
-            Upper bound of domain
-        p : float
-            Probability value to invert (0 < p < 1)
-        max_iter : int, default=100
-            Maximum number of iterations
-        tol : float, default=1e-8
-            Convergence tolerance
-
-        Returns:
-        ------------
-        float
-            x value such that CDF(x) ≈ p
-        """
+        self, chf, lower_bound, upper_bound, p, max_iter=100, tol=1e-8):
+        """  Invert CDF using Newton's method with robust handling for distributions
+        that don't have support starting at 0. """
         # Initial checks
         p = np.maximum(0.0, np.minimum(1.0, p))  # Ensure p is in [0,1]
         p = np.maximum(1e-12, np.minimum(1.0 - 1e-12, p))
@@ -516,32 +325,6 @@ def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
 
     Uses the formulation from Albrecher et al. (2007) "The Little Heston Trap"
     to avoid discontinuities caused by the complex square root branch cut.
-
-    Parameters:
-    -----------
-    u : np.ndarray
-        Frequency parameter
-    S0 : float
-        Initial stock price
-    T : float
-        Time to maturity
-    r : float
-        Risk-free rate
-    kappa : float
-        Mean reversion speed
-    nu0 : float
-        Initial variance
-    theta : float
-        Long-term variance
-    xi : float
-        Volatility of volatility
-    rho : float
-        Correlation between stock and variance
-
-    Returns:
-    --------
-    np.ndarray
-        Characteristic function values
     """
     i = 1j
 
@@ -573,35 +356,7 @@ def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
 
 
 def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
-    """
-    Heston call option price using midpoint rule integration.
-
-    Parameters:
-    -----------
-    S0 : float
-        Initial stock price
-    K : float
-        Strike price
-    T : float
-        Time to maturity
-    r : float
-        Risk-free rate
-    kappa : float
-        Mean reversion speed
-    nu0 : float
-        Initial variance
-    theta : float
-        Long-term variance
-    xi : float
-        Volatility of volatility
-    rho : float
-        Correlation between stock and variance
-
-    Returns:
-    ------------
-    float
-        Call option price
-    """
+    """ Heston call option price using midpoint rule integration. """
     params = (S0, T, r, kappa, nu0, theta, xi, rho)
     P1 = 0.5
     P2 = 0.5
@@ -624,31 +379,7 @@ def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
 
 
 def ChFIntegratedVariance(omega, kappa, gamma, vbar, vu, vt, tau):
-    """
-    Characteristic function of integrated variance (Broadie-Kaya).
-
-    Parameters:
-    -----------
-    omega : np.ndarray
-        Frequency parameter
-    kappa : float
-        Mean reversion speed
-    gamma : float
-        Volatility of volatility
-    vbar : float
-        Long-term variance
-    vu : float
-        Initial variance
-    vt : float
-        Final variance
-    tau : float
-        Time interval
-
-    Returns:
-    ------------
-    np.ndarray
-        Characteristic function values
-    """
+    """ Characteristic function of integrated variance (Broadie-Kaya). """
     R = np.sqrt(kappa**2 - 2.0 * gamma**2 * 1j * omega)
     d = 4 * kappa * vbar / gamma**2
 
@@ -694,28 +425,6 @@ def ChFIntegratedVariance(omega, kappa, gamma, vbar, vu, vt, tau):
 def CIR_Sample(NoOfPaths, kappa, gamma, vbar, s, t, v_s):
     """
     Sample from CIR process using noncentral chi-squared distribution.
-
-    Parameters:
-    -----------
-    NoOfPaths : int
-        Number of paths to simulate
-    kappa : float
-        Mean reversion speed
-    gamma : float
-        Volatility of volatility
-    vbar : float
-        Long-term variance
-    s : float
-        Start time
-    t : float
-        End time
-    v_s : np.ndarray
-        Initial variance values
-
-    Returns:
-    ------------
-    np.ndarray
-        Sampled variance values
     """
     delta = 4.0 * kappa * vbar / gamma / gamma
     c = 2 * kappa / (gamma**2 * (1 - np.exp(-kappa * (t - s))))
@@ -747,42 +456,6 @@ def GeneratePathsHestonES(
 ):
     """
     Generate Heston model paths using exact simulation.
-
-    Parameters:
-    -----------
-    NoOfPaths : int
-        Number of simulation paths
-    NoOfSteps : int
-        Number of time steps
-    T : float
-        Time to maturity
-    r : float
-        Risk-free rate
-    S_0 : float
-        Initial stock price
-    kappa : float
-        Mean reversion speed
-    gamma : float
-        Volatility of volatility
-    rho : float
-        Correlation
-    vbar : float
-        Long-term variance
-    v0 : float
-        Initial variance
-    nr_expansion : int
-        Number of terms for COS expansion
-    L : float
-        Bound multiplier for integrated variance
-    recovery_method : str, default="cos"
-        Method for CDF recovery: "cos", "carr_madan", or "conv"
-    **method_kwargs
-        Additional arguments for the recovery method
-
-    Returns:
-    ------------
-    dict
-        Dictionary containing time grid, stock paths, and integrated variance paths
     """
     dt = T / float(NoOfSteps)
     p = np.random.uniform(0, 1, [NoOfPaths, NoOfSteps])
@@ -792,7 +465,8 @@ def GeneratePathsHestonES(
     V_int = np.zeros([NoOfPaths, NoOfSteps + 1])
     X = np.zeros([NoOfPaths, NoOfSteps + 1])
     V[:, 0] = v0
-    V_int[:, 0] = v0 * dt
+    # V_int[:, 0] = v0 * dt
+    V_int[:, 0] = v0
     X[:, 0] = np.log(S_0)
 
     time = np.zeros([NoOfSteps + 1])
@@ -997,24 +671,6 @@ def cdf_inversion_newton(
 def bs_put_price(S0, K, r, sigma, T):
     """
     Black-Scholes put option price.
-
-    Parameters:
-    -----------
-    S0 : float
-        Initial stock price
-    K : float
-        Strike price
-    r : float
-        Risk-free rate
-    sigma : float
-        Volatility
-    T : float
-        Time to maturity
-
-    Returns:
-    --------
-    float
-        Put option price
     """
     d1 = (np.log(S0 / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
