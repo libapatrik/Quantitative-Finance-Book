@@ -73,6 +73,10 @@ def cos_greeks(S0, K, T, r, cf, N=128, L=10, opt_type='call'):
     Price: C = Ke^{-rT} Σ' Re[Hₖ]Vₖ
     Delta: Δ = -Ke^{-rT}/S₀ Σ' ωₖ Im[Hₖ]Vₖ
     Gamma: Γ = Ke^{-rT}/S₀² Σ' (ωₖ Im[Hₖ] - ωₖ² Re[Hₖ])Vₖ
+
+    Note: Theta computed here assumes cf is time-independent. For models where
+    the CF depends on T (like BS or Heston), use cos_greeks_full() which
+    correctly recomputes the CF at T-ε for theta calculation.
     """
     x0 = np.log(S0 / K)
     a, b = x0 - L*np.sqrt(T), x0 + L*np.sqrt(T)
@@ -151,13 +155,14 @@ def cos_greeks_full(S0, K, T, r, sigma, model='bs', N=128, L=10, opt_type='call'
 
         g = cos_greeks(S0, K, T, r, make_cf(T), N, L, opt_type)
 
-        # Vega w.r.t. v0
+        # Vega w.r.t. σ (not v0). Chain rule: ∂C/∂σ = ∂C/∂v₀ × 2σ
         def cf_up(u):
             return heston_cf(u, S0, T, r, kappa, v0+eps_sigma, theta_h, xi, rho) / S0**(1j*u)
         def cf_dn(u):
             return heston_cf(u, S0, T, r, kappa, v0-eps_sigma, theta_h, xi, rho) / S0**(1j*u)
-        g['vega'] = (cos_price(S0,K,T,r,cf_up,N,L,opt_type) -
-                     cos_price(S0,K,T,r,cf_dn,N,L,opt_type)) / (2*eps_sigma)
+        vega_v0 = (cos_price(S0,K,T,r,cf_up,N,L,opt_type) -
+                   cos_price(S0,K,T,r,cf_dn,N,L,opt_type)) / (2*eps_sigma)
+        g['vega'] = vega_v0 * 2 * np.sqrt(v0)  # Convert to per-σ units
 
         # Theta
         if T > eps_T:
