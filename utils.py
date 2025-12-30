@@ -438,22 +438,8 @@ def CIR_Sample(NoOfPaths, kappa, gamma, vbar, s, t, v_s):
 # =============================================================================
 
 
-def GeneratePathsHestonES(
-    NoOfPaths,
-    NoOfSteps,
-    T,
-    r,
-    S_0,
-    kappa,
-    gamma,
-    rho,
-    vbar,
-    v0,
-    nr_expansion,
-    L,
-    recovery_method="cos",
-    **method_kwargs,
-):
+def GeneratePathsHestonES(NoOfPaths,NoOfSteps, T, r, S_0, kappa, gamma, rho, vbar, v0, nr_expansion,
+    L, recovery_method="cos", **method_kwargs,):
     """
     Generate Heston model paths using exact simulation.
     """
@@ -716,42 +702,14 @@ def compare_cdf_inversion_methods():
         # Run brute force method
         np.random.seed(3)
         start_time = time.time()
-        paths_brute = GeneratePathsHestonES_suppl(
-            N,
-            NoOfSteps,
-            T,
-            r,
-            S_0,
-            kappa,
-            gamma,
-            rho,
-            vbar,
-            v0,
-            nr_expansion,
-            L,
-            method="brute",
-        )
+        paths_brute = GeneratePathsHestonES_suppl(N, NoOfSteps, T, r, S_0, kappa, gamma, rho, vbar, v0, nr_expansion, L, method="brute")
         brute_time = time.time() - start_time
         brute_times.append(brute_time)
 
         # Run Newton method
         np.random.seed(3)
         start_time = time.time()
-        paths_newton = GeneratePathsHestonES_suppl(
-            N,
-            NoOfSteps,
-            T,
-            r,
-            S_0,
-            kappa,
-            gamma,
-            rho,
-            vbar,
-            v0,
-            nr_expansion,
-            L,
-            method="newton",
-        )
+        paths_newton = GeneratePathsHestonES_suppl(N, NoOfSteps, T, r, S_0, kappa, gamma, rho, vbar, v0, nr_expansion, L, method="newton")
         newton_time = time.time() - start_time
         newton_times.append(newton_time)
 
@@ -829,21 +787,7 @@ def compare_cdf_inversion_methods():
     return results_df
 
 
-def GeneratePathsHestonES_suppl(
-    NoOfPaths,
-    NoOfSteps,
-    T,
-    r,
-    S_0,
-    kappa,
-    gamma,
-    rho,
-    vbar,
-    v0,
-    nr_expansion,
-    L,
-    method="newton",
-):
+def GeneratePathsHestonES_suppl(NoOfPaths, NoOfSteps, T, r, S_0,kappa, gamma, rho, vbar, v0, nr_expansion, L, method="newton"):
     dt = T / float(NoOfSteps)
     p = np.random.uniform(0, 1, [NoOfPaths, NoOfSteps])
 
