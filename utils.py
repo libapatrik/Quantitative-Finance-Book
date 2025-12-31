@@ -451,8 +451,7 @@ def GeneratePathsHestonES(NoOfPaths,NoOfSteps, T, r, S_0, kappa, gamma, rho, vba
     V_int = np.zeros([NoOfPaths, NoOfSteps + 1])
     X = np.zeros([NoOfPaths, NoOfSteps + 1])
     V[:, 0] = v0
-    # V_int[:, 0] = v0 * dt
-    V_int[:, 0] = v0
+    V_int[:, 0] = 0.0  # integrated variance at t=0 is 0
     X[:, 0] = np.log(S_0)
 
     time = np.zeros([NoOfSteps + 1])
@@ -571,16 +570,16 @@ def GeneratePathsHestonES(NoOfPaths,NoOfSteps, T, r, S_0, kappa, gamma, rho, vba
 
                 V_int[j, i + 1] = result
 
-        # STEP 3: Compute Ito integral
+        # STEP 3: Compute Ito integral (using just-sampled V_int for current interval)
         ito_integral_Ws1 = (
             1.0
             / gamma
-            * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i])
+            * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i + 1])
         )
 
         # STEP 4: Generate stock price sample
-        m = X[:, i] + (r * dt - 1.0 / 2.0 * V_int[:, i] + rho * ito_integral_Ws1)
-        variance = (1 - rho**2) * V_int[:, i]
+        m = X[:, i] + (r * dt - 1.0 / 2.0 * V_int[:, i + 1] + rho * ito_integral_Ws1)
+        variance = (1 - rho**2) * V_int[:, i + 1]
 
         X[:, i + 1] = m + np.sqrt(variance) * Z1[:, i]
         time[i + 1] = time[i] + dt
@@ -796,7 +795,7 @@ def GeneratePathsHestonES_suppl(NoOfPaths, NoOfSteps, T, r, S_0,kappa, gamma, rh
     V_int = np.zeros([NoOfPaths, NoOfSteps + 1])
     X = np.zeros([NoOfPaths, NoOfSteps + 1])
     V[:, 0] = v0
-    V_int[:, 0] = v0 * dt
+    V_int[:, 0] = 0.0  # integrated variance at t=0 is 0
     X[:, 0] = np.log(S_0)
 
     time = np.zeros([NoOfSteps + 1])
@@ -835,14 +834,14 @@ def GeneratePathsHestonES_suppl(NoOfPaths, NoOfSteps, T, r, S_0,kappa, gamma, rh
                     lower_bound, upper_bound, omega, chf_integrated, p[j, i]
                 )
 
-        # Compute stock paths
+        # Compute stock paths (using just-sampled V_int for current interval)
         ito_integral_Ws1 = (
             1.0
             / gamma
-            * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i])
+            * (V[:, i + 1] - V[:, i] - kappa * vbar * dt + kappa * V_int[:, i + 1])
         )
-        m = X[:, i] + (r * dt - 1.0 / 2.0 * V_int[:, i] + rho * ito_integral_Ws1)
-        variance = (1 - rho**2) * V_int[:, i]
+        m = X[:, i] + (r * dt - 1.0 / 2.0 * V_int[:, i + 1] + rho * ito_integral_Ws1)
+        variance = (1 - rho**2) * V_int[:, i + 1]
         X[:, i + 1] = m + np.sqrt(variance) * Z1[:, i]
         time[i + 1] = time[i] + dt
 
