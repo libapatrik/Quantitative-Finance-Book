@@ -41,6 +41,7 @@ parts:
       chapters:
         - file: trading/01_bs_hedging_pnl
         - file: trading/02_heston_hedging_pnl
+        - file: trading/03_hestonSLV_hedging_pnl  # from CppFM Personal C++ library
 
     - caption: Volatility Forecasting
       numbered: True
