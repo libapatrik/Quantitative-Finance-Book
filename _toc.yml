@@ -34,7 +34,7 @@ parts:
       numbered: True
       chapters:
           - file: greeks/01_greeks_black_scholes
-          - file: greeks/02_greeks_cos           # WIP
+          #- file: greeks/02_greeks_cos           # WIP
 
     - caption: Trading and Hedging
       numbered: True
