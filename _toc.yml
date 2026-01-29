@@ -11,8 +11,8 @@ parts:
       chapters:
           - file: char_functions/01_pdf_cdf_recovery
           - file: char_functions/02_heston_exact_simulation
-          #- file: char_functions/03_heston_calibration     # WIP
-          - file: char_functions/04_heston_calibration_qn   # improve and merge into 03_heston_calibration
+          - file: char_functions/03_heston_calibration
+          #- file: char_functions/04_heston_calibration_qn   # improve and merge into 03_heston_calibration
           #- file: char_functions/05_heston_exotic_options  # not anchored
 
 #    - caption: Volatility Surface Methods [TODO]
@@ -34,22 +34,17 @@ parts:
       numbered: True
       chapters:
           - file: greeks/01_greeks_black_scholes
-          #- file: greeks/02_greeks_cos           # WIP
+          - file: greeks/02_greeks_cos
 
     - caption: Trading and Hedging
       numbered: True
       chapters:
         - file: trading/01_bs_hedging_pnl
         - file: trading/02_heston_hedging_pnl
-        - file: trading/03_hestonSLV_hedging_pnl  # from CppFM Personal C++ library
+        - file: trading/03_hestonSLV_hedging_pnl  # from CppFM personal C++ library
 
     - caption: Volatility Forecasting
       numbered: True
       chapters:
         - file: volatility/01_pred_realized_vol
 
-# Future plans:
-
-# 03_hestonSLV_hedging
-# 01_vol_surfaces/01_svi + ssvi + essvi
-#

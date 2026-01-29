@@ -361,7 +361,7 @@ def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
     P1 = 0.5
     P2 = 0.5
     umax = 50
-    n = 100
+    n = 200
     du = umax / n
     u = du / 2
     for i in range(n):
@@ -654,13 +654,48 @@ def cdf_inversion_newton(
 
 
 def bs_put_price(S0, K, r, sigma, T):
-    """
-    Black-Scholes put option price.
-    """
+    """Black-Scholes put option price."""
     d1 = (np.log(S0 / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
     bs_put = -1 * norm.cdf(-d1) * S0 + norm.cdf(-d2) * K * np.exp(-r * T)
     return bs_put
+
+
+def bs_call_price(S0, K, r, sigma, T):
+    """Black-Scholes call option price."""
+    d1 = (np.log(S0 / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    return S0 * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+
+
+def bs_vega(S0, K, r, sigma, T):
+    """Black-Scholes vega (same for calls and puts)."""
+    d1 = (np.log(S0 / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    return S0 * np.sqrt(T) * norm.pdf(d1)
+
+
+def implied_vol(price, S0, K, r, T, opt_type='call', tol=1e-8):
+    """
+    Implied volatility via Newton-Raphson.
+    Initial guess from moneyness for robustness.
+    """
+    # initial guess from moneyness
+    m = S0 / (K * np.exp(-r * T))
+    sigma = np.sqrt(2 * np.abs(np.log(m)) / T)
+    sigma = max(sigma, 0.1)  # floor
+
+    price_fn = bs_call_price if opt_type == 'call' else bs_put_price
+
+    for _ in range(100):
+        model_price = price_fn(S0, K, r, sigma, T)
+        v = bs_vega(S0, K, r, sigma, T)
+        if v < 1e-12:
+            break
+        if abs(model_price - price) / v < tol:
+            break
+        sigma = sigma - (model_price - price) / v
+        sigma = max(sigma, 0.01)  # floor
+    return sigma
 
 
 def compare_cdf_inversion_methods():
