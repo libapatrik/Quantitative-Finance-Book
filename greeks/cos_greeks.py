@@ -58,22 +58,27 @@ def _cos_payoff_coeffs(k, a, b, opt_type='call'):
         return (2/bma) * (-_cos_chi(k, a, 0, a, b) + _cos_psi(k, a, 0, a, b))
 
 
-def _compute_domain(x0, T, L, std=None):
-    """Truncation domain [a,b]. If std given, uses L*std*sqrt(T), else L*sqrt(T)."""
+def _compute_domain(x0, T, L, std=None, r=0.0):
+    """Truncation domain [a,b] centered at expected log-moneyness.
+
+    Under risk-neutral measure: E[log(S_T/K)] = log(S0/K) + (r - σ²/2)*T
+    Domain must capture where density has mass, so center at x0 + drift.
+    """
     if std is not None:
-        # Proper scaling: L standard deviations
+        drift = (r - 0.5 * std**2) * T
         half_width = L * std * np.sqrt(T)
     else:
-        # Fallback: assume std ≈ 1 (conservative, works but suboptimal)
+        drift = 0.0
         half_width = L * np.sqrt(T)
 
-    return x0 - half_width, x0 + half_width
+    center = x0 + drift
+    return center - half_width, center + half_width
 
 
 def cos_price(S0, K, T, r, cf, N=128, L=10, opt_type='call', std=None):
     """COS European option price. cf = characteristic function of log-returns."""
     x0 = np.log(S0 / K)
-    a, b = _compute_domain(x0, T, L, std)
+    a, b = _compute_domain(x0, T, L, std, r)
     bma = b - a
 
     k = np.arange(N)
@@ -94,7 +99,7 @@ def cos_greeks(S0, K, T, r, cf, N=128, L=10, opt_type='call', std=None):
     Γ = (Ke^{-rT}/S₀²) Σ' (ωₖ Im[Hₖ] - ωₖ² Re[Hₖ])Vₖ
     """
     x0 = np.log(S0 / K)
-    a, b = _compute_domain(x0, T, L, std)
+    a, b = _compute_domain(x0, T, L, std, r)
     bma = b - a
 
     k = np.arange(N)
@@ -267,6 +272,10 @@ def validate_cos_greeks():
         (100, 90, 0.5, 0.03, 0.25, 'put'),    # OTM put
         (100, 80, 2.0, 0.08, 0.3, 'call'),    # ITM call, long maturity
         (100, 120, 2.0, 0.08, 0.3, 'put'),    # ITM put, long maturity
+        # Long-dated options (tests drift correction in domain)
+        (100, 100, 5.0, 0.05, 0.2, 'call'),   # ATM call, T=5y
+        (100, 100, 5.0, 0.05, 0.2, 'put'),    # ATM put, T=5y
+        (100, 100, 10.0, 0.05, 0.2, 'call'),  # ATM call, T=10y
     ]
 
     print("COS Greeks Validation")
@@ -296,7 +305,7 @@ def validate_cos_greeks():
                 error = abs(cos_val - bs_val)
 
             passed = error < tolerances[greek]
-            status = "✓ PASS" if passed else "✗ FAIL"
+            status = "PASS" if passed else "FAIL"
             if not passed:
                 all_passed = False
 

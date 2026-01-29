@@ -476,10 +476,13 @@ def GeneratePathsHestonES(NoOfPaths,NoOfSteps, T, r, S_0, kappa, gamma, rho, vba
                 w, kappa, gamma, vbar, V[j, i], V[j, i + 1], dt
             )
 
-            # Compute moments for bounds
+            # Compute moments for bounds (integrated variance is real-valued)
             first_moment = -1j * (chf_omega(dt) - 1) / dt
             second_moment = -1 * (chf_omega(2 * dt) - 2 * chf_omega(dt) + 1) / (dt**2)
-            standard_deviation = np.sqrt(abs(second_moment) - abs(first_moment) ** 2)
+            # Use real parts: E[X] and E[X²] are real for integrated variance
+            mean_sq = np.real(first_moment) ** 2
+            variance = max(0, np.real(second_moment) - mean_sq)
+            standard_deviation = np.sqrt(variance)
 
             # Improved bounds calculation for integrated variance
             # The integrated variance has a minimum value > 0 in the Heston model
