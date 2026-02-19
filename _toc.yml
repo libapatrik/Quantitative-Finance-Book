@@ -12,13 +12,11 @@ parts:
           - file: char_functions/01_pdf_cdf_recovery
           - file: char_functions/02_heston_exact_simulation
           - file: char_functions/03_heston_calibration
-          #- file: char_functions/04_heston_calibration_qn   # improve and merge into 03_heston_calibration
-          #- file: char_functions/05_heston_exotic_options  # not anchored
 
 #    - caption: Volatility Surface Methods [TODO]
 #      numbered: True
 #      chapters:
-#        - file: vol_surfaces/01_svi
+#        - file: vol_surfaces/01_ssvi            # constructing arb-free surface
 #
 
     - caption: Pricing American Options
