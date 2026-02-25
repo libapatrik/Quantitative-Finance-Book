@@ -29,6 +29,11 @@ parse:
     - dollarmath
     - amsmath
 
+exclude_patterns:
+  - .venv
+  - _build
+  - "**.ipynb_checkpoints"
+
 sphinx:
   extra_extensions:
     - sphinxcontrib.bibtex
