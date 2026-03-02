@@ -13,11 +13,10 @@ parts:
           - file: char_functions/02_heston_exact_simulation
           - file: char_functions/03_heston_calibration
 
-#    - caption: Volatility Surface Methods [TODO]
-#      numbered: True
-#      chapters:
-#        - file: vol_surfaces/01_ssvi            # constructing arb-free surface
-#
+    - caption: Volatility Surface Methods
+      numbered: True
+      chapters:
+          - file: volatility/01_ssvi
 
     - caption: Pricing American Options
       numbered: True

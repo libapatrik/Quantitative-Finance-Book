@@ -86,3 +86,5 @@ dmypy.json
 # incomplete notebooks - excluded for now
 calibration/
 ITB_live_vol/
+
+/docs
