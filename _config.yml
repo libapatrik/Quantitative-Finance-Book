@@ -8,6 +8,7 @@ execute:
   allow_errors: false  # Fail the build if there are errors (better for CI/CD)
   timeout: 600  # Increased timeout for complex notebooks
   stderr_output: show  # Show error messages for debugging
+  kernel_name: python3  # Override notebook kernel metadata — lets us use "QFB" locally
 
 latex:
   latex_documents:

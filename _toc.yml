@@ -11,12 +11,13 @@ parts:
       chapters:
           - file: char_functions/01_pdf_cdf_recovery
           - file: char_functions/02_heston_exact_simulation
-          - file: char_functions/03_heston_calibration
 
-    - caption: Volatility Surface Methods
+    - caption: Calibration
       numbered: True
       chapters:
-          - file: volatility/01_ssvi
+          - file: calibration/01_heston_calibration
+          - file: calibration/02_ssvi
+          - file: calibration/03_heston_slv_calibration
 
     - caption: Pricing American Options
       numbered: True
@@ -44,4 +45,3 @@ parts:
       numbered: True
       chapters:
         - file: volatility/01_pred_realized_vol
-

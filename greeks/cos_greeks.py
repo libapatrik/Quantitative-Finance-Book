@@ -2,93 +2,13 @@
 COS method for European option Greeks.
 Fang & Oosterlee (2008) - analytical Delta/Gamma, FD for Theta/Vega/Rho.
 """
+import os
+import sys
 import numpy as np
 from scipy.stats import norm
 
-
-def _cos_chi(k, c, d, a, b):
-    """χ_k(c,d) from Eq. (22) - cosine coeff for e^x."""
-    bma = b - a
-    k = np.atleast_1d(k).astype(float)
-    w = k * np.pi / bma
-
-    # Handle k=0 case separately
-    chi = np.zeros_like(k)
-
-    # k = 0: χ_0 = e^d - e^c
-    zero_mask = (k == 0)
-    chi[zero_mask] = np.exp(d) - np.exp(c)
-
-    # k ≠ 0: use the formula
-    nonzero_mask = ~zero_mask
-    w_nz = w[nonzero_mask]
-    chi[nonzero_mask] = (1 / (1 + w_nz**2)) * (
-        np.exp(d) * (np.cos(w_nz*(d-a)) + w_nz*np.sin(w_nz*(d-a))) -
-        np.exp(c) * (np.cos(w_nz*(c-a)) + w_nz*np.sin(w_nz*(c-a)))
-    )
-    return chi
-
-
-def _cos_psi(k, c, d, a, b):
-    """ψ_k(c,d) from Eq. (23) - cosine coeff for constant 1."""
-    bma = b - a
-    k = np.atleast_1d(k).astype(float)
-    w = k * np.pi / bma
-
-    psi = np.zeros_like(k)
-
-    # k = 0: ψ_0 = d - c
-    zero_mask = (k == 0)
-    psi[zero_mask] = d - c
-
-    # k ≠ 0: ψ_k = (sin(w(d-a)) - sin(w(c-a))) / w
-    nonzero_mask = ~zero_mask
-    w_nz = w[nonzero_mask]
-    psi[nonzero_mask] = (np.sin(w_nz*(d-a)) - np.sin(w_nz*(c-a))) / w_nz
-
-    return psi
-
-
-def _cos_payoff_coeffs(k, a, b, opt_type='call'):
-    """V_k payoff coeffs. Call: [0,b], Put: [a,0]."""
-    bma = b - a
-    if opt_type == 'call':
-        return (2/bma) * (_cos_chi(k, 0, b, a, b) - _cos_psi(k, 0, b, a, b))
-    else:
-        return (2/bma) * (-_cos_chi(k, a, 0, a, b) + _cos_psi(k, a, 0, a, b))
-
-
-def _compute_domain(x0, T, L, std=None, r=0.0):
-    """Truncation domain [a,b] centered at expected log-moneyness.
-
-    Under risk-neutral measure: E[log(S_T/K)] = log(S0/K) + (r - σ²/2)*T
-    Domain must capture where density has mass, so center at x0 + drift.
-    """
-    if std is not None:
-        drift = (r - 0.5 * std**2) * T
-        half_width = L * std * np.sqrt(T)
-    else:
-        drift = 0.0
-        half_width = L * np.sqrt(T)
-
-    center = x0 + drift
-    return center - half_width, center + half_width
-
-
-def cos_price(S0, K, T, r, cf, N=128, L=10, opt_type='call', std=None):
-    """COS European option price. cf = characteristic function of log-returns."""
-    x0 = np.log(S0 / K)
-    a, b = _compute_domain(x0, T, L, std, r)
-    bma = b - a
-
-    k = np.arange(N)
-    w = k * np.pi / bma
-    H = cf(w) * np.exp(1j * w * (x0 - a))
-
-    V = _cos_payoff_coeffs(k, a, b, opt_type)
-    V[0] /= 2  # First term halved in Fourier series
-
-    return max(0, K * np.exp(-r*T) * np.sum(np.real(H) * V))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from utils import cos_price, _cos_payoff_coeffs, _compute_domain
 
 
 def cos_greeks(S0, K, T, r, cf, N=128, L=10, opt_type='call', std=None):

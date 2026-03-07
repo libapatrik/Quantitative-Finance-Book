@@ -33,6 +33,89 @@ def cos_pdf(a, b, N, chf, x):
 
 
 # =============================================================================
+# COS OPTION PRICING (Fang & Oosterlee 2008)
+# =============================================================================
+
+
+def _cos_chi(k, c, d, a, b):
+    """χ_k(c,d) from Eq. (22) - cosine coeff for e^x."""
+    bma = b - a
+    k = np.atleast_1d(k).astype(float)
+    w = k * np.pi / bma
+
+    chi = np.zeros_like(k)
+
+    # k = 0: χ_0 = e^d - e^c
+    zero_mask = (k == 0)
+    chi[zero_mask] = np.exp(d) - np.exp(c)
+
+    # k ≠ 0
+    nonzero_mask = ~zero_mask
+    w_nz = w[nonzero_mask]
+    chi[nonzero_mask] = (1 / (1 + w_nz**2)) * (
+        np.exp(d) * (np.cos(w_nz*(d-a)) + w_nz*np.sin(w_nz*(d-a))) -
+        np.exp(c) * (np.cos(w_nz*(c-a)) + w_nz*np.sin(w_nz*(c-a)))
+    )
+    return chi
+
+
+def _cos_psi(k, c, d, a, b):
+    """ψ_k(c,d) from Eq. (23) - cosine coeff for constant 1."""
+    bma = b - a
+    k = np.atleast_1d(k).astype(float)
+    w = k * np.pi / bma
+
+    psi = np.zeros_like(k)
+
+    zero_mask = (k == 0)
+    psi[zero_mask] = d - c
+
+    nonzero_mask = ~zero_mask
+    w_nz = w[nonzero_mask]
+    psi[nonzero_mask] = (np.sin(w_nz*(d-a)) - np.sin(w_nz*(c-a))) / w_nz
+
+    return psi
+
+
+def _cos_payoff_coeffs(k, a, b, opt_type='call'):
+    """V_k payoff coeffs. Call: [0,b], Put: [a,0]."""
+    bma = b - a
+    if opt_type == 'call':
+        return (2/bma) * (_cos_chi(k, 0, b, a, b) - _cos_psi(k, 0, b, a, b))
+    else:
+        return (2/bma) * (-_cos_chi(k, a, 0, a, b) + _cos_psi(k, a, 0, a, b))
+
+
+def _compute_domain(x0, T, L, std=None, r=0.0):
+    """Truncation domain [a,b] for COS option pricing."""
+    if std is not None:
+        drift = (r - 0.5 * std**2) * T
+        half_width = L * std * np.sqrt(T)
+    else:
+        drift = 0.0
+        half_width = L * np.sqrt(T)
+
+    center = x0 + drift
+    return center - half_width, center + half_width
+
+
+def cos_price(S0, K, T, r, cf, N=128, L=10, opt_type='call', std=None):
+    """COS European option price. cf = characteristic function of log-returns."""
+    x0 = np.log(S0 / K)
+    a, b = _compute_domain(x0, T, L, std, r)
+    bma = b - a
+
+    k = np.arange(N)
+    w = k * np.pi / bma
+    H = cf(w) * np.exp(1j * w * (x0 - a))
+
+    V = _cos_payoff_coeffs(k, a, b, opt_type)
+    V[0] /= 2
+
+    return max(0, K * np.exp(-r*T) * np.sum(np.real(H) * V))
+
+
+# =============================================================================
 # CARR-MADAN METHOD FUNCTIONS
 # =============================================================================
 
@@ -355,13 +438,11 @@ def Heston_CF(u, S0, T, r, kappa, nu0, theta, xi, rho):
     return cf
 
 
-def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho):
+def Heston_price(S0, K, T, r, kappa, nu0, theta, xi, rho, n=200, umax=50):
     """ Heston call option price using midpoint rule integration. """
     params = (S0, T, r, kappa, nu0, theta, xi, rho)
     P1 = 0.5
     P2 = 0.5
-    umax = 50
-    n = 200
     du = umax / n
     u = du / 2
     for i in range(n):
