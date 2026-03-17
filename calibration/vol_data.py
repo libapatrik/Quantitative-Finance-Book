@@ -3,6 +3,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import yfinance as yf
 
@@ -58,6 +59,34 @@ def load_latest_snapshot(snapshot_dir: Path) -> tuple[float, pd.DataFrame]:
 
     print(f"Loaded snapshot: {csv_path.name}  (fetched {meta['fetched_at']})")
     return meta["S0"], df
+
+
+def prepare_otm_slices(df, S0, r, T_min=0.02, T_max=2.0, min_strikes=5):
+    """Filter raw option chain to OTM slices with log-moneyness."""
+    df = df[df['T'] > T_min]
+    df = df[df['T'] < T_max]
+    df = df[df['openInterest'] > 10]
+    df = df[df['impliedVolatility'] > 0.01]
+    df = df[(df['ask'] - df['bid']) / df['mid'] < 1.0]
+
+    slices = []
+    for T in sorted(df['T'].unique()):
+        sub = df[df['T'] == T].copy()
+        F = S0 * np.exp(r * T)
+
+        otm_calls = sub[(sub['optionType'] == 'call') & (sub['strike'] >= F)]
+        otm_puts  = sub[(sub['optionType'] == 'put')  & (sub['strike'] <  F)]
+        otm = pd.concat([otm_calls, otm_puts]).sort_values('strike')
+
+        if len(otm) < min_strikes:
+            continue
+
+        strikes = otm['strike'].values
+        ivs     = otm['impliedVolatility'].values
+        k       = np.log(strikes / F)
+        slices.append({'T': T, 'F': F, 'strikes': strikes, 'ivs': ivs, 'k': k})
+
+    return slices
 
 
 if __name__ == "__main__":
