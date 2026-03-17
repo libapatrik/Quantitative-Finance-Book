@@ -37,6 +37,26 @@ jobs:
           pip install pybind11 scikit-build wheel setuptools
           pip install -r requirements.txt
 
+      - name: Normalize notebook kernels to python3
+        run: |
+          python -c "
+          import json, glob
+          for path in glob.glob('**/*.ipynb', recursive=True):
+              if '_build' in path or '.venv' in path:
+                  continue
+              with open(path) as f:
+                  nb = json.load(f)
+              ks = nb.get('metadata', {}).get('kernelspec', {})
+              if ks.get('name') != 'python3':
+                  ks['name'] = 'python3'
+                  ks['display_name'] = 'Python 3 (ipykernel)'
+                  nb['metadata']['kernelspec'] = ks
+                  with open(path, 'w') as f:
+                      json.dump(nb, f, indent=1, ensure_ascii=False)
+                      f.write('\n')
+                  print(f'Fixed kernel: {path}')
+          "
+
       - name: Build the book
         run: |
           jupyter-book build .
