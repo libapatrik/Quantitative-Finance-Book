@@ -26,6 +26,7 @@ parts:
           - file: american_options/02_lsmc_pricing
           - file: american_options/03_finite_difference
           - file: american_options/04_cos_american
+          - file: american_options/05_cos_barrier
 
 
     - caption: Hedging and Greeks
