@@ -61,7 +61,8 @@ def load_latest_snapshot(snapshot_dir: Path) -> tuple[float, pd.DataFrame]:
     return meta["S0"], df
 
 
-def prepare_otm_slices(df, S0, r, T_min=0.02, T_max=2.0, min_strikes=5):
+def prepare_otm_slices(df, S0, r, T_min=0.02, T_max=2.0, min_strikes=5,
+                       k_min=-0.40, k_max=0.15):
     """Filter raw option chain to OTM slices with log-moneyness."""
     df = df[df['T'] > T_min]
     df = df[df['T'] < T_max]
@@ -78,13 +79,17 @@ def prepare_otm_slices(df, S0, r, T_min=0.02, T_max=2.0, min_strikes=5):
         otm_puts  = sub[(sub['optionType'] == 'put')  & (sub['strike'] <  F)]
         otm = pd.concat([otm_calls, otm_puts]).sort_values('strike')
 
-        if len(otm) < min_strikes:
-            continue
-
         strikes = otm['strike'].values
         ivs     = otm['impliedVolatility'].values
         k       = np.log(strikes / F)
-        slices.append({'T': T, 'F': F, 'strikes': strikes, 'ivs': ivs, 'k': k})
+
+        # liquid band only -- deep OTM quotes (k < -0.4) are stale/wide and drag
+        # the unweighted joint fit into butterfly arb; power-law phi can't do
+        # k = -1 wings anyway
+        m = (k >= k_min) & (k <= k_max)
+        if m.sum() < min_strikes:
+            continue
+        slices.append({'T': T, 'F': F, 'strikes': strikes[m], 'ivs': ivs[m], 'k': k[m]})
 
     return slices
 

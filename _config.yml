@@ -8,7 +8,6 @@ execute:
   allow_errors: false  # Fail the build if there are errors (better for CI/CD)
   timeout: 600  # Increased timeout for complex notebooks
   stderr_output: show  # Show error messages for debugging
-  kernel_name: python3  # Override notebook kernel metadata — lets us use "QFB" locally
 
 latex:
   latex_documents:
@@ -41,3 +40,5 @@ sphinx:
     - sphinx_plotly_directive
   config:
     bibtex_reference_style: author_year
+    nb_kernel_rgx_aliases:
+      qfb.*: python3  # notebooks saved with the local "qfb" kernel run on python3 (CI has no qfb kernel)
