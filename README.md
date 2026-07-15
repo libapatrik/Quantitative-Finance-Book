@@ -38,8 +38,6 @@ A Jupyter Book covering option pricing, stochastic volatility, and hedging. Impl
 **Hedging and Greeks**
 - [Greeks in Black-Scholes](https://libapatrik.github.io/Quantitative-Finance-Book/greeks/01_greeks_black_scholes.html)
 - [Greeks via COS Method](https://libapatrik.github.io/Quantitative-Finance-Book/greeks/02_greeks_cos.html)
-- [Greeks for Barrier and American Options](https://libapatrik.github.io/Quantitative-Finance-Book/greeks/03_greeks_cos_exotics.html)
-- [AAD Greeks with JAX](https://libapatrik.github.io/Quantitative-Finance-Book/greeks/04_greeks_aad_jax.html)
 
 **Trading and Hedging**
 - [Hedging P&L under Black-Scholes](https://libapatrik.github.io/Quantitative-Finance-Book/trading/01_bs_hedging_pnl.html)

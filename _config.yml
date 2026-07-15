@@ -33,6 +33,8 @@ exclude_patterns:
   - .venv
   - _build
   - "**.ipynb_checkpoints"
+  - greeks/03_greeks_cos_exotics.ipynb  # notes only, not published
+  - greeks/04_greeks_aad_jax.ipynb
 
 sphinx:
   extra_extensions:
